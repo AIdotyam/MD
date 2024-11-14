@@ -2,4 +2,24 @@
     <string name="app_name">aiyam</string>
     <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="log_in_to_your_account">Log in to your account</string>
+    <string name="email">Email</string>
+    <string name="password">Password</string>
+    <string name="todo">TODO</string>
+    <string name="forgot_password">Forgot password?</string>
+    <string name="log_in">Log In</string>
+    <string name="don_t_have_an_account_sign_up">Don\'t have an account? Sign up</string>
+    <string name="sign_in_with">Sign in with</string>
+    <string name="google">Google</string>
+    <string name="create_your_account">Create your account</string>
+    <string name="full_name">Full Name</string>
+    <string name="confirm_password">Confirm Password</string>
+    <string name="sign_up">Sign Up</string>
+    <string name="already_have_an_account_log_in">Already have an account? Log In</string>
+
+    <string name="home">Home</string>
+    <string name="alerts">Alerts</string>
+    <string name="detail">Detail</string>
+    <string name="upload">Upload</string>
+    <string name="profile">Profile</string>
 </resources>

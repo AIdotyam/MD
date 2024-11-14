@@ -6,19 +6,19 @@
     tools:context=".presentation.signin.SigninFragment">
 
     <LinearLayout
-        xmlns:android="http://schemas.android.com/apk/res/android"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:orientation="vertical"
         android:padding="16dp"
         android:gravity="center"
-        android:background="@android:color/white">
+        android:background="@android:color/white"
+        tools:ignore="UselessParent">
 
         <!-- Title -->
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Log in to your account"
+            android:text="@string/log_in_to_your_account"
             android:textSize="20sp"
             android:textStyle="bold"
             android:gravity="center"
@@ -28,7 +28,8 @@
         <EditText
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:hint="Email"
+            android:autofillHints=""
+            android:hint="@string/email"
             android:background="@drawable/rounded_input_background"
             android:padding="12dp"
             android:layout_marginBottom="16dp"
@@ -44,7 +45,8 @@
                 android:id="@+id/passwordEditText"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:hint="Password"
+                android:autofillHints=""
+                android:hint="@string/password"
                 android:background="@drawable/rounded_input_background"
                 android:padding="12dp"
                 android:inputType="textPassword" />
@@ -53,6 +55,7 @@
                 android:id="@+id/passwordToggle"
                 android:layout_width="24dp"
                 android:layout_height="24dp"
+                android:contentDescription="@string/todo"
                 android:src="@drawable/baseline_visibility_off_24"
             android:layout_alignParentEnd="true"
             android:layout_centerVertical="true"
@@ -63,7 +66,7 @@
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Forgot password?"
+            android:text="@string/forgot_password"
             android:textColor="#D49134"
         android:gravity="end"
         android:layout_marginBottom="16dp" />
@@ -72,7 +75,7 @@
         <Button
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="Log In"
+            android:text="@string/log_in"
             android:backgroundTint="#D49134"
         android:textColor="@android:color/white"
         android:layout_marginBottom="16dp" />
@@ -81,7 +84,7 @@
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Don't have an account? Sign up"
+            android:text="@string/don_t_have_an_account_sign_up"
             android:textColor="#D49134"
         android:gravity="center"
         android:layout_marginBottom="24dp" />
@@ -103,7 +106,7 @@
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Sign in with"
+                android:text="@string/sign_in_with"
                 android:paddingHorizontal="8dp"
                 android:textColor="#808080" />
 
@@ -127,12 +130,13 @@
             <ImageView
                 android:layout_width="24dp"
                 android:layout_height="24dp"
+                android:contentDescription="@string/todo"
                 android:src="@drawable/google_logo" />
 
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Google"
+                android:text="@string/google"
                 android:textColor="#808080"
                 android:layout_marginStart="8dp" />
         </LinearLayout>

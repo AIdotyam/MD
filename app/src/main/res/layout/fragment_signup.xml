@@ -17,7 +17,7 @@
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Create your account"
+            android:text="@string/create_your_account"
             android:textSize="20sp"
             android:textStyle="bold"
             android:gravity="center"
@@ -27,7 +27,7 @@
         <EditText
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:hint="Full Name"
+            android:hint="@string/full_name"
             android:background="@drawable/rounded_input_background"
             android:padding="12dp"
             android:layout_marginBottom="16dp"
@@ -37,7 +37,7 @@
         <EditText
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:hint="Email"
+            android:hint="@string/email"
             android:background="@drawable/rounded_input_background"
             android:padding="12dp"
             android:layout_marginBottom="16dp"
@@ -53,7 +53,7 @@
                 android:id="@+id/passwordEditText"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:hint="Password"
+                android:hint="@string/password"
                 android:background="@drawable/rounded_input_background"
                 android:padding="12dp"
                 android:inputType="textPassword" />
@@ -78,7 +78,7 @@
                 android:id="@+id/confirmPasswordEditText"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:hint="Confirm Password"
+                android:hint="@string/confirm_password"
                 android:background="@drawable/rounded_input_background"
                 android:padding="12dp"
                 android:inputType="textPassword" />
@@ -97,7 +97,7 @@
         <Button
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="Sign Up"
+            android:text="@string/sign_up"
             android:backgroundTint="#D49134"
         android:textColor="@android:color/white"
         android:layout_marginBottom="24dp" />
@@ -106,7 +106,7 @@
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Already have an account? Log In"
+            android:text="@string/already_have_an_account_log_in"
             android:textColor="#D49134"
         android:gravity="center" />
     </LinearLayout>
