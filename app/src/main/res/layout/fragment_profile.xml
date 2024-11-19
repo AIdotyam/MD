@@ -2,8 +2,10 @@
 <LinearLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    tools:context=".presentation.profile.ProfileFragment"
     android:orientation="vertical"
     android:padding="16dp"
     android:gravity="center_horizontal">
@@ -14,8 +16,7 @@
         android:layout_width="100dp"
         android:layout_height="100dp"
         android:layout_marginBottom="16dp"
-        android:background="@drawable/circle_placeholder"
-        android:contentDescription="@string/profile_image_desc" />
+        android:background="@drawable/circle_placeholder"/>
 
     <!-- Username -->
     <TextView
@@ -23,7 +24,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginBottom="24dp"
-        android:text="@string/username_placeholder"
+        android:text="username"
         android:textSize="18sp"
         android:textStyle="bold" />
 
@@ -39,14 +40,14 @@
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
-            android:hint="@string/email_hint"
+            android:hint="email"
             android:inputType="textEmailAddress" />
 
         <Button
             android:id="@+id/changeEmailButton"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="@string/change_button_text" />
+            android:text="change" />
     </LinearLayout>
 
     <!-- Phone Number and Logout Button -->
@@ -61,14 +62,14 @@
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
-            android:hint="@string/phone_hint"
+            android:hint="phone"
             android:inputType="phone" />
 
         <Button
             android:id="@+id/logoutButton"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="@string/logout_button_text" />
+            android:text="change" />
     </LinearLayout>
 
     <!-- Notification Settings -->
@@ -122,7 +123,7 @@
         android:id="@+id/telegramAlertsLink"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="@string/telegram_alerts_link"
+        android:text="link"
         android:textStyle="italic"
         android:autoLink="web" />
 </LinearLayout>

@@ -15,6 +15,9 @@
     <string name="confirm_password">Confirm Password</string>
     <string name="sign_up">Sign Up</string>
     <string name="already_have_an_account_log_in">Already have an account? Log In</string>
+    <string name="notification_settings_title"> Notification Settings</string>
+    <string name="push_notifications">Push Notifications</string>
+    <string name="email_notifications">Email Notifications</string>
 
     <string name="home">Home</string>
     <string name="alerts">Alerts</string>
