@@ -1,13 +1,114 @@
 <?xml version="1.0" encoding="utf-8"?>
-<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:padding="16dp"
     tools:context=".presentation.alerts.AlertsFragment">
 
+    <!-- Recent Alerts Section -->
     <TextView
+        android:id="@+id/recent_alerts_title"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:text="Hello" />
+        android:layout_height="wrap_content"
+        android:text="Recent Alerts"
+        android:textAppearance="@style/TextAppearance.Material3.TitleMedium"
+        android:paddingBottom="8dp" />
 
-</FrameLayout>
+    <!-- Single Alert Item -->
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:gravity="center_vertical"
+        android:paddingBottom="8dp">
+
+        <ImageView
+            android:layout_width="24dp"
+            android:layout_height="24dp"
+            android:src="@drawable/ic_mortality"
+            android:contentDescription="@string/recent_alert_icon_desc" />
+
+        <TextView
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:paddingStart="8dp"
+            android:text="High Mortality Detected\n12/5/24 - 14:46"
+            android:textAppearance="@style/TextAppearance.Material3.BodyMedium" />
+
+        <Button
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Mark as Read"
+            style="@style/Widget.Material3.Button.TextButton" />
+    </LinearLayout>
+
+    <Button
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Clear All"
+        android:layout_gravity="end"
+        style="@style/Widget.Material3.Button.TextButton"
+        android:paddingTop="8dp" />
+
+    <!-- Filter Alerts Section -->
+    <TextView
+        android:id="@+id/filter_alerts_title"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Filter Alerts"
+        android:textAppearance="@style/TextAppearance.Material3.TitleMedium"
+        android:paddingTop="16dp"
+        android:paddingBottom="8dp" />
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:paddingBottom="16dp"
+        android:gravity="start">
+
+        <com.google.android.material.chip.Chip
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Mortality"
+            style="@style/Widget.Material3.Chip.Filter" />
+
+        <com.google.android.material.chip.Chip
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Crowding"
+            style="@style/Widget.Material3.Chip.Filter" />
+
+        <com.google.android.material.chip.Chip
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Feeding"
+            style="@style/Widget.Material3.Chip.Filter" />
+
+        <com.google.android.material.chip.Chip
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Other"
+            style="@style/Widget.Material3.Chip.Filter" />
+    </LinearLayout>
+
+    <!-- Alerts History Section -->
+    <TextView
+        android:id="@+id/alerts_history_title"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Alerts History"
+        android:textAppearance="@style/TextAppearance.Material3.TitleMedium"
+        android:paddingBottom="8dp" />
+
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/alerts_history_recycler_view"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1"
+        tools:listitem="@layout/item_alert_history" />
+</LinearLayout>
