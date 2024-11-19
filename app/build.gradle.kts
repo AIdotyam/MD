@@ -66,18 +66,13 @@ dependencies {
     implementation(libs.converter.gson)
     implementation(libs.gson)
 
-    val camerax_version = "1.3.0"
     // The following line is optional, as the core library is included indirectly by camera-camera2
-    implementation("androidx.camera:camera-core:${camerax_version}")
-    implementation("androidx.camera:camera-camera2:${camerax_version}")
+    implementation(libs.androidx.camera.core)
+    implementation(libs.androidx.camera.camera2)
 
     // If you want to additionally use the CameraX Lifecycle library
-    implementation("androidx.camera:camera-lifecycle:${camerax_version}")
+    implementation(libs.androidx.camera.lifecycle)
 
     // If you want to additionally use the CameraX View class
-    implementation("androidx.camera:camera-view:${camerax_version}")
-
-    testImplementation("junit:junit:4.13.2")
-    androidTestImplementation("androidx.test.ext:junit:1.1.5")
-    androidTestImplementation("androidx.test.espresso:espresso-core:3.5.1")
+    implementation(libs.androidx.camera.view)
 }

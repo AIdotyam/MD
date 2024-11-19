@@ -1,6 +1,6 @@
 package com.capstone.aiyam.presentation.classification
 
-import android.Manifest
+import android.annotation.SuppressLint
 import android.content.ContentValues
 import android.content.DialogInterface
 import android.content.pm.PackageManager
@@ -40,7 +40,6 @@ import java.util.*
 import java.util.concurrent.TimeUnit
 
 class ClassificationFragment : Fragment() {
-
     private var _binding: FragmentClassificationBinding? = null
     private val binding get() = _binding!!
 
@@ -68,13 +67,23 @@ class ClassificationFragment : Fragment() {
     private lateinit var cameraProvider: ProcessCameraProvider
     private lateinit var camera: Camera
     private lateinit var cameraSelector: CameraSelector
+
     private var orientationEventListener: OrientationEventListener? = null
     private var lensFacing = CameraSelector.LENS_FACING_BACK
     private var aspectRatio = AspectRatio.RATIO_16_9
 
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-        setContentView(binding.root)
+    override fun onCreateView(
+        inflater: LayoutInflater,
+        container: ViewGroup?,
+        savedInstanceState: Bundle?
+    ): View {
+        _binding = FragmentClassificationBinding.inflate(inflater, container, false)
+        return binding.root
+    }
+
+    @SuppressLint("SetTextI18n")
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
 
         if (checkMultiplePermission()) {
             startCamera()
@@ -130,7 +139,7 @@ class ClassificationFragment : Fragment() {
         val listPermissionNeeded = arrayListOf<String>()
         for (permission in multiplePermissionNameList) {
             if (ContextCompat.checkSelfPermission(
-                    this,
+                    requireContext(),
                     permission
                 ) != PackageManager.PERMISSION_GRANTED
             ) {
@@ -139,7 +148,7 @@ class ClassificationFragment : Fragment() {
         }
         if (listPermissionNeeded.isNotEmpty()) {
             ActivityCompat.requestPermissions(
-                this,
+                requireActivity(),
                 listPermissionNeeded.toTypedArray(),
                 multiplePermissionId
             )
@@ -148,6 +157,7 @@ class ClassificationFragment : Fragment() {
         return true
     }
 
+    @Deprecated("Deprecated in Java")
     override fun onRequestPermissionsResult(
         requestCode: Int,
         permissions: Array<out String>,
@@ -170,12 +180,12 @@ class ClassificationFragment : Fragment() {
                     var someDenied = false
                     for (permission in permissions) {
                         if (!ActivityCompat.shouldShowRequestPermissionRationale(
-                                this,
+                                requireActivity(),
                                 permission
                             )
                         ) {
                             if (ActivityCompat.checkSelfPermission(
-                                    this,
+                                    requireContext(),
                                     permission
                                 ) == PackageManager.PERMISSION_DENIED
                             ) {
@@ -186,10 +196,10 @@ class ClassificationFragment : Fragment() {
                     if (someDenied) {
                         // here app Setting open because all permission is not granted
                         // and permanent denied
-                        appSettingOpen(this)
+                        appSettingOpen(requireContext())
                     } else {
                         // here warning permission show
-                        warningPermissionDialog(this) { _: DialogInterface, which: Int ->
+                        warningPermissionDialog(requireContext()) { _: DialogInterface, which: Int ->
                             when (which) {
                                 DialogInterface.BUTTON_POSITIVE -> checkMultiplePermission()
                             }
@@ -201,11 +211,11 @@ class ClassificationFragment : Fragment() {
     }
 
     private fun startCamera() {
-        val cameraProviderFuture = ProcessCameraProvider.getInstance(this)
+        val cameraProviderFuture = ProcessCameraProvider.getInstance(requireContext())
         cameraProviderFuture.addListener({
             cameraProvider = cameraProviderFuture.get()
             bindCameraUserCases()
-        }, ContextCompat.getMainExecutor(this))
+        }, ContextCompat.getMainExecutor(requireContext()))
     }
 
     private fun bindCameraUserCases() {
@@ -252,7 +262,7 @@ class ClassificationFragment : Fragment() {
             .requireLensFacing(lensFacing)
             .build()
 
-        orientationEventListener = object : OrientationEventListener(this) {
+        orientationEventListener = object : OrientationEventListener(requireContext()) {
             override fun onOrientationChanged(orientation: Int) {
                 // Monitors orientation values to determine the target rotation value
                 val myRotation = when (orientation) {
@@ -289,7 +299,7 @@ class ClassificationFragment : Fragment() {
             }
         }
 
-        val scaleGestureDetector = ScaleGestureDetector(this, listener)
+        val scaleGestureDetector = ScaleGestureDetector(requireContext(), listener)
 
         binding.previewView.setOnTouchListener { view, event ->
             scaleGestureDetector.onTouchEvent(event)
@@ -306,7 +316,7 @@ class ClassificationFragment : Fragment() {
                 val focusCircle = RectF(x - 50, y - 50, x + 50, y + 50)
 
                 _binding?.focusCircleView?.focusCircle = focusCircle
-                _binding?.focusCircleView.invalidate()
+                _binding?.focusCircleView?.invalidate()
 
                 camera.cameraControl.startFocusAndMetering(action)
 
@@ -327,7 +337,7 @@ class ClassificationFragment : Fragment() {
             }
         } else {
             Toast.makeText(
-                this,
+                requireContext(),
                 "Flash is Not Available",
                 Toast.LENGTH_LONG
             ).show()
@@ -362,25 +372,25 @@ class ClassificationFragment : Fragment() {
         }
         val outputOption =
             if (Build.VERSION.SDK_INT > Build.VERSION_CODES.P) {
-                OutputFileOptions.Builder(
+                ImageCapture.OutputFileOptions.Builder(
                     contentResolver,
                     MediaStore.Images.Media.EXTERNAL_CONTENT_URI,
                     contentValues
                 ).setMetadata(metadata).build()
             } else {
                 val imageFile = File(imageFolder, fileName)
-                OutputFileOptions.Builder(imageFile)
+                ImageCapture.OutputFileOptions.Builder(imageFile)
                     .setMetadata(metadata).build()
             }
 
         imageCapture.takePicture(
             outputOption,
-            ContextCompat.getMainExecutor(this),
+            ContextCompat.getMainExecutor(requireContext()),
             object : ImageCapture.OnImageSavedCallback {
                 override fun onImageSaved(outputFileResults: ImageCapture.OutputFileResults) {
                     val message = "Photo Capture Succeeded: ${outputFileResults.savedUri}"
                     Toast.makeText(
-                        this@ClassificationFragment,
+                        requireContext(),
                         message,
                         Toast.LENGTH_LONG
                     ).show()
@@ -388,7 +398,7 @@ class ClassificationFragment : Fragment() {
 
                 override fun onError(exception: ImageCaptureException) {
                     Toast.makeText(
-                        this@ClassificationFragment,
+                        requireContext(),
                         exception.message.toString(),
                         Toast.LENGTH_LONG
                     ).show()
@@ -413,7 +423,6 @@ class ClassificationFragment : Fragment() {
         binding.flipCameraIB.gone()
         binding.aspectRatioTxt.gone()
         binding.changeCameraToVideoIB.gone()
-
 
         val curRecording = recording
         if (curRecording != null) {
@@ -450,7 +459,7 @@ class ClassificationFragment : Fragment() {
                     withAudioEnabled()
                 }
             }
-            .start(ContextCompat.getMainExecutor(this)) { recordEvent ->
+            .start(ContextCompat.getMainExecutor(requireContext())) { recordEvent ->
                 when (recordEvent) {
                     is VideoRecordEvent.Start -> {
                         binding.captureIB.setImageResource(R.drawable.ic_stop)
@@ -462,7 +471,7 @@ class ClassificationFragment : Fragment() {
                             val message =
                                 "Video Capture Succeeded: " + "${recordEvent.outputResults.outputUri}"
                             Toast.makeText(
-                                this@ClassificationFragment,
+                                requireContext(),
                                 message,
                                 Toast.LENGTH_LONG
                             ).show()
@@ -484,7 +493,6 @@ class ClassificationFragment : Fragment() {
 
     }
 
-
     override fun onResume() {
         super.onResume()
         orientationEventListener?.enable()
@@ -498,7 +506,9 @@ class ClassificationFragment : Fragment() {
             captureVideo()
         }
     }
+
     private val handler = Handler(Looper.getMainLooper())
+
     private val updateTimer = object : Runnable{
         override fun run() {
             val currentTime = SystemClock.elapsedRealtime() - binding.recodingTimerC.base
@@ -508,6 +518,7 @@ class ClassificationFragment : Fragment() {
         }
     }
 
+    @SuppressLint("DefaultLocale")
     private fun Long.toFormattedTime():String{
         val seconds = ((this / 1000) % 60).toInt()
         val minutes = ((this / (1000 * 60)) % 60).toInt()
@@ -526,10 +537,10 @@ class ClassificationFragment : Fragment() {
         binding.recodingTimerC.start()
         handler.post(updateTimer)
     }
+
     private fun stopRecording(){
         binding.recodingTimerC.gone()
         binding.recodingTimerC.stop()
         handler.removeCallbacks(updateTimer)
     }
-
 }
