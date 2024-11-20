@@ -6,7 +6,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@color/black"
-    tools:context=".presentation.classification.ClassificationFragment">
+    tools:context=".presentation.core.classification.ClassificationFragment">
 
     <!-- Preview Camera -->
     <androidx.camera.view.PreviewView
@@ -19,7 +19,7 @@
         app:layout_constraintEnd_toEndOf="parent" />
 
     <!-- Focus Circle View -->
-    <com.capstone.aiyam.presentation.classification.FocusCircleView
+    <com.capstone.aiyam.presentation.core.classification.FocusCircleView
         android:id="@+id/focusCircleView"
         android:layout_width="0dp"
         android:layout_height="0dp"

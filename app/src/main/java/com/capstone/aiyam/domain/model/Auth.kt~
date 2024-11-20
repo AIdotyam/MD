@@ -1,0 +1,7 @@
+package com.capstone.aiyam.domain.model
+
+data class Auth(
+    val name: String,
+    val token: String,
+    val userId: String
+)

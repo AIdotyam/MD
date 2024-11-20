@@ -1,6 +1,19 @@
+import java.util.Properties
+
 plugins {
     alias(libs.plugins.android.application)
     alias(libs.plugins.kotlin.android)
+    id("androidx.navigation.safeargs.kotlin")
+    id("kotlin-parcelize")
+    id("com.google.gms.google-services")
+    id("com.google.devtools.ksp")
+    id("com.google.dagger.hilt.android")
+}
+
+val apikeyPropertiesFile = rootProject.file("apikey.properties")
+val apikeyProperties = Properties()
+if (apikeyPropertiesFile.exists()) {
+    apikeyProperties.load(apikeyPropertiesFile.inputStream())
 }
 
 android {
@@ -15,6 +28,13 @@ android {
         versionName = "1.0"
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
+
+        // Access the CLIENT_KEY property and set it in BuildConfig
+        buildConfigField(
+            "String",
+            "CLIENT_KEY",
+            "\"${apikeyProperties["CLIENT_KEY"]}\""
+        )
     }
 
     buildTypes {
@@ -35,6 +55,7 @@ android {
     }
     buildFeatures {
         viewBinding = true
+        buildConfig = true
     }
 }
 
@@ -66,13 +87,24 @@ dependencies {
     implementation(libs.converter.gson)
     implementation(libs.gson)
 
-    // The following line is optional, as the core library is included indirectly by camera-camera2
+    // CameraX
     implementation(libs.androidx.camera.core)
     implementation(libs.androidx.camera.camera2)
-
-    // If you want to additionally use the CameraX Lifecycle library
     implementation(libs.androidx.camera.lifecycle)
-
-    // If you want to additionally use the CameraX View class
     implementation(libs.androidx.camera.view)
+
+    // Firebase
+    implementation(platform(libs.firebase.bom))
+    implementation(libs.firebase.analytics)
+    implementation(libs.firebase.auth)
+
+    // Auth
+    implementation(libs.play.services.auth)
+    implementation(libs.androidx.credentials.play.services.auth)
+    implementation(libs.androidx.credentials)
+    implementation(libs.googleid)
+
+    //Dependency Injection
+    ksp(libs.hilt.android.compiler)
+    implementation(libs.hilt.android)
 }

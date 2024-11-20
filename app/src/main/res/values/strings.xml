@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">aiyam</string>
+    <string name="app_name">AI.yam</string>
     <string name="hello_blank_fragment">Hello blank fragment</string>
     <string name="log_in_to_your_account">Log in to your account</string>
     <string name="email">Email</string>
@@ -24,4 +24,31 @@
     <string name="detail">Detail</string>
     <string name="upload">Upload</string>
     <string name="profile">Profile</string>
+
+    <string name="camera">Camera</string>
+    <string name="gallery">Gallery</string>
+
+    <!-- Auth -->
+    <string name="signup">Register</string>
+    <string name="login">Sign In</string>
+    <string name="logout">Sign Out</string>
+
+    <string name="title_signup_page">New here?</string>
+    <string name="message_signup_page">Please fill out this form to continue</string>
+    <string name="message_signup_page_sign_in">Already have an account? Sign In</string>
+
+    <string name="title_login_page">Welcome Back!</string>
+    <string name="message_login_page">Lets log back in to your account</string>
+    <string name="message_login_page_sign_up">Don\'t have an account? Sign Up</string>
+
+    <string name="greeting">Halo %1$s,</string>
+    <string name="email_hint">example@google.com</string>
+    <string name="description">Description</string>
+
+    <!-- Confirmation -->
+    <string name="yes">Yes, please</string>
+    <string name="no">No, I\'m kidding</string>
+    <string name="are_you_sure_you_want_to_log_out">Are you sure you want to leave?</string>
+    <string name="confirmation">Sign Out</string>
+    <string name="name">Full Name</string>
 </resources>

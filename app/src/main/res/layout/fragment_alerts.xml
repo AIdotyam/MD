@@ -6,7 +6,7 @@
     android:layout_height="match_parent"
     android:orientation="vertical"
     android:padding="16dp"
-    tools:context=".presentation.alerts.AlertsFragment">
+    tools:context=".presentation.core.alerts.AlertsFragment">
 
     <!-- Recent Alerts Section -->
     <TextView
@@ -28,8 +28,8 @@
         <ImageView
             android:layout_width="24dp"
             android:layout_height="24dp"
-            android:src="@drawable/ic_mortality"
-            android:contentDescription="@string/recent_alert_icon_desc" />
+            android:src="@drawable/baseline_warning_24"
+            android:contentDescription="@string/todo" />
 
         <TextView
             android:layout_width="0dp"
