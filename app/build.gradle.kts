@@ -33,7 +33,7 @@ android {
         buildConfigField(
             "String",
             "CLIENT_KEY",
-            "\"${apikeyProperties["CLIENT_KEY"]}\""
+            "${apikeyProperties["CLIENT_KEY"]}"
         )
     }
 

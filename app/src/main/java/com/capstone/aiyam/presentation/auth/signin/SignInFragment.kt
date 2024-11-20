@@ -15,8 +15,10 @@ import androidx.lifecycle.repeatOnLifecycle
 import androidx.navigation.fragment.findNavController
 import com.capstone.aiyam.databinding.FragmentSigninBinding
 import com.capstone.aiyam.domain.model.AuthenticationResponse
+import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.launch
 
+@AndroidEntryPoint
 class SignInFragment : Fragment() {
     private var _binding: FragmentSigninBinding? = null
     private val binding get() = _binding!!
@@ -97,13 +99,16 @@ class SignInFragment : Fragment() {
         val passwordEditTextLayout = ObjectAnimator.ofFloat(passwordEditTextLayout, View.ALPHA, 1f).setDuration(100)
         val signup = ObjectAnimator.ofFloat(signInTextView, View.ALPHA, 1f).setDuration(100)
         val login = ObjectAnimator.ofFloat(signInButton, View.ALPHA, 1f).setDuration(100)
+        val divider = ObjectAnimator.ofFloat(signInWith, View.ALPHA, 1f).setDuration(100)
+        val google = ObjectAnimator.ofFloat(googleSignInButton, View.ALPHA, 1f).setDuration(100)
 
         AnimatorSet().apply {
             playSequentially(
                 title, message,
                 emailEditTextLayout,
                 passwordEditTextLayout,
-                signup, login
+                signup, login,
+                divider, google
             )
             startDelay = 100
         }.start()
