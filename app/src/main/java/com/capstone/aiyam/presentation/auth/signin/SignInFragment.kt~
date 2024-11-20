@@ -69,10 +69,10 @@ class SignInFragment : Fragment() {
                 onLoading(false)
                 showToast(result.message)
             }
-            is AuthenticationResponse.Loading -> {
+            AuthenticationResponse.Loading -> {
                 onLoading(true)
             }
-            is AuthenticationResponse.Success -> {
+            AuthenticationResponse.Success -> {
                 onLoading(false)
                 showToast("Successfully signed in")
                 SignInFragmentDirections.actionSigninFragmentToHomeFragment().let {

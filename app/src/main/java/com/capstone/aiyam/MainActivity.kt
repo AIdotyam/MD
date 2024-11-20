@@ -1,6 +1,7 @@
 package com.capstone.aiyam
 
 import android.os.Bundle
+import android.view.View
 import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.ViewCompat
@@ -20,6 +21,8 @@ class MainActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
+
+        // Handle window insets for padding
         ViewCompat.setOnApplyWindowInsetsListener(binding.root) { v, insets ->
             val systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars())
             v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom)
@@ -38,6 +41,17 @@ class MainActivity : AppCompatActivity() {
         val navHostFragment = supportFragmentManager.findFragmentById(R.id.nav_host_fragment_activity_main) as NavHostFragment
         val navController = navHostFragment.navController
 
+        // Attach the BottomNavigationView to the NavController
         navView.setupWithNavController(navController)
+
+        // Hide BottomNavigationView in specific fragments
+        navController.addOnDestinationChangedListener { _, destination, _ ->
+            when (destination.id) {
+                R.id.splashFragment -> navView.visibility = View.GONE
+                R.id.signinFragment -> navView.visibility = View.GONE
+                R.id.signupFragment -> navView.visibility = View.GONE
+                else -> navView.visibility = View.VISIBLE
+            }
+        }
     }
 }

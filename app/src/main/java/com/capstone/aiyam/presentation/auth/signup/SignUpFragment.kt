@@ -16,8 +16,10 @@ import androidx.navigation.fragment.findNavController
 import com.capstone.aiyam.databinding.FragmentSignupBinding
 import com.capstone.aiyam.domain.model.AuthenticationResponse
 import com.capstone.aiyam.presentation.auth.signin.SignInFragmentDirections
+import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.launch
 
+@AndroidEntryPoint
 class SignUpFragment : Fragment() {
     private var _binding: FragmentSignupBinding? = null
     private val binding get() = _binding!!
@@ -47,6 +49,11 @@ class SignUpFragment : Fragment() {
             val name = nameEditText.text.toString()
             val email = emailEditText.text.toString()
             val password = passwordEditText.text.toString()
+            val confirmPassword = confirmPasswordEditText.text.toString()
+
+            if (!validateInput(email, password, confirmPassword)) {
+                return@setOnClickListener
+            }
 
             lifecycleScope.launch {
                 viewLifecycleOwner.repeatOnLifecycle(Lifecycle.State.CREATED) {
@@ -58,16 +65,28 @@ class SignUpFragment : Fragment() {
         }
     }}
 
+    private fun validateInput(email: String, password: String, confirmPassword: String): Boolean {
+        if (email.isEmpty() || password.isEmpty() || confirmPassword.isEmpty()) {
+            showToast("Please fill all the fields")
+            return false
+        }
+        if (password != confirmPassword) {
+            showToast("Password does not match")
+            return false
+        }
+        return true
+    }
+
     private fun handleOnAuth(result: AuthenticationResponse) {
         when(result) {
             is AuthenticationResponse.Error -> {
                 onLoading(false)
                 showToast(result.message)
             }
-            AuthenticationResponse.Loading -> {
+            is AuthenticationResponse.Loading -> {
                 onLoading(true)
             }
-            AuthenticationResponse.Success -> {
+            is AuthenticationResponse.Success -> {
                 onLoading(false)
                 showToast("Successfully signed up")
                 SignInFragmentDirections.actionSigninFragmentToHomeFragment().let {
@@ -93,6 +112,7 @@ class SignUpFragment : Fragment() {
         val nameEditTextLayout = ObjectAnimator.ofFloat(nameEditTextLayout, View.ALPHA, 1f).setDuration(100)
         val emailEditTextLayout = ObjectAnimator.ofFloat(emailEditTextLayout, View.ALPHA, 1f).setDuration(100)
         val passwordEditTextLayout = ObjectAnimator.ofFloat(passwordEditTextLayout, View.ALPHA, 1f).setDuration(100)
+        val confirmPasswordEditTextLayout = ObjectAnimator.ofFloat(confirmPasswordEditTextLayout, View.ALPHA, 1f).setDuration(100)
         val login = ObjectAnimator.ofFloat(signUpTextView, View.ALPHA, 1f).setDuration(100)
         val signup = ObjectAnimator.ofFloat(signUpButton, View.ALPHA, 1f).setDuration(100)
 
@@ -102,6 +122,7 @@ class SignUpFragment : Fragment() {
                 nameEditTextLayout,
                 emailEditTextLayout,
                 passwordEditTextLayout,
+                confirmPasswordEditTextLayout,
                 login, signup
             )
             startDelay = 100

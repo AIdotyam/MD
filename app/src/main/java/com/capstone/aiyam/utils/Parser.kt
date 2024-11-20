@@ -20,3 +20,7 @@ fun String.parseDate(): String? {
 fun CharSequence.parseEmail(): Boolean {
     return Patterns.EMAIL_ADDRESS.matcher(this).matches()
 }
+
+fun String.parsePassword(): Boolean {
+    return this.length >= 8 && this.any { it.isDigit() } && this.any { it.isLetter() } && this.any { !it.isLetterOrDigit() } && this.none { it.isWhitespace() } && this.none { !it.isLetterOrDigit() } && this.none { !it.isLetter() } && this.none { !it.isDigit() }
+}

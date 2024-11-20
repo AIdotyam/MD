@@ -14,8 +14,10 @@ import androidx.lifecycle.repeatOnLifecycle
 import androidx.navigation.fragment.findNavController
 import com.capstone.aiyam.databinding.FragmentSplashBinding
 import com.capstone.aiyam.domain.model.AuthorizationResponse
+import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.launch
 
+@AndroidEntryPoint
 class SplashFragment : Fragment() {
     private var _binding: FragmentSplashBinding? = null
     private val binding get() = _binding!!

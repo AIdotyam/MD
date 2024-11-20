@@ -24,7 +24,6 @@ import com.capstone.aiyam.BuildConfig
 import com.capstone.aiyam.domain.repository.AuthenticationRepository
 import com.capstone.aiyam.utils.createNonce
 import com.google.firebase.auth.FirebaseAuth
-import com.google.firebase.auth.FirebaseAuthInvalidCredentialsException
 import javax.inject.Inject
 
 class AuthenticationRepositoryImpl @Inject constructor(
@@ -53,12 +52,6 @@ class AuthenticationRepositoryImpl @Inject constructor(
         } catch (e: CreateCredentialException) {
             e.printStackTrace()
             emit(AuthenticationResponse.Error("Failed"))
-        } catch (e: FirebaseAuthInvalidCredentialsException) {
-            e.printStackTrace()
-            emit(AuthenticationResponse.Error("Invalid credentials"))
-        } catch (e: Exception) {
-            e.printStackTrace()
-            emit(AuthenticationResponse.Error(e.message ?: ""))
         }
     }
 
