@@ -57,7 +57,9 @@
             app:popUpToInclusive="true" />
         <action
             android:id="@+id/action_signinFragment_to_homeFragment"
-            app:destination="@id/homeFragment" />
+            app:destination="@id/homeFragment"
+            app:popUpTo="@id/signinFragment"
+            app:popUpToInclusive="true" />
     </fragment>
     <fragment
         android:id="@+id/signupFragment"
