@@ -16,7 +16,8 @@
         android:layout_width="100dp"
         android:layout_height="100dp"
         android:layout_marginBottom="16dp"
-        android:background="@drawable/circle_placeholder"/>
+        android:background="@drawable/circle_placeholder"
+        android:contentDescription="@string/todo" />
 
     <!-- Username -->
     <TextView
@@ -24,7 +25,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginBottom="24dp"
-        android:text="username"
+        android:text="@string/username"
         android:textSize="18sp"
         android:textStyle="bold" />
 
@@ -40,14 +41,16 @@
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
-            android:hint="email"
-            android:inputType="textEmailAddress" />
+            android:autofillHints=""
+            android:hint="@string/email"
+            android:inputType="textEmailAddress"
+            android:enabled="false" />
 
         <Button
-            android:id="@+id/changeEmailButton"
+            android:id="@+id/logoutButton"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="change" />
+            android:text="@string/logout" />
     </LinearLayout>
 
     <!-- Phone Number and Logout Button -->
@@ -62,14 +65,15 @@
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
-            android:hint="phone"
+            android:autofillHints=""
+            android:hint="@string/phone"
             android:inputType="phone" />
 
         <Button
-            android:id="@+id/logoutButton"
+            android:id="@+id/phoneChange"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="change" />
+            android:text="@string/change" />
     </LinearLayout>
 
     <!-- Notification Settings -->

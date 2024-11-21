@@ -15,7 +15,6 @@ import androidx.lifecycle.repeatOnLifecycle
 import androidx.navigation.fragment.findNavController
 import com.capstone.aiyam.databinding.FragmentSignupBinding
 import com.capstone.aiyam.domain.model.AuthenticationResponse
-import com.capstone.aiyam.presentation.auth.signin.SignInFragmentDirections
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.launch
 
@@ -89,7 +88,7 @@ class SignUpFragment : Fragment() {
             is AuthenticationResponse.Success -> {
                 onLoading(false)
                 showToast("Successfully signed up")
-                SignInFragmentDirections.actionSigninFragmentToHomeFragment().let {
+                SignUpFragmentDirections.actionSignupFragmentToSigninFragment().let {
                     findNavController().navigate(it)
                 }
             }

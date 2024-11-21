@@ -25,6 +25,7 @@ import com.capstone.aiyam.domain.repository.AuthenticationRepository
 import com.capstone.aiyam.utils.createNonce
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.FirebaseAuthInvalidCredentialsException
+import com.google.firebase.auth.FirebaseAuthUserCollisionException
 import javax.inject.Inject
 
 class AuthenticationRepositoryImpl @Inject constructor(
@@ -38,7 +39,21 @@ class AuthenticationRepositoryImpl @Inject constructor(
         try {
             manager.createCredential(context, CreatePasswordRequest(email, password))
 
-            auth.createUserWithEmailAndPassword(email, password).await()
+            try {
+                auth.createUserWithEmailAndPassword(email, password).await()
+            } catch (e: FirebaseAuthUserCollisionException) {
+                emit(AuthenticationResponse.Error("Email already in use"))
+                return@flow
+            } catch (e: FirebaseAuthInvalidCredentialsException) {
+                emit(AuthenticationResponse.Error("Invalid credentials"))
+                return@flow
+            } catch (e: CreateCredentialCancellationException) {
+                emit(AuthenticationResponse.Error("Cancelled"))
+                return@flow
+            } catch (e: Exception) {
+                emit(AuthenticationResponse.Error("Failed to create account"))
+                return@flow
+            }
 
             auth.currentUser?.updateProfile(
                 UserProfileChangeRequest.Builder()
@@ -47,18 +62,10 @@ class AuthenticationRepositoryImpl @Inject constructor(
             )
 
             emit(AuthenticationResponse.Success)
-        } catch (e: CreateCredentialCancellationException) {
-            e.printStackTrace()
-            emit(AuthenticationResponse.Error("Cancelled"))
-        } catch (e: CreateCredentialException) {
-            e.printStackTrace()
-            emit(AuthenticationResponse.Error("Failed"))
-        } catch (e: FirebaseAuthInvalidCredentialsException) {
-            e.printStackTrace()
-            emit(AuthenticationResponse.Error("Invalid credentials"))
         } catch (e: Exception) {
             e.printStackTrace()
-            emit(AuthenticationResponse.Error(e.message ?: ""))
+            emit(AuthenticationResponse.Error("Failed"))
+            return@flow
         }
     }
 
@@ -77,9 +84,11 @@ class AuthenticationRepositoryImpl @Inject constructor(
             }
         } catch (e: GetCredentialException) {
             e.printStackTrace()
+            // Don't handle
         } catch (e: NoCredentialException) {
             e.printStackTrace()
             manager.createCredential(context, CreatePasswordRequest(email, password))
+            // Don't handle
         }
 
         try {
@@ -87,6 +96,7 @@ class AuthenticationRepositoryImpl @Inject constructor(
             emit(AuthenticationResponse.Success)
         } catch (e: Exception) {
             emit(AuthenticationResponse.Error("Sign-in failed: ${e.message}"))
+            return@flow
         }
     }
 
@@ -123,9 +133,12 @@ class AuthenticationRepositoryImpl @Inject constructor(
         } catch (e: GoogleIdTokenParsingException) {
             e.printStackTrace()
             emit(AuthenticationResponse.Error(e.message ?: ""))
-        } catch (e: Exception) {
+            return@flow
+        }
+        catch (e: Exception) {
             e.printStackTrace()
             emit(AuthenticationResponse.Error(e.message ?: ""))
+            return@flow
         }
     }
 }
