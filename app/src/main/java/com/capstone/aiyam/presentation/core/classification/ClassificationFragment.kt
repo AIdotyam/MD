@@ -9,11 +9,16 @@ import android.graphics.RectF
 import android.os.*
 import android.provider.MediaStore
 import android.util.Log
+import android.view.LayoutInflater
 import android.view.MotionEvent
 import android.view.OrientationEventListener
 import android.view.ScaleGestureDetector
 import android.view.Surface
+import android.view.View
+import android.view.ViewGroup
 import android.widget.Toast
+import androidx.activity.result.PickVisualMediaRequest
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.camera.core.*
 import androidx.camera.lifecycle.ProcessCameraProvider
 import androidx.camera.video.*
@@ -29,7 +34,6 @@ import java.util.*
 import java.util.concurrent.TimeUnit
 
 class ClassificationFragment : Fragment(R.layout.fragment_classification) {
-
     private var _binding: FragmentClassificationBinding? = null
     private val binding get() = _binding!!
 
@@ -54,7 +58,19 @@ class ClassificationFragment : Fragment(R.layout.fragment_classification) {
     private var isPhoto = true
     private var orientationEventListener: OrientationEventListener? = null
 
-    override fun onViewCreated(view: android.view.View, savedInstanceState: Bundle?) {
+    private val launcherGallery = registerForActivityResult(ActivityResultContracts.PickVisualMedia()) { uri ->
+        uri?.let { showToast("Selected an image") } ?: showToast("Failed to select an image")
+    }
+
+    private fun startGallery() {
+        launcherGallery.launch(PickVisualMediaRequest(ActivityResultContracts.PickVisualMedia.ImageAndVideo))
+    }
+
+    private fun showToast(message: String) {
+        Toast.makeText(requireContext(), message, Toast.LENGTH_SHORT).show()
+    }
+
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         _binding = FragmentClassificationBinding.bind(view)
 
@@ -62,6 +78,10 @@ class ClassificationFragment : Fragment(R.layout.fragment_classification) {
             startCamera()
         } else {
             requestPermissions(permissions, multiplePermissionId)
+        }
+
+        binding.galleryIB.setOnClickListener{
+            startGallery()
         }
 
         binding.flipCameraIB.setOnClickListener {

@@ -54,4 +54,11 @@
     <string name="username">Username</string>
     <string name="phone">08222222222</string>
     <string name="change">Change</string>
+    <string name="back">Back</string>
+    <string name="date">1 Januari 2023</string>
+    <string name="dead_count">Dead Chicken</string>
+    <string name="chicken_info">Chicken Information</string>
+    <string name="live_count">Living Chicken</string>
+    <string name="crowding">Crowding Index</string>
+    <string name="chicken_count">Chicken Count</string>
 </resources>
