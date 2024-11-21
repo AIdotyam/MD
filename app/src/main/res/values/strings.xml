@@ -51,4 +51,7 @@
     <string name="are_you_sure_you_want_to_log_out">Are you sure you want to leave?</string>
     <string name="confirmation">Sign Out</string>
     <string name="name">Full Name</string>
+    <string name="username">Username</string>
+    <string name="phone">08222222222</string>
+    <string name="change">Change</string>
 </resources>

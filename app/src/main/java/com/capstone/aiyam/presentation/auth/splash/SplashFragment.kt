@@ -8,14 +8,10 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import androidx.lifecycle.Lifecycle
-import androidx.lifecycle.lifecycleScope
-import androidx.lifecycle.repeatOnLifecycle
 import androidx.navigation.fragment.findNavController
 import com.capstone.aiyam.databinding.FragmentSplashBinding
 import com.capstone.aiyam.domain.model.AuthorizationResponse
 import dagger.hilt.android.AndroidEntryPoint
-import kotlinx.coroutines.launch
 
 @AndroidEntryPoint
 class SplashFragment : Fragment() {
@@ -35,25 +31,18 @@ class SplashFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        lifecycleScope.launch {
-            viewLifecycleOwner.repeatOnLifecycle(Lifecycle.State.CREATED) {
-                viewModel.getUser().collect {
-                    when(it) {
-                        is AuthorizationResponse.Success -> {
-                            Handler(Looper.getMainLooper()).postDelayed({
-                                findNavController().navigate(SplashFragmentDirections.actionSplashFragmentToHomeFragment())
-                            }, 3000)
-                        }
-                        is AuthorizationResponse.Error -> {
-                            Handler(Looper.getMainLooper()).postDelayed({
-                                findNavController().navigate(SplashFragmentDirections.actionSplashFragmentToSigninFragment())
-                            }, 3000)
-                        }
-                        else -> {}
-                    }
-                }
+        val action = when(viewModel.getUser()) {
+            is AuthorizationResponse.Success -> {
+                SplashFragmentDirections.actionSplashFragmentToHomeFragment()
+            }
+            is AuthorizationResponse.Error -> {
+                SplashFragmentDirections.actionSplashFragmentToSigninFragment()
             }
         }
+
+        Handler(Looper.getMainLooper()).postDelayed({
+            findNavController().navigate(action)
+        }, 2000)
     }
 
     override fun onDestroyView() {
