@@ -88,7 +88,7 @@ class SignUpFragment : Fragment() {
             is AuthenticationResponse.Success -> {
                 onLoading(false)
                 showToast("Successfully signed up")
-                SignUpFragmentDirections.actionSignupFragmentToSigninFragment().let {
+                SignUpFragmentDirections.actionSignupFragmentToHomeFragment().let {
                     findNavController().navigate(it)
                 }
             }
