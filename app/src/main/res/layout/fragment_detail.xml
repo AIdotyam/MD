@@ -20,8 +20,8 @@
 
             <ImageView
                 android:id="@+id/headerImage"
-                android:layout_width="0dp"
-                android:layout_height="0dp"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
                 android:contentDescription="@string/todo"
                 android:scaleType="centerCrop"
                 android:visibility="gone"
@@ -29,8 +29,8 @@
 
             <androidx.media3.ui.PlayerView
                 android:id="@+id/headerVideo"
-                android:layout_width="0dp"
-                android:layout_height="0dp"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
                 android:visibility="gone" />
         </FrameLayout>
 

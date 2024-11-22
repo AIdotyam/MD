@@ -1,14 +1,12 @@
 package com.capstone.aiyam.presentation.core.detail
 
 import android.annotation.SuppressLint
-import android.os.Build
 import androidx.fragment.app.viewModels
 import android.os.Bundle
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import androidx.annotation.RequiresApi
 import androidx.media3.common.MediaItem
 import androidx.media3.exoplayer.ExoPlayer
 import androidx.navigation.fragment.findNavController
@@ -17,7 +15,6 @@ import com.capstone.aiyam.R
 import com.capstone.aiyam.databinding.FragmentDetailBinding
 import com.capstone.aiyam.domain.model.Classification
 import com.capstone.aiyam.utils.getMimeTypeFromUrl
-import com.capstone.aiyam.utils.parseDate
 import com.capstone.aiyam.utils.parseDateTime
 
 class DetailFragment : Fragment() {
@@ -25,6 +22,7 @@ class DetailFragment : Fragment() {
     private val binding get() = _binding!!
 
     private val viewModel: DetailViewModel by viewModels()
+    private var player: ExoPlayer? = null  // Define ExoPlayer instance at class level
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -39,42 +37,55 @@ class DetailFragment : Fragment() {
         return binding.root
     }
 
-    @RequiresApi(Build.VERSION_CODES.O)
     @SuppressLint("SetTextI18n")
-    private fun bindViews(classification: Classification) { binding.apply {
-        dateTitle.text = classification.createdAt.parseDateTime()
+    private fun bindViews(classification: Classification) {
+        binding.apply {
+            dateTitle.text = classification.createdAt.parseDateTime()
 
-        val mediaUrl = classification.mediaUrl
-        val mimeType = mediaUrl.getMimeTypeFromUrl()
-        if (mimeType != null && mimeType.startsWith("video")) {
-            headerVideo.visibility = View.VISIBLE
+            val mediaUrl = classification.mediaUrl
+            val mimeType = mediaUrl.getMimeTypeFromUrl()
 
-            val mediaItem = MediaItem.Builder()
-                .setUri(mediaUrl)
-                .build()
+            if (mimeType != null && mimeType.startsWith("video")) {
+                headerVideo.visibility = View.VISIBLE
 
-            val player = ExoPlayer.Builder(requireContext()).build().also { exoPlayer ->
-                exoPlayer.setMediaItem(mediaItem)
-                exoPlayer.prepare()
+                val mediaItem = MediaItem.Builder()
+                    .setUri(mediaUrl)
+                    .build()
+
+                player = ExoPlayer.Builder(requireContext()).build().also { exoPlayer ->
+                    exoPlayer.setMediaItem(mediaItem)
+                    exoPlayer.prepare()
+                }
+
+                player?.playWhenReady = true
+                binding.headerVideo.player = player
+            } else if (mimeType != null && mimeType.startsWith("image")) {
+                headerImage.visibility = View.VISIBLE
+                Glide.with(requireContext()).load(mediaUrl).into(headerImage)
+            } else {
+                headerImage.visibility = View.VISIBLE
+                Glide.with(requireContext()).load(R.drawable.baseline_broken_image_24).into(headerImage)
             }
 
-            binding.headerVideo.player = player
-        } else if (mimeType != null && mimeType.startsWith("image")) {
-            headerImage.visibility = View.VISIBLE
+            crowdingValue.text = classification.crowdDensity
+            ayamMatiValue.text = classification.deadCount.toString()
+            totalAyamValue.text = classification.chickenCount.toString()
 
-            Glide.with(requireContext()).load(mediaUrl).into(headerImage)
-        } else {
-            headerImage.visibility = View.VISIBLE
-
-            Glide.with(requireContext()).load(R.drawable.baseline_broken_image_24).into(headerImage)
+            backButton.setOnClickListener {
+                findNavController().popBackStack()
+            }
         }
+    }
 
-        crowdingValue.text = classification.crowdDensity
-        ayamMatiValue.text = classification.deadCount.toString()
-        totalAyamValue.text = classification.chickenCount.toString()
+    override fun onDestroyView() {
+        super.onDestroyView()
+        releasePlayer()  // Release the player when view is destroyed
+        _binding = null
+    }
 
-        backButton.setOnClickListener {
-            findNavController().popBackStack()
-        }
-    }}
+    private fun releasePlayer() {
+        player?.release()
+        player = null
+    }
 }
+

@@ -6,6 +6,7 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:orientation="vertical"
     android:padding="16dp"
+    android:layout_marginBottom="?android:attr/actionBarSize"
     tools:context=".presentation.core.alerts.AlertsFragment">
 
     <TextView
@@ -28,7 +29,7 @@
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
-            android:text="Read Alert"
+            android:text="Read"
             android:layout_margin="8dp"
             android:minHeight="48dp"
             android:minWidth="48dp"
@@ -38,13 +39,15 @@
             app:iconStartPadding="8dp"
             app:iconEndPadding="8dp"
             app:chipIconSize="24dp"
+            app:chipIconTint="@color/md_theme_onBackground"
+            app:checkedIcon="@drawable/read_icon"
             style="@style/Widget.Material3.Chip.Filter" />
 
         <com.google.android.material.chip.Chip
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
-            android:text="Unread Alert"
+            android:text="Unread"
             android:layout_margin="8dp"
             android:minHeight="48dp"
             android:minWidth="48dp"
@@ -54,6 +57,8 @@
             app:iconStartPadding="8dp"
             app:iconEndPadding="8dp"
             app:chipIconSize="24dp"
+            app:chipIconTint="@color/md_theme_onBackground"
+            app:checkedIcon="@drawable/unread_icon"
             style="@style/Widget.Material3.Chip.Filter" />
     </LinearLayout>
 

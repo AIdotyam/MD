@@ -1,5 +1,6 @@
 package com.capstone.aiyam.utils
 
+import android.annotation.SuppressLint
 import android.os.Build
 import android.util.Patterns
 import android.webkit.MimeTypeMap
@@ -10,6 +11,7 @@ import java.text.SimpleDateFormat
 import java.time.ZonedDateTime
 import java.time.format.DateTimeFormatter
 import java.util.Locale
+import java.util.TimeZone
 
 fun String.parseDate(): String? {
     return try {
@@ -23,12 +25,29 @@ fun String.parseDate(): String? {
     }
 }
 
-@RequiresApi(Build.VERSION_CODES.O)
 fun String.parseDateTime(): String {
-    val zonedDateTime = ZonedDateTime.parse(this) // Parse the ISO 8601 timestamp
-    val formatter = DateTimeFormatter.ofPattern("MMMM dd, yyyy HH:mm:ss z") // Desired format
-    val formattedDate = zonedDateTime.format(formatter) // Format the date
+    val inputFormat = SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss'Z'", Locale.getDefault())
+    inputFormat.timeZone = TimeZone.getTimeZone("UTC")
+    val date = inputFormat.parse(this)
+
+    val outputFormat = SimpleDateFormat("MMMM dd, yyyy HH:mm:ss z", Locale.getDefault())
+    outputFormat.timeZone = TimeZone.getTimeZone("UTC")
+
+    val formattedDate = date?.let { outputFormat.format(it) } ?: this.parseDate() ?: this
     return formattedDate
+}
+
+@SuppressLint("DefaultLocale")
+fun Long.toFormattedTime():String{
+    val seconds = ((this / 1000) % 60).toInt()
+    val minutes = ((this / (1000 * 60)) % 60).toInt()
+    val hours = ((this / (1000 * 60 * 60)) % 24).toInt()
+
+    return if (hours >0){
+        String.format("%02d:%02d:%02d",hours,minutes,seconds)
+    }else{
+        String.format("%02d:%02d",minutes,seconds)
+    }
 }
 
 fun CharSequence.parseEmail(): Boolean {

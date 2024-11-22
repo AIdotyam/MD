@@ -62,4 +62,5 @@
     <string name="crowding">Crowding Density</string>
     <string name="chicken_count">Chicken Count</string>
     <string name="_32">32</string>
+    <string name="_10_20">10:20</string>
 </resources>

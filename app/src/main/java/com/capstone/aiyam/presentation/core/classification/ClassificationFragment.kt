@@ -33,6 +33,7 @@ import com.capstone.aiyam.databinding.FragmentClassificationBinding
 import com.capstone.aiyam.domain.model.Classification
 import com.capstone.aiyam.presentation.auth.profile.ProfileFragmentDirections
 import com.capstone.aiyam.utils.ResponseWrapper
+import com.capstone.aiyam.utils.toFormattedTime
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.launch
 import java.io.File
@@ -104,16 +105,6 @@ class ClassificationFragment : Fragment() {
             bindCameraUseCases()
         }
 
-//        binding.aspectRatioTxt.setOnClickListener {
-//            aspectRatio = if (aspectRatio == AspectRatio.RATIO_16_9) {
-//                AspectRatio.RATIO_4_3
-//            } else {
-//                AspectRatio.RATIO_16_9
-//            }
-//            binding.aspectRatioTxt.text = if (aspectRatio == AspectRatio.RATIO_16_9) "16:9" else "4:3"
-//            bindCameraUseCases()
-//        }
-
         binding.changeCameraToVideoIB.setOnClickListener {
             isPhoto = !isPhoto
             binding.changeCameraToVideoIB.setImageResource(
@@ -166,12 +157,12 @@ class ClassificationFragment : Fragment() {
             .build()
 
         cameraProvider.unbindAll()
+
         try {
-            cameraProvider.bindToLifecycle(
-                viewLifecycleOwner, cameraSelector, preview, imageCapture, videoCapture
-            )
+            cameraProvider.bindToLifecycle(viewLifecycleOwner, cameraSelector, preview, imageCapture, videoCapture)
         } catch (e: Exception) {
             e.printStackTrace()
+            showToast("Failed: ${e.message}")
         }
     }
 
@@ -190,22 +181,41 @@ class ClassificationFragment : Fragment() {
             ContextCompat.getMainExecutor(requireContext()),
             object : ImageCapture.OnImageSavedCallback {
                 override fun onImageSaved(outputFileResults: ImageCapture.OutputFileResults) {
-                    // Pass the captured image file to a callback function
                     onImageCaptured(outputFileResults.savedUri)
                 }
 
                 override fun onError(exception: ImageCaptureException) {
-                    Toast.makeText(requireContext(), "Failed: ${exception.message}", Toast.LENGTH_SHORT).show()
+                    showToast("Failed: ${exception.message}")
                 }
             }
         )
+    }
+
+    private val handler = Handler(Looper.getMainLooper())
+    private val updateTimer = object : Runnable{
+        override fun run() {
+            val currentTime = SystemClock.elapsedRealtime() - binding.recodingTimerC.base
+            val timeString = currentTime.toFormattedTime()
+            binding.recodingTimerC.text = timeString
+            handler.postDelayed(this,1000)
+        }
     }
 
     private fun captureVideo() {
         if (recording != null) {
             recording?.stop()
             recording = null
+
+            binding.recodingTimerC.gone()
+            binding.recodingTimerC.stop()
+            handler.removeCallbacks(updateTimer)
+            binding.captureIB.setImageResource(R.drawable.ic_start)
             return
+        } else {
+            binding.recodingTimerC.visible()
+            binding.recodingTimerC.base = SystemClock.elapsedRealtime()
+            binding.recodingTimerC.start()
+            binding.captureIB.setImageResource(R.drawable.ic_stop)
         }
 
         val outputOptions = MediaStoreOutputOptions.Builder(
@@ -218,14 +228,15 @@ class ClassificationFragment : Fragment() {
             })
         }.build()
 
-        recording = videoCapture.output.prepareRecording(requireContext(), outputOptions)
-            .start(ContextCompat.getMainExecutor(requireContext())) { recordEvent ->
-                if (recordEvent is VideoRecordEvent.Finalize) {
-                    if (!recordEvent.hasError()) {
-                        onVideoCaptured(recordEvent.outputResults.outputUri)
-                    }
+        recording = videoCapture.output.prepareRecording(requireContext(), outputOptions).start(ContextCompat.getMainExecutor(requireContext())) { recordEvent ->
+            if (recordEvent is VideoRecordEvent.Finalize) {
+                if (!recordEvent.hasError()) {
+                    onVideoCaptured(recordEvent.outputResults.outputUri)
+                } else {
+                    showToast("Failed: ${recordEvent.error}")
                 }
             }
+        }
     }
 
     private fun generateFileName(extension: String): String {
