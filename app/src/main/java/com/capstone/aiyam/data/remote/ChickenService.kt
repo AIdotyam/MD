@@ -1,6 +1,6 @@
 package com.capstone.aiyam.data.remote
 
-import com.capstone.aiyam.data.dto.Classification
+import com.capstone.aiyam.domain.model.Classification
 import okhttp3.MultipartBody
 import retrofit2.http.Multipart
 import retrofit2.http.POST

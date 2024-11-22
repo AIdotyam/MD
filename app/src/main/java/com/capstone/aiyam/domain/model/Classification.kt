@@ -1,4 +1,4 @@
-package com.capstone.aiyam.data.dto
+package com.capstone.aiyam.domain.model
 
 import com.google.gson.annotations.SerializedName
 

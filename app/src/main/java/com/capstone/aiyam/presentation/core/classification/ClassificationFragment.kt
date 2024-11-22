@@ -6,6 +6,7 @@ import android.content.ContentValues
 import android.content.DialogInterface
 import android.content.pm.PackageManager
 import android.graphics.RectF
+import android.net.Uri
 import android.os.*
 import android.provider.MediaStore
 import android.util.Log
@@ -26,28 +27,40 @@ import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
+import androidx.fragment.app.viewModels
+import androidx.lifecycle.Lifecycle
+import androidx.lifecycle.lifecycleScope
+import androidx.lifecycle.repeatOnLifecycle
+import androidx.navigation.fragment.findNavController
 import com.capstone.aiyam.R
 import com.capstone.aiyam.databinding.FragmentClassificationBinding
+import com.capstone.aiyam.domain.model.AuthenticationResponse
+import com.capstone.aiyam.domain.model.Classification
+import com.capstone.aiyam.presentation.auth.signin.SignInFragmentDirections
+import com.capstone.aiyam.presentation.auth.signin.SignInViewModel
+import com.capstone.aiyam.utils.ResponseWrapper
+import dagger.hilt.android.AndroidEntryPoint
+import kotlinx.coroutines.launch
+import okhttp3.MediaType
+import okhttp3.MediaType.Companion.toMediaTypeOrNull
+import okhttp3.MultipartBody
+import okhttp3.RequestBody.Companion.asRequestBody
 import java.io.File
+import java.io.FileOutputStream
+import java.io.IOException
 import java.text.SimpleDateFormat
 import java.util.*
 import java.util.concurrent.TimeUnit
 
-class ClassificationFragment : Fragment(R.layout.fragment_classification) {
+@AndroidEntryPoint
+class ClassificationFragment : Fragment() {
     private var _binding: FragmentClassificationBinding? = null
     private val binding get() = _binding!!
 
+    private val viewModel: ClassificationViewModel by viewModels()
+
     private val multiplePermissionId = 14
-    private val permissions = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
-        arrayOf(Manifest.permission.CAMERA, Manifest.permission.RECORD_AUDIO)
-    } else {
-        arrayOf(
-            Manifest.permission.CAMERA,
-            Manifest.permission.RECORD_AUDIO,
-            Manifest.permission.WRITE_EXTERNAL_STORAGE,
-            Manifest.permission.READ_EXTERNAL_STORAGE
-        )
-    }
+    private val permissions = arrayOf(Manifest.permission.CAMERA)
 
     private lateinit var videoCapture: VideoCapture<Recorder>
     private lateinit var imageCapture: ImageCapture
@@ -56,10 +69,12 @@ class ClassificationFragment : Fragment(R.layout.fragment_classification) {
     private var lensFacing = CameraSelector.LENS_FACING_BACK
     private var aspectRatio = AspectRatio.RATIO_16_9
     private var isPhoto = true
-    private var orientationEventListener: OrientationEventListener? = null
 
     private val launcherGallery = registerForActivityResult(ActivityResultContracts.PickVisualMedia()) { uri ->
-        uri?.let { showToast("Selected an image") } ?: showToast("Failed to select an image")
+        uri?.let {
+            // Pass the selected image/video URI to a callback function
+            onMediaSelected(uri)
+        } ?: showToast("Failed to select media")
     }
 
     private fun startGallery() {
@@ -70,9 +85,16 @@ class ClassificationFragment : Fragment(R.layout.fragment_classification) {
         Toast.makeText(requireContext(), message, Toast.LENGTH_SHORT).show()
     }
 
+    override fun onCreateView(
+        inflater: LayoutInflater, container: ViewGroup?,
+        savedInstanceState: Bundle?
+    ): View {
+        _binding = FragmentClassificationBinding.inflate(inflater, container, false)
+        return binding.root
+    }
+
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        _binding = FragmentClassificationBinding.bind(view)
 
         if (hasPermissions()) {
             startCamera()
@@ -80,7 +102,7 @@ class ClassificationFragment : Fragment(R.layout.fragment_classification) {
             requestPermissions(permissions, multiplePermissionId)
         }
 
-        binding.galleryIB.setOnClickListener{
+        binding.galleryIB.setOnClickListener {
             startGallery()
         }
 
@@ -115,10 +137,6 @@ class ClassificationFragment : Fragment(R.layout.fragment_classification) {
 
         binding.captureIB.setOnClickListener {
             if (isPhoto) takePhoto() else captureVideo()
-        }
-
-        binding.flashToggleIB.setOnClickListener {
-            toggleFlash()
         }
     }
 
@@ -160,10 +178,9 @@ class ClassificationFragment : Fragment(R.layout.fragment_classification) {
 
         cameraProvider.unbindAll()
         try {
-            val camera = cameraProvider.bindToLifecycle(
+            cameraProvider.bindToLifecycle(
                 viewLifecycleOwner, cameraSelector, preview, imageCapture, videoCapture
             )
-            setupTapToFocus(camera)
         } catch (e: Exception) {
             e.printStackTrace()
         }
@@ -184,7 +201,8 @@ class ClassificationFragment : Fragment(R.layout.fragment_classification) {
             ContextCompat.getMainExecutor(requireContext()),
             object : ImageCapture.OnImageSavedCallback {
                 override fun onImageSaved(outputFileResults: ImageCapture.OutputFileResults) {
-                    Toast.makeText(requireContext(), "Photo saved!", Toast.LENGTH_SHORT).show()
+                    // Pass the captured image file to a callback function
+                    onImageCaptured(outputFileResults.savedUri)
                 }
 
                 override fun onError(exception: ImageCaptureException) {
@@ -212,18 +230,11 @@ class ClassificationFragment : Fragment(R.layout.fragment_classification) {
         }.build()
 
         recording = videoCapture.output.prepareRecording(requireContext(), outputOptions)
-            .apply { if (ActivityCompat.checkSelfPermission(
-                    requireContext(),
-                    Manifest.permission.RECORD_AUDIO
-                ) != PackageManager.PERMISSION_GRANTED
-            ) {
-                return
-            }
-                withAudioEnabled() }
             .start(ContextCompat.getMainExecutor(requireContext())) { recordEvent ->
                 if (recordEvent is VideoRecordEvent.Finalize) {
                     if (!recordEvent.hasError()) {
-                        Toast.makeText(requireContext(), "Video saved!", Toast.LENGTH_SHORT).show()
+                        // Pass the recorded video file to a callback function
+                        onVideoCaptured(recordEvent.outputResults.outputUri)
                     }
                 }
             }
@@ -234,35 +245,69 @@ class ClassificationFragment : Fragment(R.layout.fragment_classification) {
         return "VID_$timestamp.$extension"
     }
 
-    private fun toggleFlash() {
-        val camera = cameraProvider.bindToLifecycle(viewLifecycleOwner, CameraSelector.DEFAULT_BACK_CAMERA)
-        if (camera.cameraInfo.hasFlashUnit()) {
-            val torchState = camera.cameraInfo.torchState.value
-            camera.cameraControl.enableTorch(torchState != TorchState.ON)
+    private fun onMediaSelected(uri: Uri) {
+        val file = uriToFile(uri)
+        val mediaType = getMediaType(uri)
+        classify(file, mediaType)
+    }
+
+    private fun onImageCaptured(imageUri: Uri?) {
+        imageUri?.let {
+            val file = uriToFile(it)
+            classify(file, "image/*")
         }
     }
 
-    @SuppressLint("ClickableViewAccessibility")
-    private fun setupTapToFocus(camera: Camera) {
-        val scaleGestureDetector = ScaleGestureDetector(requireContext(),
-            object : ScaleGestureDetector.SimpleOnScaleGestureListener() {
-                override fun onScale(detector: ScaleGestureDetector): Boolean {
-                    val currentZoomRatio = camera.cameraInfo.zoomState.value?.zoomRatio ?: 1f
-                    camera.cameraControl.setZoomRatio(currentZoomRatio * detector.scaleFactor)
-                    return true
-                }
-            })
+    private fun onVideoCaptured(videoUri: Uri?) {
+        videoUri?.let {
+            val file = uriToFile(it)
+            classify(file, "video/*")
+        }
+    }
 
-        binding.previewView.setOnTouchListener { _, event ->
-            scaleGestureDetector.onTouchEvent(event)
-            if (event.action == MotionEvent.ACTION_DOWN) {
-                val factory = binding.previewView.meteringPointFactory
-                val action = FocusMeteringAction.Builder(factory.createPoint(event.x, event.y))
-                    .setAutoCancelDuration(3, TimeUnit.SECONDS)
-                    .build()
-                camera.cameraControl.startFocusAndMetering(action)
+    private fun getMediaType(uri: Uri): String {
+        val contentResolver = requireContext().contentResolver
+        return contentResolver.getType(uri) ?: "*/*"
+    }
+
+    private fun uriToFile(uri: Uri): File {
+        val contentResolver = requireContext().contentResolver
+        val storageDir = requireContext().getExternalFilesDir(Environment.DIRECTORY_PICTURES)
+        val file = File.createTempFile("temp_", ".jpg", storageDir)
+
+        try {
+            val inputStream = contentResolver.openInputStream(uri)
+            val outputStream = FileOutputStream(file)
+            inputStream?.copyTo(outputStream)
+            inputStream?.close()
+            outputStream.close()
+        } catch (e: IOException) {
+            showToast(e.message.toString())
+            e.printStackTrace()
+        }
+
+        return file
+    }
+
+    private fun classify(file: File, mediaType: String) { lifecycleScope.launch {
+        viewLifecycleOwner.repeatOnLifecycle(Lifecycle.State.CREATED) {
+            viewModel.classify(file, mediaType).collect {
+                handleOnClassify(it)
             }
-            true
+        }
+    }}
+
+    private fun handleOnClassify(result: ResponseWrapper<Classification>) {
+        when(result) {
+            is ResponseWrapper.Error -> {
+                showToast(result.error)
+            }
+            is ResponseWrapper.Loading -> {
+
+            }
+            is ResponseWrapper.Success -> {
+                showToast(result.data.toString())
+            }
         }
     }
 

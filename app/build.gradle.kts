@@ -35,7 +35,7 @@ android {
             "${apikeyProperties["CLIENT_KEY"]}"
         )
 
-        buildConfigField("String", "ENDPOINT", "\"http://192.168.10.3:8080/\"")
+        buildConfigField("String", "ENDPOINT", "\"http://192.168.10.3:8082/\"")
     }
 
     buildTypes {
