@@ -59,6 +59,6 @@
     <string name="dead_count">Dead Chicken</string>
     <string name="chicken_info">Chicken Information</string>
     <string name="live_count">Living Chicken</string>
-    <string name="crowding">Crowding Index</string>
+    <string name="crowding">Crowding Density</string>
     <string name="chicken_count">Chicken Count</string>
 </resources>

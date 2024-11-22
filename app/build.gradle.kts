@@ -29,12 +29,13 @@ android {
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
 
-        // Access the CLIENT_KEY property and set it in BuildConfig
         buildConfigField(
             "String",
             "CLIENT_KEY",
             "${apikeyProperties["CLIENT_KEY"]}"
         )
+
+        buildConfigField("String", "ENDPOINT", "\"http://192.168.10.3:8080/\"")
     }
 
     buildTypes {
