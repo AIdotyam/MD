@@ -82,7 +82,6 @@ dependencies {
     implementation(libs.androidx.lifecycle.runtime.ktx)
 
     // Data
-    implementation(libs.glide)
     implementation(libs.retrofit)
     implementation(libs.okhttp)
     implementation(libs.logging.interceptor)
@@ -94,6 +93,12 @@ dependencies {
     implementation(libs.androidx.camera.camera2)
     implementation(libs.androidx.camera.lifecycle)
     implementation(libs.androidx.camera.view)
+
+    // Media
+//    implementation("com.google.android.exoplayer:exoplayer:2.19.1")
+    implementation(libs.androidx.media3.exoplayer)
+    implementation(libs.androidx.media3.ui)
+    implementation(libs.glide)
 
     // Firebase
     implementation(platform(libs.firebase.bom))

@@ -32,7 +32,11 @@
         android:id="@+id/detailFragment"
         android:name="com.capstone.aiyam.presentation.core.detail.DetailFragment"
         android:label="fragment_detail"
-        tools:layout="@layout/fragment_detail" />
+        tools:layout="@layout/fragment_detail" >
+        <argument
+            android:name="Classification"
+            app:argType="com.capstone.aiyam.domain.model.Classification" />
+    </fragment>
     <fragment
         android:id="@+id/profileFragment"
         android:name="com.capstone.aiyam.presentation.auth.profile.ProfileFragment"

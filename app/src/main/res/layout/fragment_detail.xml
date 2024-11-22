@@ -13,12 +13,26 @@
         android:orientation="vertical">
 
         <!-- Image Header -->
-        <ImageView
-            android:id="@+id/headerImage"
+        <FrameLayout
+            android:id="@+id/mediaContainer"
             android:layout_width="match_parent"
-            android:layout_height="500dp"
-            android:scaleType="centerCrop"
-            tools:src="@drawable/sticker_6"/>
+            android:layout_height="500dp">
+
+            <ImageView
+                android:id="@+id/headerImage"
+                android:layout_width="0dp"
+                android:layout_height="0dp"
+                android:contentDescription="@string/todo"
+                android:scaleType="centerCrop"
+                android:visibility="gone"
+                tools:src="@drawable/sticker_6" />
+
+            <androidx.media3.ui.PlayerView
+                android:id="@+id/headerVideo"
+                android:layout_width="0dp"
+                android:layout_height="0dp"
+                android:visibility="gone" />
+        </FrameLayout>
 
         <!-- Title -->
         <TextView
@@ -33,6 +47,7 @@
             android:textStyle="bold" />
 
         <androidx.cardview.widget.CardView
+            android:id="@+id/cardView"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_margin="16dp"
@@ -44,33 +59,21 @@
                 android:layout_height="wrap_content"
                 android:padding="16dp">
 
-                <TextView
-                    android:id="@+id/titleText"
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:text="@string/chicken_info"
-                    android:textSize="18sp"
-                    android:textStyle="bold"
-                    app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintTop_toTopOf="parent" />
-
                 <LinearLayout
                     android:id="@+id/dataList2"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:orientation="vertical"
-                    android:layout_marginTop="8dp"
-                    app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintTop_toBottomOf="@id/titleText">
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent">
 
                     <LinearLayout
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:orientation="horizontal"
+                        android:layout_marginBottom="8dp"
                         android:gravity="center_vertical"
-                        android:layout_marginBottom="8dp">
+                        android:orientation="horizontal">
 
                         <TextView
                             android:id="@+id/totalAyamLabel"
@@ -84,16 +87,16 @@
                             android:id="@+id/totalAyamValue"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:text="32"
+                            android:text="@string/_32"
                             android:textSize="16sp" />
                     </LinearLayout>
 
                     <LinearLayout
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:orientation="horizontal"
+                        android:layout_marginBottom="8dp"
                         android:gravity="center_vertical"
-                        android:layout_marginBottom="8dp" >
+                        android:orientation="horizontal">
 
                         <TextView
                             android:id="@+id/ayamMatiLabel"
@@ -115,11 +118,11 @@
                     <LinearLayout
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:orientation="horizontal"
-                        android:gravity="center_vertical">
+                        android:gravity="center_vertical"
+                        android:orientation="horizontal">
 
                         <TextView
-                            android:id="@+id/ayamHidupLabel"
+                            android:id="@+id/crowdingLabel"
                             android:layout_width="0dp"
                             android:layout_height="wrap_content"
                             android:layout_weight="1"
@@ -127,7 +130,7 @@
                             android:textSize="16sp" />
 
                         <TextView
-                            android:id="@+id/ayamHidupValue"
+                            android:id="@+id/crowdingValue"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:text="Low"

@@ -3,28 +3,24 @@ package com.capstone.aiyam.presentation.core.classification
 import android.Manifest
 import android.annotation.SuppressLint
 import android.content.ContentValues
-import android.content.DialogInterface
 import android.content.pm.PackageManager
-import android.graphics.RectF
 import android.net.Uri
 import android.os.*
 import android.provider.MediaStore
 import android.util.Log
 import android.view.LayoutInflater
-import android.view.MotionEvent
-import android.view.OrientationEventListener
-import android.view.ScaleGestureDetector
-import android.view.Surface
 import android.view.View
 import android.view.ViewGroup
+import android.webkit.MimeTypeMap
+import android.widget.Button
+import android.widget.TextView
 import android.widget.Toast
 import androidx.activity.result.PickVisualMediaRequest
 import androidx.activity.result.contract.ActivityResultContracts
+import androidx.appcompat.app.AlertDialog
 import androidx.camera.core.*
 import androidx.camera.lifecycle.ProcessCameraProvider
 import androidx.camera.video.*
-import androidx.constraintlayout.widget.ConstraintLayout
-import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
@@ -34,23 +30,16 @@ import androidx.lifecycle.repeatOnLifecycle
 import androidx.navigation.fragment.findNavController
 import com.capstone.aiyam.R
 import com.capstone.aiyam.databinding.FragmentClassificationBinding
-import com.capstone.aiyam.domain.model.AuthenticationResponse
 import com.capstone.aiyam.domain.model.Classification
-import com.capstone.aiyam.presentation.auth.signin.SignInFragmentDirections
-import com.capstone.aiyam.presentation.auth.signin.SignInViewModel
+import com.capstone.aiyam.presentation.auth.profile.ProfileFragmentDirections
 import com.capstone.aiyam.utils.ResponseWrapper
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.launch
-import okhttp3.MediaType
-import okhttp3.MediaType.Companion.toMediaTypeOrNull
-import okhttp3.MultipartBody
-import okhttp3.RequestBody.Companion.asRequestBody
 import java.io.File
 import java.io.FileOutputStream
 import java.io.IOException
 import java.text.SimpleDateFormat
 import java.util.*
-import java.util.concurrent.TimeUnit
 
 @AndroidEntryPoint
 class ClassificationFragment : Fragment() {
@@ -115,15 +104,15 @@ class ClassificationFragment : Fragment() {
             bindCameraUseCases()
         }
 
-        binding.aspectRatioTxt.setOnClickListener {
-            aspectRatio = if (aspectRatio == AspectRatio.RATIO_16_9) {
-                AspectRatio.RATIO_4_3
-            } else {
-                AspectRatio.RATIO_16_9
-            }
-            binding.aspectRatioTxt.text = if (aspectRatio == AspectRatio.RATIO_16_9) "16:9" else "4:3"
-            bindCameraUseCases()
-        }
+//        binding.aspectRatioTxt.setOnClickListener {
+//            aspectRatio = if (aspectRatio == AspectRatio.RATIO_16_9) {
+//                AspectRatio.RATIO_4_3
+//            } else {
+//                AspectRatio.RATIO_16_9
+//            }
+//            binding.aspectRatioTxt.text = if (aspectRatio == AspectRatio.RATIO_16_9) "16:9" else "4:3"
+//            bindCameraUseCases()
+//        }
 
         binding.changeCameraToVideoIB.setOnClickListener {
             isPhoto = !isPhoto
@@ -233,7 +222,6 @@ class ClassificationFragment : Fragment() {
             .start(ContextCompat.getMainExecutor(requireContext())) { recordEvent ->
                 if (recordEvent is VideoRecordEvent.Finalize) {
                     if (!recordEvent.hasError()) {
-                        // Pass the recorded video file to a callback function
                         onVideoCaptured(recordEvent.outputResults.outputUri)
                     }
                 }
@@ -248,20 +236,20 @@ class ClassificationFragment : Fragment() {
     private fun onMediaSelected(uri: Uri) {
         val file = uriToFile(uri)
         val mediaType = getMediaType(uri)
-        classify(file, mediaType)
+        alertDialog(file, mediaType).show()
     }
 
     private fun onImageCaptured(imageUri: Uri?) {
         imageUri?.let {
             val file = uriToFile(it)
-            classify(file, "image/*")
+            alertDialog(file, "image/*").show()
         }
     }
 
     private fun onVideoCaptured(videoUri: Uri?) {
         videoUri?.let {
             val file = uriToFile(it)
-            classify(file, "video/*")
+            alertDialog(file, "video/*").show()
         }
     }
 
@@ -272,8 +260,10 @@ class ClassificationFragment : Fragment() {
 
     private fun uriToFile(uri: Uri): File {
         val contentResolver = requireContext().contentResolver
+        val mimeType = contentResolver.getType(uri) ?: "*/*"
+        val fileExtension = MimeTypeMap.getSingleton().getExtensionFromMimeType(mimeType) ?: "tmp"
         val storageDir = requireContext().getExternalFilesDir(Environment.DIRECTORY_PICTURES)
-        val file = File.createTempFile("temp_", ".jpg", storageDir)
+        val file = File.createTempFile("temp_", ".$fileExtension", storageDir)
 
         try {
             val inputStream = contentResolver.openInputStream(uri)
@@ -303,12 +293,39 @@ class ClassificationFragment : Fragment() {
                 showToast(result.error)
             }
             is ResponseWrapper.Loading -> {
-
+                showToast("File has been uploaded")
             }
             is ResponseWrapper.Success -> {
-                showToast(result.data.toString())
+                val action = ClassificationFragmentDirections.actionClassificationFragmentToDetailFragment(result.data)
+                findNavController().navigate(action)
             }
         }
+    }
+
+    @SuppressLint("SetTextI18n")
+    private fun alertDialog(file: File, mediaType: String): AlertDialog {
+        val dialogView = requireActivity().layoutInflater.inflate(R.layout.custom_dialog, null)
+
+        dialogView.findViewById<TextView>(R.id.dialog_title).text = "Confirmation"
+        dialogView.findViewById<TextView>(R.id.dialog_message).text = "Proceed with classification?"
+
+        val dialog = AlertDialog.Builder(requireContext())
+            .setView(dialogView)
+            .create()
+
+        val positiveButton = dialogView.findViewById<Button>(R.id.dialog_positive_button)
+        val negativeButton = dialogView.findViewById<Button>(R.id.dialog_negative_button)
+
+        positiveButton.setOnClickListener {
+            classify(file, mediaType)
+            dialog.dismiss()
+        }
+
+        negativeButton.setOnClickListener {
+            dialog.dismiss()
+        }
+
+        return dialog
     }
 
     override fun onDestroyView() {

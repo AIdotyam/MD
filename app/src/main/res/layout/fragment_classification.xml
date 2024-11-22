@@ -7,18 +7,6 @@
     android:background="@color/black"
     tools:context=".presentation.core.classification.ClassificationFragment">
 
-    <TextView
-        android:id="@+id/aspectRatioTxt"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="8dp"
-        android:text="16:9"
-        android:textColor="@color/white"
-        android:textSize="16sp"
-        android:alpha="0"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/flipCameraIB" />
-
     <androidx.camera.view.PreviewView
         android:id="@+id/previewView"
         android:layout_width="0dp"
@@ -27,15 +15,6 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
-
-    <com.capstone.aiyam.presentation.core.classification.FocusCircleView
-        android:id="@+id/focusCircleView"
-        android:layout_width="0dp"
-        android:layout_height="0dp"
-        app:layout_constraintBottom_toBottomOf="@+id/previewView"
-        app:layout_constraintEnd_toEndOf="@+id/previewView"
-        app:layout_constraintStart_toStartOf="@+id/previewView"
-        app:layout_constraintTop_toTopOf="@+id/previewView" />
 
     <ImageButton
         android:id="@+id/galleryIB"
@@ -75,7 +54,7 @@
         app:layout_constraintStart_toEndOf="@+id/captureIB"
         app:tint="@color/white" />
 
-   <ImageButton
+    <ImageButton
         android:id="@+id/changeCameraToVideoIB"
         android:layout_width="40dp"
         android:layout_height="40dp"
@@ -88,29 +67,17 @@
         android:layout_marginBottom="20dp"
         app:tint="@color/white" />
 
-    <!-- Flash Toggle -->
-    <ImageButton
-        android:id="@+id/flashToggleIB"
-        android:layout_width="40dp"
-        android:layout_height="40dp"
-        android:layout_margin="10dp"
-        android:background="?attr/selectableItemBackgroundBorderless"
-        android:scaleType="centerCrop"
-        android:src="@drawable/flash_off"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:tint="@color/white" />
-
     <Chronometer
         android:id="@+id/recodingTimerC"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginStart="16dp"
-        android:text="00:00"
+        android:layout_marginEnd="24dp"
+        android:layout_marginTop="12dp"
+        android:text="10:20"
         android:textColor="@color/white"
-        android:textSize="18sp"
+        android:textSize="24sp"
         android:visibility="gone"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"/>
 
 </androidx.constraintlayout.widget.ConstraintLayout>

@@ -61,4 +61,5 @@
     <string name="live_count">Living Chicken</string>
     <string name="crowding">Crowding Density</string>
     <string name="chicken_count">Chicken Count</string>
+    <string name="_32">32</string>
 </resources>
