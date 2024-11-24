@@ -7,7 +7,6 @@ import android.content.pm.PackageManager
 import android.net.Uri
 import android.os.*
 import android.provider.MediaStore
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -31,9 +30,10 @@ import androidx.navigation.fragment.findNavController
 import com.capstone.aiyam.R
 import com.capstone.aiyam.databinding.FragmentClassificationBinding
 import com.capstone.aiyam.domain.model.Classification
-import com.capstone.aiyam.presentation.auth.profile.ProfileFragmentDirections
-import com.capstone.aiyam.utils.ResponseWrapper
+import com.capstone.aiyam.data.dto.ResponseWrapper
+import com.capstone.aiyam.utils.gone
 import com.capstone.aiyam.utils.toFormattedTime
+import com.capstone.aiyam.utils.visible
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.launch
 import java.io.File
@@ -110,6 +110,7 @@ class ClassificationFragment : Fragment() {
             binding.changeCameraToVideoIB.setImageResource(
                 if (isPhoto) R.drawable.ic_photo else R.drawable.ic_videocam
             )
+
             binding.captureIB.setImageResource(
                 if (isPhoto) R.drawable.camera else R.drawable.ic_start
             )

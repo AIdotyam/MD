@@ -1,6 +1,8 @@
 package com.capstone.aiyam.di
 
+import com.capstone.aiyam.data.repository.AlertRepositoryImpl
 import com.capstone.aiyam.data.repository.ChickenRepositoryImpl
+import com.capstone.aiyam.domain.repository.AlertRepository
 import com.capstone.aiyam.domain.repository.ChickenRepository
 import dagger.Binds
 import dagger.Module
@@ -10,11 +12,17 @@ import javax.inject.Singleton
 
 @Module
 @InstallIn(SingletonComponent::class)
-abstract class ChickenRepositoryModule {
+abstract class CoreRepositoryModule {
 
     @Binds
     @Singleton
     abstract fun bindChickenRepository(
         chickenRepositoryImpl: ChickenRepositoryImpl
-    ): ChickenRepository
+    ) : ChickenRepository
+
+    @Binds
+    @Singleton
+    abstract fun bindAlertRepository(
+        alertRepositoryImpl: AlertRepositoryImpl
+    ) : AlertRepository
 }

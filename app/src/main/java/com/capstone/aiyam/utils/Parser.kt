@@ -5,13 +5,13 @@ import android.os.Build
 import android.util.Patterns
 import android.webkit.MimeTypeMap
 import androidx.annotation.RequiresApi
-import java.net.URLConnection
+import kotlinx.datetime.LocalDateTime
+import kotlinx.datetime.TimeZone
+import kotlinx.datetime.toInstant
+import kotlinx.datetime.toLocalDateTime
 import java.net.URLConnection.*
 import java.text.SimpleDateFormat
-import java.time.ZonedDateTime
-import java.time.format.DateTimeFormatter
 import java.util.Locale
-import java.util.TimeZone
 
 fun String.parseDate(): String? {
     return try {
@@ -26,15 +26,11 @@ fun String.parseDate(): String? {
 }
 
 fun String.parseDateTime(): String {
-    val inputFormat = SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss'Z'", Locale.getDefault())
-    inputFormat.timeZone = TimeZone.getTimeZone("UTC")
-    val date = inputFormat.parse(this)
-
-    val outputFormat = SimpleDateFormat("MMMM dd, yyyy HH:mm:ss z", Locale.getDefault())
-    outputFormat.timeZone = TimeZone.getTimeZone("UTC")
-
-    val formattedDate = date?.let { outputFormat.format(it) } ?: this.parseDate() ?: this
-    return formattedDate
+    val parsedDateTime = LocalDateTime.parse(this.removeSuffix("Z"))
+    val instant = parsedDateTime.toInstant(TimeZone.UTC)
+    val date = instant.toLocalDateTime(TimeZone.UTC).date
+    val time = instant.toLocalDateTime(TimeZone.UTC).time
+    return "$date | $time"
 }
 
 @SuppressLint("DefaultLocale")

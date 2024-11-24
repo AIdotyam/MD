@@ -3,7 +3,7 @@ package com.capstone.aiyam.data.repository
 import com.capstone.aiyam.domain.model.Classification
 import com.capstone.aiyam.data.remote.ChickenService
 import com.capstone.aiyam.domain.repository.ChickenRepository
-import com.capstone.aiyam.utils.ResponseWrapper
+import com.capstone.aiyam.data.dto.ResponseWrapper
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
 import okhttp3.MediaType.Companion.toMediaTypeOrNull
@@ -23,7 +23,7 @@ class ChickenRepositoryImpl @Inject constructor(
 
         try {
             val response = chickenService.postChicken(multipartBody)
-            emit(ResponseWrapper.Success(response))
+            emit(ResponseWrapper.Success(response.data))
         } catch (e: Exception) {
             emit(ResponseWrapper.Error(e.message.toString()))
         }

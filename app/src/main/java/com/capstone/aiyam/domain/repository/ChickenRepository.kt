@@ -1,7 +1,7 @@
 package com.capstone.aiyam.domain.repository
 
 import com.capstone.aiyam.domain.model.Classification
-import com.capstone.aiyam.utils.ResponseWrapper
+import com.capstone.aiyam.data.dto.ResponseWrapper
 import kotlinx.coroutines.flow.Flow
 import java.io.File
 

@@ -1,5 +1,6 @@
 package com.capstone.aiyam.data.remote
 
+import com.capstone.aiyam.data.dto.DataWrapper
 import com.capstone.aiyam.domain.model.Classification
 import okhttp3.MultipartBody
 import retrofit2.http.Multipart
@@ -12,5 +13,5 @@ interface ChickenService {
     @POST("upload")
     suspend fun postChicken(
         @Part file: MultipartBody.Part
-    ): Classification
+    ): DataWrapper<Classification>
 }

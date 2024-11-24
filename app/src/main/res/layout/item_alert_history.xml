@@ -38,7 +38,7 @@
                 android:id="@+id/tv_message"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="High Density Detected"
+                android:text="Dead Chicken Detected"
                 android:textSize="16sp"
                 android:textStyle="bold" />
 

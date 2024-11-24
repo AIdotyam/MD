@@ -36,9 +36,9 @@ class MainActivity : AppCompatActivity() {
         }
 
         setupNavigation()
-        lifecycleScope.launch {
-            Log.d("TOKEN", Firebase.messaging.token.await())
-        }
+//        lifecycleScope.launch {
+//            Log.d("TOKEN", Firebase.messaging.token.await())
+//        }
     }
 
     override fun onSupportNavigateUp(): Boolean {
@@ -60,6 +60,7 @@ class MainActivity : AppCompatActivity() {
                 R.id.signinFragment -> navView.visibility = View.GONE
                 R.id.signupFragment -> navView.visibility = View.GONE
                 R.id.detailFragment -> navView.visibility = View.GONE
+                R.id.alertDetailFragment -> navView.visibility = View.GONE
                 else -> navView.visibility = View.VISIBLE
             }
         }

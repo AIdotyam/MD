@@ -15,6 +15,8 @@ import androidx.lifecycle.repeatOnLifecycle
 import androidx.navigation.fragment.findNavController
 import com.capstone.aiyam.databinding.FragmentSignupBinding
 import com.capstone.aiyam.domain.model.AuthenticationResponse
+import com.capstone.aiyam.utils.gone
+import com.capstone.aiyam.utils.visible
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.launch
 
@@ -96,7 +98,7 @@ class SignUpFragment : Fragment() {
     }
 
     private fun onLoading(isLoading: Boolean) {
-        binding.lpiLoading.visibility = if (isLoading) View.VISIBLE else View.GONE
+        if (isLoading) binding.lpiLoading.visible() else binding.lpiLoading.gone()
     }
 
     private fun animate() { binding.apply {

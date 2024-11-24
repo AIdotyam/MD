@@ -1,4 +1,4 @@
-package com.capstone.aiyam.utils
+package com.capstone.aiyam.data.dto
 
 sealed class ResponseWrapper<out R> private constructor() {
     data class Success<out T>(val data: T) : ResponseWrapper<T>()

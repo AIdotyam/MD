@@ -18,7 +18,11 @@
         android:id="@+id/alertsFragment"
         android:name="com.capstone.aiyam.presentation.core.alerts.AlertsFragment"
         android:label="fragment_alerts"
-        tools:layout="@layout/fragment_alerts" />
+        tools:layout="@layout/fragment_alerts" >
+        <action
+            android:id="@+id/action_alertsFragment_to_alertDetailFragment"
+            app:destination="@id/alertDetailFragment" />
+    </fragment>
     <fragment
         android:id="@+id/classificationFragment"
         android:name="com.capstone.aiyam.presentation.core.classification.ClassificationFragment"
@@ -97,5 +101,14 @@
             app:destination="@id/homeFragment"
             app:popUpTo="@id/splashFragment"
             app:popUpToInclusive="true" />
+    </fragment>
+    <fragment
+        android:id="@+id/alertDetailFragment"
+        android:name="com.capstone.aiyam.presentation.core.alertdetail.AlertDetailFragment"
+        android:label="fragment_alert_detail"
+        tools:layout="@layout/fragment_alert_detail" >
+        <argument
+            android:name="id"
+            app:argType="integer" />
     </fragment>
 </navigation>

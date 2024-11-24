@@ -1,71 +1,100 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.swiperefreshlayout.widget.SwipeRefreshLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
-    android:orientation="vertical"
-    android:padding="16dp"
+    android:padding="8dp"
+    android:id="@+id/refresh_layout"
     android:layout_marginBottom="?android:attr/actionBarSize"
     tools:context=".presentation.core.alerts.AlertsFragment">
 
-    <TextView
-        android:id="@+id/alerts_history_title"
+    <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="Alerts History"
-        android:textSize="22sp"
-        android:textAppearance="@style/TextAppearance.Material3.TitleMedium"
-        android:paddingBottom="8dp" />
+        android:layout_height="match_parent">
 
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="horizontal"
-        android:paddingBottom="16dp"
-        android:gravity="center">
+        <com.google.android.material.progressindicator.LinearProgressIndicator
+            android:id="@+id/lpiLoading"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:visibility="gone"
+            android:indeterminate="true"
+            app:indicatorColor="@color/md_theme_primary"
+            app:trackCornerRadius="2dp"
+            app:trackThickness="4dp"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            tools:visibility="visible" />
 
-        <com.google.android.material.chip.Chip
+        <TextView
+            android:id="@+id/alerts_history_title"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:text="Read"
-            android:layout_margin="8dp"
-            android:minHeight="48dp"
-            android:minWidth="48dp"
-            android:textSize="16sp"
-            app:chipIcon="@drawable/read_icon"
-            app:chipIconEnabled="true"
-            app:iconStartPadding="8dp"
-            app:iconEndPadding="8dp"
-            app:chipIconSize="24dp"
-            app:chipIconTint="@color/md_theme_onBackground"
-            app:checkedIcon="@drawable/read_icon"
-            style="@style/Widget.Material3.Chip.Filter" />
+            android:text="Alerts History"
+            android:textSize="22sp"
+            android:textAppearance="@style/TextAppearance.Material3.TitleMedium"
+            android:paddingBottom="8dp"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent" />
 
-        <com.google.android.material.chip.Chip
+        <com.google.android.material.chip.ChipGroup
+            android:id="@+id/filterChipGroup"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:text="Unread"
-            android:layout_margin="8dp"
-            android:minHeight="48dp"
-            android:minWidth="48dp"
-            android:textSize="16sp"
-            app:chipIcon="@drawable/unread_icon"
-            app:chipIconEnabled="true"
-            app:iconStartPadding="8dp"
-            app:iconEndPadding="8dp"
-            app:chipIconSize="24dp"
-            app:chipIconTint="@color/md_theme_onBackground"
-            app:checkedIcon="@drawable/unread_icon"
-            style="@style/Widget.Material3.Chip.Filter" />
-    </LinearLayout>
+            android:layout_marginBottom="8dp"
+            app:chipSpacingHorizontal="8dp"
+            app:singleSelection="true"
+            app:layout_constraintTop_toBottomOf="@id/alerts_history_title"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent">
 
-    <androidx.recyclerview.widget.RecyclerView
-        android:id="@+id/alerts_history_recycler_view"
-        android:layout_width="match_parent"
-        android:layout_height="0dp"
-        android:layout_weight="1"
-        tools:listitem="@layout/item_alert_history" />
-</LinearLayout>
+            <com.google.android.material.chip.Chip
+                android:id="@+id/readChip"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Read"
+                android:minHeight="48dp"
+                android:minWidth="48dp"
+                android:textSize="16sp"
+                app:chipIcon="@drawable/read_icon"
+                app:chipIconEnabled="true"
+                app:iconStartPadding="8dp"
+                app:iconEndPadding="8dp"
+                app:chipIconSize="24dp"
+                app:chipIconTint="@color/md_theme_onBackground"
+                app:checkedIcon="@drawable/read_icon"
+                style="@style/Widget.Material3.Chip.Filter" />
+
+            <com.google.android.material.chip.Chip
+                android:id="@+id/unreadChip"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Unread"
+                android:minHeight="48dp"
+                android:minWidth="48dp"
+                android:textSize="16sp"
+                app:chipIcon="@drawable/unread_icon"
+                app:chipIconEnabled="true"
+                app:iconStartPadding="8dp"
+                app:iconEndPadding="8dp"
+                app:chipIconSize="24dp"
+                app:chipIconTint="@color/md_theme_onBackground"
+                app:checkedIcon="@drawable/unread_icon"
+                style="@style/Widget.Material3.Chip.Filter" />
+        </com.google.android.material.chip.ChipGroup>
+
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/alerts_history_recycler_view"
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            android:layout_marginTop="8dp"
+            app:layout_constraintTop_toBottomOf="@id/filterChipGroup"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintBottom_toBottomOf="parent"
+            tools:listitem="@layout/item_alert_history" />
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+</androidx.swiperefreshlayout.widget.SwipeRefreshLayout>

@@ -38,44 +38,42 @@ class DetailFragment : Fragment() {
     }
 
     @SuppressLint("SetTextI18n")
-    private fun bindViews(classification: Classification) {
-        binding.apply {
-            dateTitle.text = classification.createdAt.parseDateTime()
+    private fun bindViews(classification: Classification) { binding.apply {
+        dateTitle.text = classification.createdAt.parseDateTime()
 
-            val mediaUrl = classification.mediaUrl
-            val mimeType = mediaUrl.getMimeTypeFromUrl()
+        val mediaUrl = classification.mediaUrl
+        val mimeType = mediaUrl.getMimeTypeFromUrl()
 
-            if (mimeType != null && mimeType.startsWith("video")) {
-                headerVideo.visibility = View.VISIBLE
+        if (mimeType != null && mimeType.startsWith("video")) {
+            headerVideo.visibility = View.VISIBLE
 
-                val mediaItem = MediaItem.Builder()
-                    .setUri(mediaUrl)
-                    .build()
+            val mediaItem = MediaItem.Builder()
+                .setUri(mediaUrl)
+                .build()
 
-                player = ExoPlayer.Builder(requireContext()).build().also { exoPlayer ->
-                    exoPlayer.setMediaItem(mediaItem)
-                    exoPlayer.prepare()
-                }
-
-                player?.playWhenReady = true
-                binding.headerVideo.player = player
-            } else if (mimeType != null && mimeType.startsWith("image")) {
-                headerImage.visibility = View.VISIBLE
-                Glide.with(requireContext()).load(mediaUrl).into(headerImage)
-            } else {
-                headerImage.visibility = View.VISIBLE
-                Glide.with(requireContext()).load(R.drawable.baseline_broken_image_24).into(headerImage)
+            player = ExoPlayer.Builder(requireContext()).build().also { exoPlayer ->
+                exoPlayer.setMediaItem(mediaItem)
+                exoPlayer.prepare()
             }
 
-            crowdingValue.text = classification.crowdDensity
-            ayamMatiValue.text = classification.deadCount.toString()
-            totalAyamValue.text = classification.chickenCount.toString()
-
-            backButton.setOnClickListener {
-                findNavController().popBackStack()
-            }
+            player?.playWhenReady = true
+            binding.headerVideo.player = player
+        } else if (mimeType != null && mimeType.startsWith("image")) {
+            headerImage.visibility = View.VISIBLE
+            Glide.with(requireContext()).load(mediaUrl).into(headerImage)
+        } else {
+            headerImage.visibility = View.VISIBLE
+            Glide.with(requireContext()).load(R.drawable.baseline_broken_image_24).into(headerImage)
         }
-    }
+
+        crowdingValue.text = classification.crowdDensity
+        ayamMatiValue.text = classification.deadCount.toString()
+        totalAyamValue.text = classification.chickenCount.toString()
+
+        backButton.setOnClickListener {
+            findNavController().popBackStack()
+        }
+    }}
 
     override fun onDestroyView() {
         super.onDestroyView()

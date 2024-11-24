@@ -1,6 +1,7 @@
 package com.capstone.aiyam.di
 
 import com.capstone.aiyam.BuildConfig
+import com.capstone.aiyam.data.remote.AlertService
 import com.capstone.aiyam.data.remote.ChickenService
 import com.google.firebase.Firebase
 import com.google.firebase.auth.FirebaseAuth
@@ -45,7 +46,15 @@ object AppModule {
     @Singleton
     fun provideAuthService(
         retrofit: Retrofit
-    ): ChickenService {
+    ) : ChickenService {
         return retrofit.create(ChickenService::class.java)
+    }
+
+    @Provides
+    @Singleton
+    fun provideAlertService(
+        retrofit: Retrofit
+    ) : AlertService {
+        return retrofit.create(AlertService::class.java)
     }
 }
