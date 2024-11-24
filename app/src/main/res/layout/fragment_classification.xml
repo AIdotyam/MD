@@ -17,59 +17,80 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
-    <ImageButton
+    <androidx.cardview.widget.CardView
         android:id="@+id/galleryIB"
-        android:layout_width="40dp"
-        android:layout_height="40dp"
-        android:background="?attr/selectableItemBackgroundBorderless"
-        android:contentDescription="@string/todo"
-        android:scaleType="centerCrop"
-        android:src="@drawable/baseline_browse_gallery_24"
+        style="@style/CircularIconButton"
         app:layout_constraintBottom_toBottomOf="@+id/captureIB"
         app:layout_constraintEnd_toStartOf="@+id/captureIB"
-        app:layout_constraintStart_toStartOf="parent"
-        app:tint="@color/white" />
+        app:layout_constraintStart_toStartOf="parent">
 
-    <ImageButton
+        <ImageView
+            android:layout_width="30dp"
+            android:layout_height="30dp"
+            android:layout_gravity="center"
+            android:src="@drawable/gallery" />
+
+    </androidx.cardview.widget.CardView>
+
+    <androidx.cardview.widget.CardView
         android:id="@+id/captureIB"
-        android:layout_width="60dp"
-        android:layout_height="60dp"
-        android:layout_marginBottom="40dp"
-        android:background="?attr/selectableItemBackgroundBorderless"
-        android:contentDescription="@string/todo"
-        android:scaleType="centerCrop"
-        android:src="@drawable/camera"
+        style="@style/CircularIconButtonLarge"
+        android:layout_marginBottom="46dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:tint="@color/white" />
+        app:layout_constraintStart_toStartOf="parent">
 
-    <ImageButton
+        <ImageView
+            android:id="@+id/captureIBLogo"
+            android:layout_width="34dp"
+            android:layout_height="34dp"
+            android:layout_gravity="center"
+            android:src="@drawable/baseline_photo_camera_24" />
+
+    </androidx.cardview.widget.CardView>
+
+    <androidx.cardview.widget.CardView
         android:id="@+id/flipCameraIB"
-        android:layout_width="40dp"
-        android:layout_height="40dp"
-        android:background="?attr/selectableItemBackgroundBorderless"
-        android:scaleType="centerCrop"
-        android:contentDescription="@string/todo"
-        android:src="@drawable/flip_camera"
+        style="@style/CircularIconButton"
         app:layout_constraintBottom_toBottomOf="@+id/captureIB"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toEndOf="@+id/captureIB"
-        app:tint="@color/white" />
+        app:layout_constraintStart_toEndOf="@+id/captureIB">
 
-    <ImageButton
-        android:id="@+id/changeCameraToVideoIB"
-        android:layout_width="40dp"
-        android:layout_height="40dp"
-        android:background="?attr/selectableItemBackgroundBorderless"
-        android:scaleType="centerCrop"
-        android:src="@drawable/ic_photo"
-        android:contentDescription="@string/todo"
+        <ImageView
+            android:layout_width="30dp"
+            android:layout_height="30dp"
+            android:layout_gravity="center"
+            android:src="@drawable/flip_camera" />
+
+    </androidx.cardview.widget.CardView>
+
+    <com.google.android.material.button.MaterialButtonToggleGroup
+        android:id="@+id/toggleGroup"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="36dp"
         app:layout_constraintBottom_toTopOf="@+id/captureIB"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        android:layout_marginBottom="20dp"
-        app:tint="@color/white" />
+        app:singleSelection="true"
+        app:selectionRequired="true"
+        app:checkedButton="@id/photoButton">
+
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/photoButton"
+            style="?attr/materialButtonOutlinedStyle"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Photo" />
+
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/videoButton"
+            style="?attr/materialButtonOutlinedStyle"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Video" />
+
+    </com.google.android.material.button.MaterialButtonToggleGroup>
 
     <Chronometer
         android:id="@+id/recodingTimerC"

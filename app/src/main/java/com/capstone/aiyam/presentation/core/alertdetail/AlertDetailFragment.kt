@@ -96,7 +96,6 @@ class AlertDetailFragment : Fragment() {
                 exoPlayer.prepare()
             }
 
-            player?.playWhenReady = true
             binding.headerVideo.player = player
         } else if (mimeType != null && mimeType.startsWith("image")) {
             headerImage.visibility = View.VISIBLE

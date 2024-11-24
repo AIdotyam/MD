@@ -105,15 +105,32 @@ class ClassificationFragment : Fragment() {
             bindCameraUseCases()
         }
 
-        binding.changeCameraToVideoIB.setOnClickListener {
-            isPhoto = !isPhoto
-            binding.changeCameraToVideoIB.setImageResource(
-                if (isPhoto) R.drawable.ic_photo else R.drawable.ic_videocam
-            )
+//        binding.changeCameraToVideoIB.setOnClickListener {
+//            isPhoto = !isPhoto
+//            binding.changeCameraToVideoIB.setImageResource(
+//                if (isPhoto) R.drawable.ic_photo else R.drawable.ic_videocam
+//            )
+//
+//            binding.captureIB.setImageResource(
+//                if (isPhoto) R.drawable.camera else R.drawable.ic_start
+//            )
+//        }
 
-            binding.captureIB.setImageResource(
-                if (isPhoto) R.drawable.camera else R.drawable.ic_start
-            )
+        binding.toggleGroup.addOnButtonCheckedListener { _, checkedId, isChecked ->
+            when (checkedId) {
+                R.id.photoButton -> {
+                    if (isChecked) {
+                        isPhoto = true
+                        binding.captureIBLogo.setImageResource(R.drawable.camera)
+                    }
+                }
+                R.id.videoButton -> {
+                    if (isChecked) {
+                        isPhoto = false
+                        binding.captureIBLogo.setImageResource(R.drawable.ic_start)
+                    }
+                }
+            }
         }
 
         binding.captureIB.setOnClickListener {
@@ -210,13 +227,13 @@ class ClassificationFragment : Fragment() {
             binding.recodingTimerC.gone()
             binding.recodingTimerC.stop()
             handler.removeCallbacks(updateTimer)
-            binding.captureIB.setImageResource(R.drawable.ic_start)
+            binding.captureIBLogo.setImageResource(R.drawable.ic_start)
             return
         } else {
             binding.recodingTimerC.visible()
             binding.recodingTimerC.base = SystemClock.elapsedRealtime()
             binding.recodingTimerC.start()
-            binding.captureIB.setImageResource(R.drawable.ic_stop)
+            binding.captureIBLogo.setImageResource(R.drawable.ic_stop)
         }
 
         val outputOptions = MediaStoreOutputOptions.Builder(
