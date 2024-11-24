@@ -105,23 +105,12 @@ class ClassificationFragment : Fragment() {
             bindCameraUseCases()
         }
 
-//        binding.changeCameraToVideoIB.setOnClickListener {
-//            isPhoto = !isPhoto
-//            binding.changeCameraToVideoIB.setImageResource(
-//                if (isPhoto) R.drawable.ic_photo else R.drawable.ic_videocam
-//            )
-//
-//            binding.captureIB.setImageResource(
-//                if (isPhoto) R.drawable.camera else R.drawable.ic_start
-//            )
-//        }
-
         binding.toggleGroup.addOnButtonCheckedListener { _, checkedId, isChecked ->
             when (checkedId) {
                 R.id.photoButton -> {
                     if (isChecked) {
                         isPhoto = true
-                        binding.captureIBLogo.setImageResource(R.drawable.camera)
+                        binding.captureIBLogo.setImageResource(R.drawable.baseline_photo_camera_24)
                     }
                 }
                 R.id.videoButton -> {
