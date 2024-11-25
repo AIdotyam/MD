@@ -68,7 +68,7 @@ class AlertsAdapter(
             override fun areItemsTheSame(oldItem: AlertsDisplayItem, newItem: AlertsDisplayItem): Boolean {
                 return when {
                     oldItem is AlertsDisplayItem.Header && newItem is AlertsDisplayItem.Header -> oldItem.date == newItem.date
-                    oldItem is AlertsDisplayItem.Item && newItem is AlertsDisplayItem.Item -> oldItem.alerts == newItem.alerts
+                    oldItem is AlertsDisplayItem.Item && newItem is AlertsDisplayItem.Item -> oldItem.alerts.id == newItem.alerts.id
                     else -> false
                 }
             }

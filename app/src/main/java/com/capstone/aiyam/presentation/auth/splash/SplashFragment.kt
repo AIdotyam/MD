@@ -8,7 +8,10 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.navigation.findNavController
+import androidx.navigation.fragment.NavHostFragment
 import androidx.navigation.fragment.findNavController
+import com.capstone.aiyam.R
 import com.capstone.aiyam.databinding.FragmentSplashBinding
 import com.capstone.aiyam.domain.model.AuthorizationResponse
 import dagger.hilt.android.AndroidEntryPoint

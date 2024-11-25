@@ -1,5 +1,6 @@
 package com.capstone.aiyam.presentation.core.alerts
 
+import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.capstone.aiyam.data.dto.ResponseWrapper
@@ -25,13 +26,15 @@ class AlertsViewModel @Inject constructor(
     private val _filterCriteria = MutableStateFlow<String?>(null)
     val filteredAlerts = combine(_alerts, _filterCriteria) { response, filter ->
         if (response is ResponseWrapper.Success && !filter.isNullOrEmpty()) {
-            ResponseWrapper.Success(response.data.filter {
+            val filteredData = response.data.filter {
                 when (filter) {
                     "read" -> it.isRead
                     "unread" -> !it.isRead
                     else -> true
                 }
-            })
+            }
+            Log.d("Filtered Alerts", filteredData.toString())
+            ResponseWrapper.Success(filteredData)
         } else {
             response
         }

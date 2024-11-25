@@ -92,7 +92,6 @@ class AlertsFragment : Fragment() {
     private fun handleSuccess(alerts: List<Alerts>) {
         showLoading(false)
         showRefresh(false)
-        Log.d("Alerts Data", alerts.toString())
         adapter.submitList(groupAlertsByDate(alerts))
     }
 

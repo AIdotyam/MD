@@ -3,13 +3,13 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/mobile_navigation"
-    app:startDestination="@id/splashFragment">
+    app:startDestination="@+id/splashFragment">
 
     <fragment
         android:id="@+id/homeFragment"
         android:name="com.capstone.aiyam.presentation.core.home.HomeFragment"
-        android:label="fragment_home"
-        tools:layout="@layout/fragment_home" >
+        android:label="Dashboard"
+        tools:layout="@layout/fragment_home">
         <action
             android:id="@+id/action_homeFragment_to_detailFragment"
             app:destination="@id/detailFragment" />
@@ -17,8 +17,8 @@
     <fragment
         android:id="@+id/alertsFragment"
         android:name="com.capstone.aiyam.presentation.core.alerts.AlertsFragment"
-        android:label="fragment_alerts"
-        tools:layout="@layout/fragment_alerts" >
+        android:label="Alerts"
+        tools:layout="@layout/fragment_alerts">
         <action
             android:id="@+id/action_alertsFragment_to_alertDetailFragment"
             app:destination="@id/alertDetailFragment" />
@@ -26,8 +26,8 @@
     <fragment
         android:id="@+id/classificationFragment"
         android:name="com.capstone.aiyam.presentation.core.classification.ClassificationFragment"
-        android:label="fragment_classification"
-        tools:layout="@layout/fragment_classification" >
+        android:label="Classification"
+        tools:layout="@layout/fragment_classification">
         <action
             android:id="@+id/action_classificationFragment_to_detailFragment"
             app:destination="@id/detailFragment" />
@@ -35,7 +35,7 @@
     <fragment
         android:id="@+id/detailFragment"
         android:name="com.capstone.aiyam.presentation.core.detail.DetailFragment"
-        android:label="fragment_detail"
+        android:label="Detail"
         tools:layout="@layout/fragment_detail" >
         <argument
             android:name="Classification"
@@ -44,8 +44,8 @@
     <fragment
         android:id="@+id/profileFragment"
         android:name="com.capstone.aiyam.presentation.auth.profile.ProfileFragment"
-        android:label="fragment_profile"
-        tools:layout="@layout/fragment_profile" >
+        android:label="Profile"
+        tools:layout="@layout/fragment_profile">
         <action
             android:id="@+id/action_profileFragment_to_signinFragment"
             app:destination="@id/signinFragment"
@@ -55,7 +55,7 @@
     <fragment
         android:id="@+id/signinFragment"
         android:name="com.capstone.aiyam.presentation.auth.signin.SignInFragment"
-        android:label="fragment_signin"
+        android:label="Sign In"
         tools:layout="@layout/fragment_signin" >
         <action
             android:id="@+id/action_signinFragment_to_signupFragment"
@@ -72,7 +72,7 @@
     <fragment
         android:id="@+id/signupFragment"
         android:name="com.capstone.aiyam.presentation.auth.signup.SignUpFragment"
-        android:label="fragment_signup"
+        android:label="Sign Out"
         tools:layout="@layout/fragment_signup" >
         <action
             android:id="@+id/action_signupFragment_to_signinFragment"
@@ -89,7 +89,7 @@
     <fragment
         android:id="@+id/splashFragment"
         android:name="com.capstone.aiyam.presentation.auth.splash.SplashFragment"
-        android:label="fragment_splash"
+        android:label="Splash"
         tools:layout="@layout/fragment_splash" >
         <action
             android:id="@+id/action_splashFragment_to_signinFragment"
@@ -105,7 +105,7 @@
     <fragment
         android:id="@+id/alertDetailFragment"
         android:name="com.capstone.aiyam.presentation.core.alertdetail.AlertDetailFragment"
-        android:label="fragment_alert_detail"
+        android:label="Alert Detail"
         tools:layout="@layout/fragment_alert_detail" >
         <argument
             android:name="id"
