@@ -13,6 +13,7 @@ import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
 import androidx.navigation.fragment.findNavController
+import com.capstone.aiyam.R
 import com.capstone.aiyam.databinding.FragmentSigninBinding
 import com.capstone.aiyam.domain.model.AuthenticationResponse
 import com.capstone.aiyam.utils.gone
@@ -32,6 +33,10 @@ class SignInFragment : Fragment() {
         savedInstanceState: Bundle?
     ): View {
         _binding = FragmentSigninBinding.inflate(inflater, container, false)
+
+        val mainNavGraph = findNavController().navInflater.inflate(R.navigation.splash_navigation)
+        findNavController().graph = mainNavGraph
+
         return binding.root
     }
 
