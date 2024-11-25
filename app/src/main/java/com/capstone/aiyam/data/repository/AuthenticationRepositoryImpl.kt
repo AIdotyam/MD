@@ -134,8 +134,7 @@ class AuthenticationRepositoryImpl @Inject constructor(
             e.printStackTrace()
             emit(AuthenticationResponse.Error(e.message ?: ""))
             return@flow
-        }
-        catch (e: Exception) {
+        } catch (e: Exception) {
             e.printStackTrace()
             emit(AuthenticationResponse.Error(e.message ?: ""))
             return@flow

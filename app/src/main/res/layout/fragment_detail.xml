@@ -12,6 +12,25 @@
         android:layout_height="wrap_content"
         android:orientation="vertical">
 
+        <com.google.android.material.appbar.MaterialToolbar
+            android:id="@+id/topAppBar"
+            android:layout_width="match_parent"
+            android:layout_height="?attr/actionBarSize"
+            android:background="?attr/colorPrimary"
+            android:elevation="4dp"
+            app:titleTextColor="?attr/colorOnPrimary">
+
+            <TextView
+                android:id="@+id/toolbar_title"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="AI.result"
+                android:textColor="?attr/colorOnPrimary"
+                android:textSize="20sp"
+                android:textStyle="bold" />
+
+        </com.google.android.material.appbar.MaterialToolbar>
+
         <!-- Image Header -->
         <FrameLayout
             android:id="@+id/mediaContainer"
@@ -74,6 +93,7 @@
                         android:layout_width="36dp"
                         android:layout_height="36dp"
                         android:src="@drawable/chicken"
+                        app:tint="@color/md_theme_onSecondaryContainer"
                         android:contentDescription="@string/todo" />
 
                     <TextView
@@ -92,7 +112,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="@string/chicken_count"
-                    android:textColor="@color/md_theme_onPrimary"
+                    android:textColor="@color/md_theme_onSecondaryContainer"
                     android:textSize="17sp" />
             </LinearLayout>
         </androidx.cardview.widget.CardView>
@@ -123,6 +143,7 @@
                         android:layout_width="36dp"
                         android:layout_height="36dp"
                         android:src="@drawable/skull"
+                        app:tint="@color/md_theme_onSecondaryContainer"
                         android:contentDescription="@string/todo" />
 
                     <TextView
@@ -142,7 +163,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="@string/dead_count"
-                    android:textColor="@color/md_theme_onPrimary"
+                    android:textColor="@color/md_theme_onSecondaryContainer"
                     android:textSize="17sp" />
             </LinearLayout>
         </androidx.cardview.widget.CardView>
@@ -173,7 +194,8 @@
                         android:layout_width="36dp"
                         android:layout_height="36dp"
                         android:src="@drawable/round"
-                        android:contentDescription="@string/todo" />
+                        android:contentDescription="@string/todo"
+                        app:tint="@color/md_theme_onSecondaryContainer" />
 
                     <TextView
                         android:id="@+id/crowdingValue"
@@ -192,7 +214,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="@string/crowding"
-                    android:textColor="@color/md_theme_onPrimary"
+                    android:textColor="@color/md_theme_onSecondaryContainer"
                     android:textSize="17sp" />
             </LinearLayout>
         </androidx.cardview.widget.CardView>
@@ -203,6 +225,6 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_margin="16dp"
-            android:text="@string/back" />
+            android:text="@string/back"/>
     </LinearLayout>
 </ScrollView>

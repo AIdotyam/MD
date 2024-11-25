@@ -4,7 +4,6 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:padding="8dp"
     android:id="@+id/refresh_layout"
     android:layout_marginBottom="?android:attr/actionBarSize"
     tools:context=".presentation.core.alerts.AlertsFragment">
@@ -13,40 +12,51 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent">
 
+        <com.google.android.material.appbar.MaterialToolbar
+            android:id="@+id/topAppBar"
+            android:layout_width="match_parent"
+            android:layout_height="?attr/actionBarSize"
+            android:background="?attr/colorPrimary"
+            android:elevation="4dp"
+            app:titleTextColor="?attr/colorOnPrimary"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent" >
+
+            <TextView
+                android:id="@+id/toolbar_title"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="AI.history"
+                android:textColor="?attr/colorOnPrimary"
+                android:textSize="20sp"
+                android:textStyle="bold" />
+
+        </com.google.android.material.appbar.MaterialToolbar>
+
         <com.google.android.material.progressindicator.LinearProgressIndicator
             android:id="@+id/lpiLoading"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:visibility="gone"
             android:indeterminate="true"
-            app:indicatorColor="@color/md_theme_primary"
+            app:indicatorColor="@color/md_theme_error"
             app:trackCornerRadius="2dp"
             app:trackThickness="4dp"
-            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/topAppBar"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             tools:visibility="visible" />
 
-        <TextView
-            android:id="@+id/alerts_history_title"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:text="Alerts History"
-            android:textSize="22sp"
-            android:textAppearance="@style/TextAppearance.Material3.TitleMedium"
-            android:paddingBottom="8dp"
-            app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintEnd_toEndOf="parent" />
-
         <com.google.android.material.chip.ChipGroup
             android:id="@+id/filterChipGroup"
             android:layout_width="0dp"
+            android:padding="16dp"
             android:layout_height="wrap_content"
-            android:layout_marginBottom="8dp"
+            android:layout_marginTop="8dp"
             app:chipSpacingHorizontal="8dp"
             app:singleSelection="true"
-            app:layout_constraintTop_toBottomOf="@id/alerts_history_title"
+            app:layout_constraintTop_toBottomOf="@+id/topAppBar"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintEnd_toEndOf="parent">
 
@@ -86,10 +96,10 @@
         </com.google.android.material.chip.ChipGroup>
 
         <androidx.recyclerview.widget.RecyclerView
+            android:padding="16dp"
             android:id="@+id/alerts_history_recycler_view"
             android:layout_width="0dp"
             android:layout_height="0dp"
-            android:layout_marginTop="8dp"
             app:layout_constraintTop_toBottomOf="@id/filterChipGroup"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintEnd_toEndOf="parent"

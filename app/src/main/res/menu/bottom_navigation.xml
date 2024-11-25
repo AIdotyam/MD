@@ -8,14 +8,17 @@
         android:icon="@drawable/baseline_dashboard_24"
         android:title="@string/home"
         android:enabled="true"/>
+
         <item android:id="@+id/classificationFragment"
         android:icon="@drawable/baseline_file_upload_24"
         android:title="@string/upload"
         android:enabled="true"/>
+
         <item android:id="@+id/alertsFragment"
         android:icon="@drawable/baseline_crisis_alert_24"
         android:title="@string/alerts"
         android:enabled="true"/>
+
         <item android:id="@+id/profileFragment"
         android:icon="@drawable/baseline_people_24"
         android:title="@string/profile"

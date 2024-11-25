@@ -50,6 +50,7 @@ class AlertsFragment : Fragment() {
 
     private fun observeRefresh() {
         binding.refreshLayout.setOnRefreshListener {
+            showRefresh(true)
             viewModel.refreshAlerts()
             binding.filterChipGroup.clearCheck()
         }
@@ -77,9 +78,7 @@ class AlertsFragment : Fragment() {
     private fun handleAlerts(response: ResponseWrapper<List<Alerts>>) {
         when (response) {
             is ResponseWrapper.Success -> {
-                showLoading(false)
-                showRefresh(false)
-                adapter.submitList(response.data)
+                handleSuccess(response.data)
             }
             is ResponseWrapper.Error -> {
                 handleError(response.error)
@@ -88,6 +87,12 @@ class AlertsFragment : Fragment() {
                 showLoading(true)
             }
         }
+    }
+
+    private fun handleSuccess(alerts: List<Alerts>) {
+        showLoading(false)
+        showRefresh(false)
+        adapter.submitList(groupAlertsByDate(alerts))
     }
 
     private fun initializeAdapter() {
@@ -100,6 +105,22 @@ class AlertsFragment : Fragment() {
         }
 
         binding.alertsHistoryRecyclerView.adapter = adapter
+    }
+
+    private fun groupAlertsByDate(alerts: List<Alerts>): List<AlertsDisplayItem> {
+        val groupedItems = mutableListOf<AlertsDisplayItem>()
+        var lastDate: String? = null
+
+        alerts.forEach { alert ->
+            val date = alert.createdAt.split("T")[0]
+            if (date != lastDate) {
+                groupedItems.add(AlertsDisplayItem.Header(date))
+                lastDate = date
+            }
+            groupedItems.add(AlertsDisplayItem.Item(alert))
+        }
+
+        return groupedItems
     }
 
     private fun showLoading(isLoading: Boolean) {

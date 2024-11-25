@@ -93,6 +93,7 @@ class AlertDetailFragment : Fragment() {
 
             player = ExoPlayer.Builder(requireContext()).build().also { exoPlayer ->
                 exoPlayer.setMediaItem(mediaItem)
+                exoPlayer.playWhenReady = true
                 exoPlayer.prepare()
             }
 
@@ -123,7 +124,7 @@ class AlertDetailFragment : Fragment() {
     }
 
     private fun handleVisibility(isVisible: Boolean) { binding.apply {
-        dateTitle.visibility = View.VISIBLE
+        dateTitle.visibility = if (isVisible) View.GONE else View.VISIBLE
     }}
 
     private fun showToast(message: String) {

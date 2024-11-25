@@ -20,6 +20,8 @@
     <androidx.cardview.widget.CardView
         android:id="@+id/galleryIB"
         style="@style/CircularIconButton"
+        android:clickable="true"
+        android:focusable="true"
         app:layout_constraintBottom_toBottomOf="@+id/captureIB"
         app:layout_constraintEnd_toStartOf="@+id/captureIB"
         app:layout_constraintStart_toStartOf="parent">
@@ -28,6 +30,7 @@
             android:layout_width="30dp"
             android:layout_height="30dp"
             android:layout_gravity="center"
+            app:tint="@color/md_theme_onPrimary"
             android:src="@drawable/gallery" />
 
     </androidx.cardview.widget.CardView>
@@ -36,6 +39,8 @@
         android:id="@+id/captureIB"
         style="@style/CircularIconButtonLarge"
         android:layout_marginBottom="46dp"
+        android:clickable="true"
+        android:focusable="true"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent">
@@ -45,6 +50,7 @@
             android:layout_width="34dp"
             android:layout_height="34dp"
             android:layout_gravity="center"
+            app:tint="@color/md_theme_onPrimary"
             android:src="@drawable/baseline_photo_camera_24" />
 
     </androidx.cardview.widget.CardView>
@@ -52,6 +58,8 @@
     <androidx.cardview.widget.CardView
         android:id="@+id/flipCameraIB"
         style="@style/CircularIconButton"
+        android:clickable="true"
+        android:focusable="true"
         app:layout_constraintBottom_toBottomOf="@+id/captureIB"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toEndOf="@+id/captureIB">
@@ -60,6 +68,7 @@
             android:layout_width="30dp"
             android:layout_height="30dp"
             android:layout_gravity="center"
+            app:tint="@color/md_theme_onPrimary"
             android:src="@drawable/flip_camera" />
 
     </androidx.cardview.widget.CardView>

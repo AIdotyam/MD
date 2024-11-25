@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <style name="CircularIconButton" parent="Widget.MaterialComponents.CardView">
+        <item name="cardBackgroundColor">?attr/colorPrimaryContainer</item>
+        <item name="cardElevation">4dp</item>
+        <item name="cardCornerRadius">32dp</item>
+        <item name="android:layout_width">64dp</item>
+        <item name="android:layout_height">64dp</item>
+    </style>
+
+    <style name="CircularIconButtonLarge" parent="CircularIconButton">
+        <item name="cardCornerRadius">39dp</item>
+        <item name="android:layout_width">78dp</item>
+        <item name="android:layout_height">78dp</item>
+    </style>
+
+    <style name="NormalCardView" parent="Widget.MaterialComponents.CardView">
+        <item name="cardBackgroundColor">?attr/colorPrimaryContainer</item>
+        <item name="cardElevation">4dp</item>
+        <item name="cardCornerRadius">8dp</item>
+        <item name="contentPaddingLeft">16dp</item>
+        <item name="contentPaddingTop">12dp</item>
+        <item name="contentPaddingRight">16dp</item>
+        <item name="contentPaddingBottom">12dp</item>
+    </style>
+</resources>

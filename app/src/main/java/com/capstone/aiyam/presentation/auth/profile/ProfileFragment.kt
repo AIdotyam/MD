@@ -48,7 +48,7 @@ class ProfileFragment : Fragment() {
             }
         }
 
-        binding.logoutButton.setOnClickListener {
+        binding.signOutIcon.setOnClickListener {
             alertDialog().show()
         }
     }
@@ -84,6 +84,7 @@ class ProfileFragment : Fragment() {
             .load(user.photoUrl)
             .placeholder(R.drawable.baseline_people_24)
             .error(R.drawable.baseline_people_24)
+            .circleCrop()
             .into(profileImage)
 
         username.text = user.displayName

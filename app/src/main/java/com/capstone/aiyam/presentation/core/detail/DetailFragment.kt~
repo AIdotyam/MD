@@ -53,9 +53,16 @@ class DetailFragment : Fragment() {
 
             player = ExoPlayer.Builder(requireContext()).build().also { exoPlayer ->
                 exoPlayer.setMediaItem(mediaItem)
-                exoPlayer.playWhenReady = true
                 exoPlayer.prepare()
             }
+
+            val player = ExoPlayer.Builder(requireContext())
+                .build()
+                .also { exoPlayer ->
+                    exoPlayer.setMediaItem(mediaItem)
+                    exoPlayer.playWhenReady = true
+                    exoPlayer.prepare()
+                }
 
             binding.headerVideo.player = player
         } else if (mimeType != null && mimeType.startsWith("image")) {
