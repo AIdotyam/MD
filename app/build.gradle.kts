@@ -116,4 +116,10 @@ dependencies {
     //Dependency Injection
     ksp(libs.hilt.android.compiler)
     implementation(libs.hilt.android)
+
+    //diagram
+    implementation ("com.github.PhilJay:MPAndroidChart:v3.0.3")
+    implementation ("com.squareup.retrofit2:retrofit:2.9.0")
+    implementation ("com.squareup.retrofit2:converter-gson:2.9.0")
+
 }
