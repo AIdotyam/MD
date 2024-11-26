@@ -51,12 +51,6 @@ class ProfileFragment : Fragment() {
         binding.signOutIcon.setOnClickListener {
             alertDialog().show()
         }
-
-        binding.phoneNumberButton.setOnClickListener {
-            ProfileFragmentDirections.actionProfileFragmentToPhoneFragment().let {
-                findNavController().navigate(it)
-            }
-        }
     }
 
     private fun alertDialog(): AlertDialog {

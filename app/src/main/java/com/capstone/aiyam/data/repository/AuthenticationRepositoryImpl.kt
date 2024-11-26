@@ -1,6 +1,7 @@
 package com.capstone.aiyam.data.repository
 
 import android.app.Application
+import androidx.core.net.toUri
 import androidx.credentials.CreatePasswordRequest
 import androidx.credentials.CredentialManager
 import androidx.credentials.CustomCredential
@@ -26,77 +27,77 @@ import com.capstone.aiyam.utils.createNonce
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.FirebaseAuthInvalidCredentialsException
 import com.google.firebase.auth.FirebaseAuthUserCollisionException
+import com.google.firebase.auth.PhoneAuthCredential
+import com.google.firebase.auth.PhoneAuthOptions
+import com.google.firebase.auth.PhoneAuthProvider
+import java.util.concurrent.TimeUnit
 import javax.inject.Inject
 
 class AuthenticationRepositoryImpl @Inject constructor(
     private val context: Application,
-    private val auth: FirebaseAuth
+    private val auth: FirebaseAuth,
+    private val manager: CredentialManager
 ): AuthenticationRepository {
-    private val manager = CredentialManager.create(context)
 
     override fun createAccountWithEmail(username: String, email: String, password: String): Flow<AuthenticationResponse> = flow {
         emit(AuthenticationResponse.Loading)
         try {
-            manager.createCredential(context, CreatePasswordRequest(email, password))
-
-            try {
-                auth.createUserWithEmailAndPassword(email, password).await()
-            } catch (e: FirebaseAuthUserCollisionException) {
-                emit(AuthenticationResponse.Error("Email already in use"))
-                return@flow
-            } catch (e: FirebaseAuthInvalidCredentialsException) {
-                emit(AuthenticationResponse.Error("Invalid credentials"))
-                return@flow
-            } catch (e: CreateCredentialCancellationException) {
-                emit(AuthenticationResponse.Error("Cancelled"))
-                return@flow
-            } catch (e: Exception) {
-                emit(AuthenticationResponse.Error("Failed to create account"))
-                return@flow
-            }
-
-            auth.currentUser?.updateProfile(
-                UserProfileChangeRequest.Builder()
-                    .setDisplayName(username)
-                    .build()
-            )
-
+            auth.createUserWithEmailAndPassword(email, password).await()
+            updateUserDisplayName(username)
             emit(AuthenticationResponse.Success)
+        } catch (e: FirebaseAuthUserCollisionException) {
+            emit(AuthenticationResponse.Error("Email already in use"))
+            return@flow
+        } catch (e: FirebaseAuthInvalidCredentialsException) {
+            emit(AuthenticationResponse.Error("Invalid credentials"))
+            return@flow
+        } catch (e: CreateCredentialCancellationException) {
+            emit(AuthenticationResponse.Error("Cancelled"))
+            return@flow
         } catch (e: Exception) {
-            e.printStackTrace()
-            emit(AuthenticationResponse.Error("Failed"))
+            emit(AuthenticationResponse.Error("Failed to create account"))
             return@flow
         }
+    }
+
+    private fun updateUserDisplayName(username: String) {
+        auth.currentUser?.updateProfile(UserProfileChangeRequest.Builder().setDisplayName(username).build())
+    }
+
+    // Use later, idk?
+    private fun updateProfilePhoto(photoUrl: String) {
+        auth.currentUser?.updateProfile(UserProfileChangeRequest.Builder().setPhotoUri(photoUrl.toUri()).build())
     }
 
     override fun loginWithEmail(email: String, password: String): Flow<AuthenticationResponse> = flow {
         emit(AuthenticationResponse.Loading)
 
         try {
-            val credentialResponse = manager.getCredential(context, GetCredentialRequest(credentialOptions = listOf(GetPasswordOption())))
-            val credential = credentialResponse.credential as? PasswordCredential
-
-            credential?.let {
-                if (credential.id == email && credential.password == password) {
-                    emit(AuthenticationResponse.Success)
-                    return@flow
-                }
-            }
-        } catch (e: GetCredentialException) {
-            e.printStackTrace()
-            // Don't handle
-        } catch (e: NoCredentialException) {
-            e.printStackTrace()
-            manager.createCredential(context, CreatePasswordRequest(email, password))
-            // Don't handle
-        }
-
-        try {
             auth.signInWithEmailAndPassword(email, password).await()
             emit(AuthenticationResponse.Success)
         } catch (e: Exception) {
             emit(AuthenticationResponse.Error("Sign-in failed: ${e.message}"))
-            return@flow
+        }
+    }
+
+    override fun sendOtp(phoneNumber: String, verificationCallback: PhoneAuthProvider.OnVerificationStateChangedCallbacks) {
+        val options = PhoneAuthOptions.newBuilder(auth)
+            .setPhoneNumber(phoneNumber)
+            .setTimeout(60L, TimeUnit.SECONDS)
+            .setCallbacks(verificationCallback)
+            .build()
+
+        PhoneAuthProvider.verifyPhoneNumber(options)
+    }
+
+    override fun linkPhoneNumber(credential: PhoneAuthCredential): Flow<AuthenticationResponse> = flow {
+        emit(AuthenticationResponse.Loading)
+        try {
+            auth.currentUser?.linkWithCredential(credential)?.await()
+            emit(AuthenticationResponse.Success)
+        } catch (e: Exception) {
+            e.printStackTrace()
+            emit(AuthenticationResponse.Error(e.message ?: ""))
         }
     }
 
@@ -117,18 +118,17 @@ class AuthenticationRepositoryImpl @Inject constructor(
             val credential = manager.getCredential(context, request).credential
 
             if (credential !is CustomCredential) {
-                emit(AuthenticationResponse.Error("Credential not found"))
+                throw Exception("Credential not found")
             }
 
             if (credential.type != GoogleIdTokenCredential.TYPE_GOOGLE_ID_TOKEN_CREDENTIAL) {
-                emit(AuthenticationResponse.Error("Invalid credential type"))
+                throw Exception("Credential type is not valid")
             }
 
             val googleIdTokenCredential = GoogleIdTokenCredential.createFrom(credential.data)
             val firebaseCredential = GoogleAuthProvider.getCredential(googleIdTokenCredential.idToken, null)
 
             auth.signInWithCredential(firebaseCredential).await()
-
             emit(AuthenticationResponse.Success)
         } catch (e: GoogleIdTokenParsingException) {
             e.printStackTrace()

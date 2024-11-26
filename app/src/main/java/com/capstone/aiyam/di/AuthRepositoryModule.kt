@@ -1,9 +1,9 @@
 package com.capstone.aiyam.di
 
 import com.capstone.aiyam.data.repository.AuthenticationRepositoryImpl
-import com.capstone.aiyam.data.repository.AuthorizationRepositoryImpl
+import com.capstone.aiyam.data.repository.UserRepositoryImpl
 import com.capstone.aiyam.domain.repository.AuthenticationRepository
-import com.capstone.aiyam.domain.repository.AuthorizationRepository
+import com.capstone.aiyam.domain.repository.UserRepository
 import dagger.Binds
 import dagger.Module
 import dagger.hilt.InstallIn
@@ -23,6 +23,6 @@ abstract class AuthRepositoryModule {
     @Binds
     @Singleton
     abstract fun bindAuthorizationRepository(
-        authorizationRepositoryImpl: AuthorizationRepositoryImpl
-    ) : AuthorizationRepository
+        authorizationRepositoryImpl: UserRepositoryImpl
+    ) : UserRepository
 }
