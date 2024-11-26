@@ -1,5 +1,7 @@
 package com.capstone.aiyam.di
 
+import android.app.Application
+import androidx.credentials.CredentialManager
 import com.capstone.aiyam.BuildConfig
 import com.capstone.aiyam.data.remote.AlertService
 import com.capstone.aiyam.data.remote.ChickenService
@@ -24,6 +26,14 @@ object AppModule {
     @Singleton
     fun provideFirebaseAuth(): FirebaseAuth {
         return Firebase.auth
+    }
+
+    @Provides
+    @Singleton
+    fun provideCredentialManager(
+        context: Application
+    ): CredentialManager {
+        return CredentialManager.create(context)
     }
 
     @Provides

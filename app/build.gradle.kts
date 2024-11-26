@@ -100,6 +100,7 @@ dependencies {
     implementation(libs.androidx.media3.ui)
     implementation(libs.glide)
     implementation(libs.kotlinx.datetime)
+    implementation(libs.chaosleung.pinview)
 
     // Firebase
     implementation(platform(libs.firebase.bom))
