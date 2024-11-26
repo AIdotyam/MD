@@ -17,13 +17,15 @@
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toRightOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:navGraph="@navigation/splash_navigation" />
+        app:navGraph="@navigation/navigation_root" />
 
     <com.google.android.material.bottomnavigation.BottomNavigationView
         android:id="@+id/nav_view"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:background="@color/md_theme_secondary"
+        style="?attr/bottomNavigationStyle"
+        app:itemActiveIndicatorStyle="@color/md_theme_tertiary"
         app:itemIconTint="@color/md_theme_onSecondary"
         app:itemTextColor="@color/md_theme_onSecondary"
         app:layout_constraintBottom_toBottomOf="parent"

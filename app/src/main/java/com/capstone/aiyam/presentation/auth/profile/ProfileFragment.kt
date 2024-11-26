@@ -42,7 +42,7 @@ class ProfileFragment : Fragment() {
 
             is AuthorizationResponse.Error -> {
                 showToast(result.message)
-                ProfileFragmentDirections.actionProfileFragmentToSigninFragment().let {
+                ProfileFragmentDirections.actionProfileFragmentToSplashFragment().let {
                     findNavController().navigate(it)
                 }
             }
@@ -73,7 +73,7 @@ class ProfileFragment : Fragment() {
             viewModel.signOut()
             showToast("Successfully signed out")
             dialog.dismiss()
-            ProfileFragmentDirections.actionProfileFragmentToSigninFragment().let {
+            ProfileFragmentDirections.actionProfileFragmentToSplashFragment().let {
                 findNavController().navigate(it)
             }
         }

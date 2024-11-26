@@ -34,8 +34,8 @@ class SignInFragment : Fragment() {
     ): View {
         _binding = FragmentSigninBinding.inflate(inflater, container, false)
 
-        val mainNavGraph = findNavController().navInflater.inflate(R.navigation.splash_navigation)
-        findNavController().graph = mainNavGraph
+//        val mainNavGraph = findNavController().navInflater.inflate(R.navigation.splash_navigation)
+//        findNavController().graph = mainNavGraph
 
         return binding.root
     }

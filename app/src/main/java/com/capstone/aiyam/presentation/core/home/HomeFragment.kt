@@ -22,10 +22,6 @@ class HomeFragment : Fragment() {
         savedInstanceState: Bundle?
     ): View {
         _binding = FragmentHomeBinding.inflate(inflater, container, false)
-
-        val mainNavGraph = findNavController().navInflater.inflate(R.navigation.mobile_navigation)
-        findNavController().graph = mainNavGraph
-
         return binding.root
     }
 
