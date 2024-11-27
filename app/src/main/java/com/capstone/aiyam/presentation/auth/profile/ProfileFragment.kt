@@ -9,6 +9,9 @@ import android.view.ViewGroup
 import android.widget.Button
 import android.widget.Toast
 import androidx.appcompat.app.AlertDialog
+import androidx.lifecycle.Lifecycle
+import androidx.lifecycle.lifecycleScope
+import androidx.lifecycle.repeatOnLifecycle
 import androidx.navigation.fragment.findNavController
 import com.bumptech.glide.Glide
 import com.capstone.aiyam.R
@@ -16,6 +19,7 @@ import com.capstone.aiyam.databinding.FragmentProfileBinding
 import com.capstone.aiyam.domain.model.AuthorizationResponse
 import com.google.firebase.auth.FirebaseUser
 import dagger.hilt.android.AndroidEntryPoint
+import kotlinx.coroutines.launch
 
 @AndroidEntryPoint
 class ProfileFragment : Fragment() {
@@ -35,7 +39,7 @@ class ProfileFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        when(val result = viewModel.getUser()) {
+        when (val result = viewModel.getUser()) {
             is AuthorizationResponse.Success -> {
                 handleUser(result.user)
             }
@@ -43,6 +47,7 @@ class ProfileFragment : Fragment() {
             is AuthorizationResponse.Error -> {
                 showToast(result.message)
                 ProfileFragmentDirections.actionProfileFragmentToSplashFragment().let {
+                    findNavController().popBackStack()
                     findNavController().navigate(it)
                 }
             }
@@ -52,9 +57,24 @@ class ProfileFragment : Fragment() {
             alertDialog().show()
         }
 
-        binding.phoneNumberButton.setOnClickListener {
+        binding.phoneNumberCard.setOnClickListener {
             ProfileFragmentDirections.actionProfileFragmentToPhoneFragment().let {
                 findNavController().navigate(it)
+            }
+        }
+
+        binding.notificationSwitch.setOnCheckedChangeListener { _, isChecked ->
+            viewModel.saveNotificationSetting(isChecked)
+        }
+
+        lifecycleScope.launch {
+            viewLifecycleOwner.repeatOnLifecycle(Lifecycle.State.CREATED) {
+
+                // TODO: Add some kind of API call to set notification setting
+                //  if action true, send notification token, else remove notification token
+                viewModel.getNotificationSetting().collect {
+                    binding.notificationSwitch.isChecked = it
+                }
             }
         }
     }

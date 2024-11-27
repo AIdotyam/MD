@@ -14,6 +14,7 @@ import androidx.core.view.forEach
 import androidx.navigation.NavController
 import androidx.navigation.NavDestination
 import androidx.navigation.NavDestination.Companion.hierarchy
+import androidx.navigation.NavOptions
 import androidx.navigation.findNavController
 import androidx.navigation.fragment.NavHostFragment
 import com.capstone.aiyam.databinding.ActivityMainBinding
@@ -75,12 +76,6 @@ class MainActivity : AppCompatActivity() {
                 R.id.phoneFragment -> navView.visibility = View.GONE
                 else -> navView.visibility = View.VISIBLE
             }
-
-            navView.menu.forEach { item ->
-                if (destination(destination, item.itemId)) {
-                    item.isChecked = true
-                }
-            }
         }
 
         onBackPressedDispatcher.addCallback(this, object : OnBackPressedCallback(true) {
@@ -100,10 +95,6 @@ class MainActivity : AppCompatActivity() {
                 }
             }
         })
-    }
-
-    private fun destination(destination: NavDestination, destId: Int): Boolean {
-        return destination.hierarchy.any { it.id == destId }
     }
 
     private fun onBottomNavigated(navController: NavController, destination: Int) {

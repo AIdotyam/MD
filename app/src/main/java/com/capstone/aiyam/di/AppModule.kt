@@ -5,6 +5,7 @@ import androidx.credentials.CredentialManager
 import com.capstone.aiyam.BuildConfig
 import com.capstone.aiyam.data.remote.AlertService
 import com.capstone.aiyam.data.remote.ChickenService
+import com.capstone.aiyam.data.remote.DashboardService
 import com.google.firebase.Firebase
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.auth
@@ -66,5 +67,13 @@ object AppModule {
         retrofit: Retrofit
     ) : AlertService {
         return retrofit.create(AlertService::class.java)
+    }
+
+    @Provides
+    @Singleton
+    fun provideDashboardService(
+        retrofit: Retrofit
+    ): DashboardService {
+        return retrofit.create(DashboardService::class.java)
     }
 }

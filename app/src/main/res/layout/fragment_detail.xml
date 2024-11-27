@@ -1,23 +1,23 @@
 <?xml version="1.0" encoding="utf-8"?>
-<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.coordinatorlayout.widget.CoordinatorLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
-    tools:context=".presentation.core.detail.DetailFragment"
-    android:fillViewport="true">
+    tools:context=".presentation.core.detail.DetailFragment">
 
-    <LinearLayout
+    <!-- App Bar Layout -->
+    <com.google.android.material.appbar.AppBarLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="vertical">
+        android:theme="@style/ThemeOverlay.MaterialComponents.Dark.ActionBar">
 
         <com.google.android.material.appbar.MaterialToolbar
             android:id="@+id/topAppBar"
             android:layout_width="match_parent"
             android:layout_height="?attr/actionBarSize"
             android:background="?attr/colorPrimary"
-            android:elevation="4dp"
             app:titleTextColor="?attr/colorOnPrimary">
 
             <TextView
@@ -28,203 +28,216 @@
                 android:textColor="?attr/colorOnPrimary"
                 android:textSize="20sp"
                 android:textStyle="bold" />
-
         </com.google.android.material.appbar.MaterialToolbar>
 
-        <!-- Image Header -->
-        <FrameLayout
-            android:id="@+id/mediaContainer"
-            android:layout_width="match_parent"
-            android:layout_height="500dp">
+    </com.google.android.material.appbar.AppBarLayout>
 
-            <ImageView
-                android:id="@+id/headerImage"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:contentDescription="@string/todo"
-                android:scaleType="centerCrop"
-                android:visibility="gone"
-                tools:src="@drawable/sticker_6" />
+    <!-- Scrollable Content -->
+    <androidx.core.widget.NestedScrollView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        app:layout_behavior="@string/appbar_scrolling_view_behavior">
 
-            <androidx.media3.ui.PlayerView
-                android:id="@+id/headerVideo"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:visibility="gone" />
-        </FrameLayout>
-
-        <!-- Title -->
-        <TextView
-            android:id="@+id/dateTitle"
+        <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="16dp"
-            android:layout_marginBottom="8dp"
-            android:layout_marginStart="16dp"
-            android:layout_marginEnd="16dp"
-            android:gravity="center"
-            android:text="@string/date"
-            android:textSize="24sp"
-            android:textStyle="bold" />
+            android:orientation="vertical"
+            android:padding="@dimen/default_margin">
 
-        <androidx.cardview.widget.CardView
-            android:id="@+id/totalAyamCard"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginVertical="10dp"
-            android:layout_marginHorizontal="26dp"
-            style="@style/NormalCardView" >
+            <!-- Image Header -->
+            <FrameLayout
+                android:id="@+id/mediaContainer"
+                android:layout_width="match_parent"
+                android:layout_height="500dp"
+                android:layout_marginBottom="16dp">
 
-            <LinearLayout
+                <ImageView
+                    android:id="@+id/headerImage"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:contentDescription="@string/todo"
+                    android:scaleType="centerCrop"
+                    android:visibility="gone"
+                    tools:src="@drawable/sticker_6" />
+
+                <androidx.media3.ui.PlayerView
+                    android:id="@+id/headerVideo"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:visibility="gone" />
+            </FrameLayout>
+
+            <!-- Title -->
+            <TextView
+                android:id="@+id/dateTitle"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:padding="16dp"
-                android:orientation="vertical"
-                android:gravity="center">
+                android:gravity="center"
+                android:text="@string/date"
+                android:textSize="24sp"
+                android:textStyle="bold"
+                android:layout_marginBottom="16dp" />
 
-                <LinearLayout
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:orientation="horizontal"
-                    android:gravity="center"
-                    android:layout_marginBottom="8dp">
-
-                    <ImageView
-                        android:layout_width="36dp"
-                        android:layout_height="36dp"
-                        android:src="@drawable/chicken"
-                        app:tint="@color/md_theme_onSecondaryContainer"
-                        android:contentDescription="@string/todo" />
-
-                    <TextView
-                        android:id="@+id/totalAyamValue"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_marginStart="8dp"
-                        android:text="@string/_32"
-                        android:textStyle="bold"
-                        android:textSize="24sp"
-                        android:textColor="#4285F4" />
-                </LinearLayout>
-
-                <TextView
-                    android:id="@+id/totalAyamLabel"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="@string/chicken_count"
-                    android:textColor="@color/md_theme_onSecondaryContainer"
-                    android:textSize="17sp" />
-            </LinearLayout>
-        </androidx.cardview.widget.CardView>
-
-        <androidx.cardview.widget.CardView
-            android:id="@+id/ayamMatiCard"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginVertical="10dp"
-            android:layout_marginHorizontal="26dp"
-            style="@style/NormalCardView">
-
-            <LinearLayout
+            <!-- Cards -->
+            <androidx.cardview.widget.CardView
+                android:id="@+id/totalAyamCard"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:padding="16dp"
-                android:orientation="vertical"
-                android:gravity="center">
+                android:layout_marginVertical="10dp"
+                android:layout_marginHorizontal="26dp"
+                style="@style/NormalCardView" >
 
                 <LinearLayout
-                    android:layout_width="wrap_content"
+                    android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:orientation="horizontal"
-                    android:gravity="center"
-                    android:layout_marginBottom="8dp">
+                    android:padding="16dp"
+                    android:orientation="vertical"
+                    android:gravity="center">
 
-                    <ImageView
-                        android:layout_width="36dp"
-                        android:layout_height="36dp"
-                        android:src="@drawable/skull"
-                        app:tint="@color/md_theme_onSecondaryContainer"
-                        android:contentDescription="@string/todo" />
-
-                    <TextView
-                        android:id="@+id/ayamMatiValue"
+                    <LinearLayout
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:layout_marginStart="8dp"
-                        android:text="3"
-                        android:textSize="24sp"
-                        android:textStyle="bold"
-                        android:textColor="#DB4437"
-                        tools:ignore="HardcodedText" />
+                        android:orientation="horizontal"
+                        android:gravity="center"
+                        android:layout_marginBottom="8dp">
+
+                        <ImageView
+                            android:layout_width="36dp"
+                            android:layout_height="36dp"
+                            android:src="@drawable/chicken"
+                            app:tint="@color/md_theme_onSecondaryContainer"
+                            android:contentDescription="@string/todo" />
+
+                        <TextView
+                            android:id="@+id/totalAyamValue"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginStart="8dp"
+                            android:text="@string/_32"
+                            android:textStyle="bold"
+                            android:textSize="24sp"
+                            android:textColor="#4285F4" />
+                    </LinearLayout>
+
+                    <TextView
+                        android:id="@+id/totalAyamLabel"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="@string/chicken_count"
+                        android:textColor="@color/md_theme_onSecondaryContainer"
+                        android:textSize="17sp" />
                 </LinearLayout>
+            </androidx.cardview.widget.CardView>
 
-                <TextView
-                    android:id="@+id/ayamMatiLabel"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="@string/dead_count"
-                    android:textColor="@color/md_theme_onSecondaryContainer"
-                    android:textSize="17sp" />
-            </LinearLayout>
-        </androidx.cardview.widget.CardView>
-
-        <androidx.cardview.widget.CardView
-            android:id="@+id/crowdingCard"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginVertical="10dp"
-            android:layout_marginHorizontal="26dp"
-            style="@style/NormalCardView">
-
-            <LinearLayout
+            <androidx.cardview.widget.CardView
+                android:id="@+id/ayamMatiCard"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:padding="16dp"
-                android:orientation="vertical"
-                android:gravity="center">
+                android:layout_marginVertical="10dp"
+                android:layout_marginHorizontal="26dp"
+                style="@style/NormalCardView">
 
                 <LinearLayout
-                    android:layout_width="wrap_content"
+                    android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:orientation="horizontal"
-                    android:gravity="center"
-                    android:layout_marginBottom="8dp">
+                    android:padding="16dp"
+                    android:orientation="vertical"
+                    android:gravity="center">
 
-                    <ImageView
-                        android:layout_width="36dp"
-                        android:layout_height="36dp"
-                        android:src="@drawable/round"
-                        android:contentDescription="@string/todo"
-                        app:tint="@color/md_theme_onSecondaryContainer" />
-
-                    <TextView
-                        android:id="@+id/crowdingValue"
+                    <LinearLayout
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:layout_marginStart="8dp"
-                        android:text="Low"
-                        android:textSize="24sp"
-                        android:textStyle="bold"
-                        android:textColor="#0F9D58"
-                        tools:ignore="HardcodedText" />
+                        android:orientation="horizontal"
+                        android:gravity="center"
+                        android:layout_marginBottom="8dp">
+
+                        <ImageView
+                            android:layout_width="36dp"
+                            android:layout_height="36dp"
+                            android:src="@drawable/skull"
+                            app:tint="@color/md_theme_onSecondaryContainer"
+                            android:contentDescription="@string/todo" />
+
+                        <TextView
+                            android:id="@+id/ayamMatiValue"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginStart="8dp"
+                            android:text="3"
+                            android:textSize="24sp"
+                            android:textStyle="bold"
+                            android:textColor="#DB4437"
+                            tools:ignore="HardcodedText" />
+                    </LinearLayout>
+
+                    <TextView
+                        android:id="@+id/ayamMatiLabel"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="@string/dead_count"
+                        android:textColor="@color/md_theme_onSecondaryContainer"
+                        android:textSize="17sp" />
                 </LinearLayout>
+            </androidx.cardview.widget.CardView>
 
-                <TextView
-                    android:id="@+id/crowdingLabel"
-                    android:layout_width="wrap_content"
+            <androidx.cardview.widget.CardView
+                android:id="@+id/crowdingCard"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginVertical="10dp"
+                android:layout_marginHorizontal="26dp"
+                style="@style/NormalCardView">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:text="@string/crowding"
-                    android:textColor="@color/md_theme_onSecondaryContainer"
-                    android:textSize="17sp" />
-            </LinearLayout>
-        </androidx.cardview.widget.CardView>
+                    android:padding="16dp"
+                    android:orientation="vertical"
+                    android:gravity="center">
 
-        <!-- Back Button -->
-        <Button
-            android:id="@+id/backButton"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_margin="16dp"
-            android:text="@string/back"/>
-    </LinearLayout>
-</ScrollView>
+                    <LinearLayout
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:orientation="horizontal"
+                        android:gravity="center"
+                        android:layout_marginBottom="8dp">
+
+                        <ImageView
+                            android:layout_width="36dp"
+                            android:layout_height="36dp"
+                            android:src="@drawable/round"
+                            android:contentDescription="@string/todo"
+                            app:tint="@color/md_theme_onSecondaryContainer" />
+
+                        <TextView
+                            android:id="@+id/crowdingValue"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginStart="8dp"
+                            android:text="Low"
+                            android:textSize="24sp"
+                            android:textStyle="bold"
+                            android:textColor="#0F9D58"
+                            tools:ignore="HardcodedText" />
+                    </LinearLayout>
+
+                    <TextView
+                        android:id="@+id/crowdingLabel"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="@string/crowding"
+                        android:textColor="@color/md_theme_onSecondaryContainer"
+                        android:textSize="17sp" />
+                </LinearLayout>
+            </androidx.cardview.widget.CardView>
+
+            <!-- Back Button -->
+            <Button
+                android:id="@+id/backButton"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="@string/back"
+                android:layout_marginTop="24dp" />
+        </LinearLayout>
+    </androidx.core.widget.NestedScrollView>
+</androidx.coordinatorlayout.widget.CoordinatorLayout>

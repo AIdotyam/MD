@@ -64,14 +64,8 @@ class AuthenticationRepositoryImpl @Inject constructor(
         auth.currentUser?.updateProfile(UserProfileChangeRequest.Builder().setDisplayName(username).build())
     }
 
-    // Use later, idk?
-    private fun updateProfilePhoto(photoUrl: String) {
-        auth.currentUser?.updateProfile(UserProfileChangeRequest.Builder().setPhotoUri(photoUrl.toUri()).build())
-    }
-
     override fun loginWithEmail(email: String, password: String): Flow<AuthenticationResponse> = flow {
         emit(AuthenticationResponse.Loading)
-
         try {
             auth.signInWithEmailAndPassword(email, password).await()
             emit(AuthenticationResponse.Success)

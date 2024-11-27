@@ -2,17 +2,24 @@ package com.capstone.aiyam.presentation.core.home
 
 import android.graphics.Color
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
-import androidx.navigation.fragment.findNavController
-import com.capstone.aiyam.R
+import androidx.lifecycle.lifecycleScope
 import com.capstone.aiyam.data.remote.DashboardData
 import com.capstone.aiyam.data.remote.RetrofitInstance
 import com.capstone.aiyam.databinding.FragmentHomeBinding
-import com.github.mikephil.charting.data.*
+import com.github.mikephil.charting.data.BarData
+import com.github.mikephil.charting.data.BarDataSet
+import com.github.mikephil.charting.data.BarEntry
+import com.github.mikephil.charting.data.Entry
+import com.github.mikephil.charting.data.LineData
+import com.github.mikephil.charting.data.LineDataSet
+import kotlinx.coroutines.delay
+import kotlinx.coroutines.launch
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
@@ -44,20 +51,46 @@ class HomeFragment : Fragment() {
     }
 
     private fun fetchDashboardData() {
+        val dummyData: List<Int> = List(12) { (1..100).random() }
+        val dummyData2: List<Int> = List(12) { (1..100).random() }
+
         RetrofitInstance.api.getDashboardData().enqueue(object : Callback<DashboardData> {
             override fun onResponse(call: Call<DashboardData>, response: Response<DashboardData>) {
                 if (response.isSuccessful) {
                     response.body()?.let {
-                        setupDailyBarChart(it.daily_count)
-                        setupMortalityLineChart(it.mortality_trends)
+                        setupDailyBarChart(dummyData)
+                        setupMortalityLineChart(dummyData2)
                     }
                 } else {
-                    // Handle response error
+                    setupDailyBarChart(dummyData)
+                    setupMortalityLineChart(dummyData2)
+                    // Launch a coroutine to change the charts after 2 seconds
+                    lifecycleScope.launch {
+                        delay(2000) // Delay for 2 seconds
+                        // Generate new dummy data
+                        val newDummyData: List<Int> = List(12) { (1..100).random() }
+                        val newDummyData2: List<Int> = List(12) { (1..100).random() }
+
+                        // Update the charts with new data
+                        setupDailyBarChart(newDummyData)
+                        setupMortalityLineChart(newDummyData2)
+
+                        delay(2000) // Delay for 2 seconds
+
+                        // Generate new dummy data
+                        val newDummyData3: List<Int> = List(12) { (1..100).random() }
+                        val newDummyData4: List<Int> = List(12) { (1..100).random() }
+
+                        // Update the charts with new data
+                        setupDailyBarChart(newDummyData3)
+                        setupMortalityLineChart(newDummyData4)
+                    }
                 }
             }
 
             override fun onFailure(call: Call<DashboardData>, t: Throwable) {
-                // Handle API call failure (e.g., log error or show Toast)
+                setupDailyBarChart(dummyData)
+                setupMortalityLineChart(dummyData2)
             }
         })
     }
@@ -67,8 +100,9 @@ class HomeFragment : Fragment() {
         val dataSet = BarDataSet(entries, "Daily Count").apply {
             color = Color.BLUE
         }
+
         binding.dailyBarChart.data = BarData(dataSet)
-        binding.dailyBarChart.invalidate() // Refresh the chart
+        binding.dailyBarChart.invalidate()
     }
 
     private fun setupMortalityLineChart(data: List<Int>) {
@@ -77,7 +111,8 @@ class HomeFragment : Fragment() {
             color = Color.RED
             setCircleColor(Color.RED)
         }
+
         binding.mortalityLineChart.data = LineData(dataSet)
-        binding.mortalityLineChart.invalidate() // Refresh the chart
+        binding.mortalityLineChart.invalidate()
     }
 }

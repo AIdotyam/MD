@@ -22,7 +22,7 @@ android {
 
     defaultConfig {
         applicationId = "com.capstone.aiyam"
-        minSdk = 24
+        minSdk = 26
         targetSdk = 34
         versionCode = 1
         versionName = "1.0"
@@ -88,6 +88,7 @@ dependencies {
     implementation(libs.logging.interceptor)
     implementation(libs.converter.gson)
     implementation(libs.gson)
+    implementation(libs.androidx.datastore.preferences)
 
     // CameraX
     implementation(libs.androidx.camera.core)
@@ -96,12 +97,12 @@ dependencies {
     implementation(libs.androidx.camera.view)
 
     // Media
-//    implementation("com.google.android.exoplayer:exoplayer:2.19.1")
     implementation(libs.androidx.media3.exoplayer)
     implementation(libs.androidx.media3.ui)
     implementation(libs.glide)
     implementation(libs.kotlinx.datetime)
     implementation(libs.chaosleung.pinview)
+    implementation(libs.mpandroidchart)
 
     // Firebase
     implementation(platform(libs.firebase.bom))
@@ -114,10 +115,7 @@ dependencies {
     implementation(libs.androidx.credentials)
     implementation(libs.googleid)
 
-    //Dependency Injection
+    // Dependency Injection
     ksp(libs.hilt.android.compiler)
     implementation(libs.hilt.android)
-
-    //diagram chart
-    implementation(libs.mpandroidchart)
 }

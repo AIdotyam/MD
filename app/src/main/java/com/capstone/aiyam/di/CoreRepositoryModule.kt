@@ -2,8 +2,12 @@ package com.capstone.aiyam.di
 
 import com.capstone.aiyam.data.repository.AlertRepositoryImpl
 import com.capstone.aiyam.data.repository.ChickenRepositoryImpl
+import com.capstone.aiyam.data.repository.DashboardRepositoryImpl
+import com.capstone.aiyam.data.repository.NotificationPreferencesRepositoryImpl
 import com.capstone.aiyam.domain.repository.AlertRepository
 import com.capstone.aiyam.domain.repository.ChickenRepository
+import com.capstone.aiyam.domain.repository.DashboardRepository
+import com.capstone.aiyam.domain.repository.NotificationPreferencesRepository
 import dagger.Binds
 import dagger.Module
 import dagger.hilt.InstallIn
@@ -25,4 +29,16 @@ abstract class CoreRepositoryModule {
     abstract fun bindAlertRepository(
         alertRepositoryImpl: AlertRepositoryImpl
     ) : AlertRepository
+
+    @Binds
+    @Singleton
+    abstract fun bindDashboardRepository(
+        dashboardRepositoryImpl: DashboardRepositoryImpl
+    ) : DashboardRepository
+
+    @Binds
+    @Singleton
+    abstract fun bindNotificationPreferencesRepository(
+        notificationPreferencesRepositoryImpl: NotificationPreferencesRepositoryImpl
+    ) : NotificationPreferencesRepository
 }
