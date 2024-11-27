@@ -12,8 +12,6 @@ import com.capstone.aiyam.R
 import com.capstone.aiyam.data.remote.DashboardData
 import com.capstone.aiyam.data.remote.RetrofitInstance
 import com.capstone.aiyam.databinding.FragmentHomeBinding
-import com.capstone.aiyam.presentation.core.home.model.DashboardData
-import com.capstone.aiyam.presentation.core.home.network.RetrofitInstance
 import com.github.mikephil.charting.data.*
 import retrofit2.Call
 import retrofit2.Callback
