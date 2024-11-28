@@ -17,6 +17,7 @@ import com.capstone.aiyam.R
 import com.capstone.aiyam.data.dto.ResponseWrapper
 import com.capstone.aiyam.databinding.FragmentAlertsBinding
 import com.capstone.aiyam.domain.model.Alerts
+import com.capstone.aiyam.presentation.core.history.HistoryFragmentDirections
 import com.capstone.aiyam.utils.gone
 import com.capstone.aiyam.utils.visible
 import dagger.hilt.android.AndroidEntryPoint
@@ -42,7 +43,6 @@ class AlertsFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-
         observeChips()
         observeAlerts()
         observeRefresh()
@@ -109,7 +109,6 @@ class AlertsFragment : Fragment() {
             groupedItems.add(AlertsDisplayItem.Item(alert))
         }
 
-        Log.d("GroupedItems", groupedItems.toString())
         return groupedItems
     }
 
@@ -118,7 +117,7 @@ class AlertsFragment : Fragment() {
         binding.alertsHistoryRecyclerView.layoutManager = layoutManager
 
         adapter = AlertsAdapter {
-            val action = AlertsFragmentDirections.actionAlertsFragmentToAlertDetailFragment(it.id)
+            val action = HistoryFragmentDirections.actionHistoryFragmentToAlertDetailFragment(it.id)
             findNavController().navigate(action)
         }
 

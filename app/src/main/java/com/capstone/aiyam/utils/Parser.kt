@@ -65,3 +65,9 @@ fun String.getMimeTypeFromUrl(): String? {
         null
     }
 }
+
+fun String.isValidPhoneNumber(): Boolean {
+    // Regex to check if phone starts with 8 and contains 10-12 digits
+    val regex = "^8\\d{9,11}$".toRegex()
+    return regex.matches(this)
+}

@@ -47,7 +47,6 @@ class ProfileFragment : Fragment() {
             is AuthorizationResponse.Error -> {
                 showToast(result.message)
                 ProfileFragmentDirections.actionProfileFragmentToSplashFragment().let {
-                    findNavController().popBackStack()
                     findNavController().navigate(it)
                 }
             }
@@ -64,7 +63,7 @@ class ProfileFragment : Fragment() {
         }
 
         binding.notificationSwitch.setOnCheckedChangeListener { _, isChecked ->
-            viewModel.saveNotificationSetting(isChecked)
+            viewModel.savePushNotificationSetting(isChecked)
         }
 
         lifecycleScope.launch {
@@ -72,8 +71,23 @@ class ProfileFragment : Fragment() {
 
                 // TODO: Add some kind of API call to set notification setting
                 //  if action true, send notification token, else remove notification token
-                viewModel.getNotificationSetting().collect {
+                viewModel.getPushNotificationSetting().collect {
                     binding.notificationSwitch.isChecked = it
+                }
+            }
+        }
+
+        binding.emailNotificationSwitch.setOnCheckedChangeListener { _, isChecked ->
+            viewModel.saveEmailNotificationSetting(isChecked)
+        }
+
+        lifecycleScope.launch {
+            viewLifecycleOwner.repeatOnLifecycle(Lifecycle.State.CREATED) {
+
+                // TODO: Add some kind of API call to set notification setting
+                //  if action true, send notification token, else remove notification token
+                viewModel.getEmailNotificationSetting().collect {
+                    binding.emailNotificationSwitch.isChecked = it
                 }
             }
         }

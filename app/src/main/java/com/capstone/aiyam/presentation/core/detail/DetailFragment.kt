@@ -76,7 +76,7 @@ class DetailFragment : Fragment() {
 
     override fun onDestroyView() {
         super.onDestroyView()
-        releasePlayer()  // Release the player when view is destroyed
+        releasePlayer()
         _binding = null
     }
 

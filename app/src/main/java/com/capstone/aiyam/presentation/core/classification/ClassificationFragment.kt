@@ -301,21 +301,25 @@ class ClassificationFragment : Fragment() {
 
     private fun classify(file: File, mediaType: String) { lifecycleScope.launch {
         viewLifecycleOwner.repeatOnLifecycle(Lifecycle.State.CREATED) {
-            viewModel.getToken().collect { token ->
-                when (token) {
-                    is TokenResponse.Failed -> {
-                        showToast("Unauthorized")
-                    }
-                    is TokenResponse.Loading -> {
-                        showToast("File has been uploaded")
-                    }
-                    is TokenResponse.Success -> {
-                        viewModel.classify(token.token, file, mediaType).collect {
-                            Log.d("Firebase", token.token)
-                            handleOnClassify(it)
+            try {
+                viewModel.getToken().collect { token ->
+                    when (token) {
+                        is TokenResponse.Failed -> {
+                            showToast("Unauthorized")
+                        }
+                        is TokenResponse.Loading -> {
+                            showToast("File has been uploaded")
+                        }
+                        is TokenResponse.Success -> {
+                            viewModel.classify(token.token, file, mediaType).collect {
+                                Log.d("Firebase", token.token)
+                                handleOnClassify(it)
+                            }
                         }
                     }
                 }
+            } catch (e: Exception) {
+                showToast(e.message.toString())
             }
         }
     }}

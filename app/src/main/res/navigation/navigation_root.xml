@@ -33,11 +33,7 @@
         android:id="@+id/alertsFragment"
         android:name="com.capstone.aiyam.presentation.core.alerts.AlertsFragment"
         android:label="Alerts"
-        tools:layout="@layout/fragment_alerts">
-        <action
-            android:id="@+id/action_alertsFragment_to_alertDetailFragment"
-            app:destination="@id/alertDetailFragment" />
-    </fragment>
+        tools:layout="@layout/fragment_alerts"/>
     <fragment
         android:id="@+id/classificationFragment"
         android:name="com.capstone.aiyam.presentation.core.classification.ClassificationFragment"
@@ -128,5 +124,12 @@
         android:id="@+id/historyFragment"
         android:name="com.capstone.aiyam.presentation.core.history.HistoryFragment"
         android:label="fragment_history"
-        tools:layout="@layout/fragment_history" />
+        tools:layout="@layout/fragment_history" >
+        <action
+            android:id="@+id/action_historyFragment_to_alertDetailFragment"
+            app:destination="@id/alertDetailFragment" />
+        <action
+            android:id="@+id/action_historyFragment_to_detailFragment"
+            app:destination="@id/detailFragment" />
+    </fragment>
 </navigation>

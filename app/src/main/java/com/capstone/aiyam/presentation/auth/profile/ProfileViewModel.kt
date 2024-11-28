@@ -16,9 +16,15 @@ class ProfileViewModel @Inject constructor(
     fun getUser() = userRepository.getFirebaseUser()
     fun signOut() = userRepository.firebaseSignOut()
 
-    fun saveNotificationSetting(isActive: Boolean) { viewModelScope.launch {
-        notificationPreferencesRepository.saveNotificationSetting(isActive)
+    fun savePushNotificationSetting(isActive: Boolean) { viewModelScope.launch {
+        notificationPreferencesRepository.savePushNotificationSetting(isActive)
     }}
 
-    fun getNotificationSetting() = notificationPreferencesRepository.getNotificationSetting()
+    fun getPushNotificationSetting() = notificationPreferencesRepository.getPushNotificationSetting()
+
+    fun saveEmailNotificationSetting(isActive: Boolean) { viewModelScope.launch {
+        notificationPreferencesRepository.saveEmailNotificationSetting(isActive)
+    }}
+
+    fun getEmailNotificationSetting() = notificationPreferencesRepository.getEmailNotificationSetting()
 }

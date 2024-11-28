@@ -12,15 +12,27 @@ import javax.inject.Inject
 class NotificationPreferencesRepositoryImpl @Inject constructor(
     private val context: Application
 ) : NotificationPreferencesRepository {
-    override fun getNotificationSetting(): Flow<Boolean> {
+    override fun getPushNotificationSetting(): Flow<Boolean> {
         return context.notificationPreferences.data.map {
-            it[PreferencesKey.NOTIFICATION_KEY] ?: false
+            it[PreferencesKey.PUSH_NOTIFICATION_KEY] ?: false
         }
     }
 
-    override suspend fun saveNotificationSetting(isActive: Boolean) {
+    override suspend fun savePushNotificationSetting(isActive: Boolean) {
         context.notificationPreferences.edit {
-            it[PreferencesKey.NOTIFICATION_KEY] = isActive
+            it[PreferencesKey.PUSH_NOTIFICATION_KEY] = isActive
+        }
+    }
+
+    override fun getEmailNotificationSetting(): Flow<Boolean> {
+        return context.notificationPreferences.data.map {
+            it[PreferencesKey.EMAIL_NOTIFICATION_KEY] ?: false
+        }
+    }
+
+    override suspend fun saveEmailNotificationSetting(isActive: Boolean) {
+        context.notificationPreferences.edit {
+            it[PreferencesKey.EMAIL_NOTIFICATION_KEY] = isActive
         }
     }
 }
