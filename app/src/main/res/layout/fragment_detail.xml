@@ -7,7 +7,6 @@
     android:layout_height="match_parent"
     tools:context=".presentation.core.detail.DetailFragment">
 
-    <!-- App Bar Layout -->
     <com.google.android.material.appbar.AppBarLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -105,7 +104,6 @@
                             android:layout_width="36dp"
                             android:layout_height="36dp"
                             android:src="@drawable/chicken"
-                            app:tint="@color/md_theme_onSecondaryContainer"
                             android:contentDescription="@string/todo" />
 
                         <TextView
@@ -124,7 +122,6 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:text="@string/chicken_count"
-                        android:textColor="@color/md_theme_onSecondaryContainer"
                         android:textSize="17sp" />
                 </LinearLayout>
             </androidx.cardview.widget.CardView>
@@ -155,7 +152,6 @@
                             android:layout_width="36dp"
                             android:layout_height="36dp"
                             android:src="@drawable/skull"
-                            app:tint="@color/md_theme_onSecondaryContainer"
                             android:contentDescription="@string/todo" />
 
                         <TextView
@@ -175,7 +171,6 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:text="@string/dead_count"
-                        android:textColor="@color/md_theme_onSecondaryContainer"
                         android:textSize="17sp" />
                 </LinearLayout>
             </androidx.cardview.widget.CardView>
@@ -206,8 +201,7 @@
                             android:layout_width="36dp"
                             android:layout_height="36dp"
                             android:src="@drawable/round"
-                            android:contentDescription="@string/todo"
-                            app:tint="@color/md_theme_onSecondaryContainer" />
+                            android:contentDescription="@string/todo" />
 
                         <TextView
                             android:id="@+id/crowdingValue"
@@ -226,7 +220,6 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:text="@string/crowding"
-                        android:textColor="@color/md_theme_onSecondaryContainer"
                         android:textSize="17sp" />
                 </LinearLayout>
             </androidx.cardview.widget.CardView>

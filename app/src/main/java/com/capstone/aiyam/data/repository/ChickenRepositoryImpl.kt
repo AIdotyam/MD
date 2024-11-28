@@ -15,14 +15,24 @@ import javax.inject.Inject
 class ChickenRepositoryImpl @Inject constructor(
     private val chickenService: ChickenService
 ) : ChickenRepository {
-    override fun classifyChicken(file: File, mediaType: String): Flow<ResponseWrapper<Classification>> = flow {
+    override fun classifyChicken(token: String, file: File, mediaType: String): Flow<ResponseWrapper<Classification>> = flow {
         emit(ResponseWrapper.Loading)
 
         val requestBody = file.asRequestBody(mediaType.toMediaTypeOrNull())
         val multipartBody =  MultipartBody.Part.createFormData("file", file.name, requestBody)
 
         try {
-            val response = chickenService.postChicken(multipartBody)
+            val response = chickenService.postChicken(token, multipartBody)
+            emit(ResponseWrapper.Success(response.data))
+        } catch (e: Exception) {
+            emit(ResponseWrapper.Error(e.message.toString()))
+        }
+    }
+
+    override fun getHistories(token: String): Flow<ResponseWrapper<List<Classification>>> = flow {
+        emit(ResponseWrapper.Loading)
+        try {
+            val response = chickenService.getHistories(token)
             emit(ResponseWrapper.Success(response.data))
         } catch (e: Exception) {
             emit(ResponseWrapper.Error(e.message.toString()))

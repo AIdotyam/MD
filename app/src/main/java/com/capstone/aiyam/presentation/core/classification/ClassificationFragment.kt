@@ -7,6 +7,7 @@ import android.content.pm.PackageManager
 import android.net.Uri
 import android.os.*
 import android.provider.MediaStore
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -31,6 +32,7 @@ import com.capstone.aiyam.R
 import com.capstone.aiyam.databinding.FragmentClassificationBinding
 import com.capstone.aiyam.domain.model.Classification
 import com.capstone.aiyam.data.dto.ResponseWrapper
+import com.capstone.aiyam.domain.model.TokenResponse
 import com.capstone.aiyam.utils.gone
 import com.capstone.aiyam.utils.toFormattedTime
 import com.capstone.aiyam.utils.visible
@@ -299,8 +301,21 @@ class ClassificationFragment : Fragment() {
 
     private fun classify(file: File, mediaType: String) { lifecycleScope.launch {
         viewLifecycleOwner.repeatOnLifecycle(Lifecycle.State.CREATED) {
-            viewModel.classify(file, mediaType).collect {
-                handleOnClassify(it)
+            viewModel.getToken().collect { token ->
+                when (token) {
+                    is TokenResponse.Failed -> {
+                        showToast("Unauthorized")
+                    }
+                    is TokenResponse.Loading -> {
+                        showToast("File has been uploaded")
+                    }
+                    is TokenResponse.Success -> {
+                        viewModel.classify(token.token, file, mediaType).collect {
+                            Log.d("Firebase", token.token)
+                            handleOnClassify(it)
+                        }
+                    }
+                }
             }
         }
     }}

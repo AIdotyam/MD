@@ -10,11 +10,7 @@ import androidx.activity.OnBackPressedCallback
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
-import androidx.core.view.forEach
 import androidx.navigation.NavController
-import androidx.navigation.NavDestination
-import androidx.navigation.NavDestination.Companion.hierarchy
-import androidx.navigation.NavOptions
 import androidx.navigation.findNavController
 import androidx.navigation.fragment.NavHostFragment
 import com.capstone.aiyam.databinding.ActivityMainBinding
@@ -54,8 +50,8 @@ class MainActivity : AppCompatActivity() {
                     onBottomNavigated(navController, R.id.profileFragment)
                     true
                 }
-                R.id.alertsFragment -> {
-                    onBottomNavigated(navController, R.id.alertsFragment)
+                R.id.historyFragment -> {
+                    onBottomNavigated(navController, R.id.historyFragment)
                     true
                 }
                 R.id.classificationFragment -> {
@@ -110,7 +106,7 @@ class MainActivity : AppCompatActivity() {
         val topLevelDestinations = setOf(
             R.id.homeFragment,
             R.id.profileFragment,
-            R.id.alertsFragment,
+            R.id.historyFragment,
             R.id.classificationFragment,
             R.id.signinFragment,
             R.id.signupFragment

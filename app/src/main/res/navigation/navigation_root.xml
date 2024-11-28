@@ -119,4 +119,14 @@
             app:destination="@id/homeFragment"
             app:popUpTo="@id/signupFragment" />
     </fragment>
+    <fragment
+        android:id="@+id/classificationHistoryFragment"
+        android:name="com.capstone.aiyam.presentation.core.classificationhistory.ClassificationHistoryFragment"
+        android:label="fragment_classification_history"
+        tools:layout="@layout/fragment_classification_history" />
+    <fragment
+        android:id="@+id/historyFragment"
+        android:name="com.capstone.aiyam.presentation.core.history.HistoryFragment"
+        android:label="fragment_history"
+        tools:layout="@layout/fragment_history" />
 </navigation>

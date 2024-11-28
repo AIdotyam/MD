@@ -64,4 +64,5 @@
     <string name="_10_20">10:20</string>
     <string name="telegram_alert">Telegram Alert</string>
     <string name="phone_number">Phone Number</string>
+    <string name="history">History</string>
 </resources>

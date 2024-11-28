@@ -12,7 +12,6 @@
         android:layout_height="wrap_content"
         android:visibility="gone"
         android:indeterminate="true"
-        app:indicatorColor="@color/md_theme_primary"
         app:trackCornerRadius="2dp"
         app:trackThickness="4dp"
         app:layout_constraintEnd_toEndOf="parent"

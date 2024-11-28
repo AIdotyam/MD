@@ -100,10 +100,13 @@ dependencies {
     implementation(libs.androidx.media3.exoplayer)
     implementation(libs.androidx.media3.ui)
     implementation(libs.glide)
+
+    // Interface
     implementation(libs.kotlinx.datetime)
     implementation(libs.chaosleung.pinview)
     implementation(libs.mpandroidchart)
-
+    implementation(libs.androidx.viewpager2)
+    
     // Firebase
     implementation(platform(libs.firebase.bom))
     implementation(libs.firebase.analytics)

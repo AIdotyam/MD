@@ -57,7 +57,7 @@ class ProfileFragment : Fragment() {
             alertDialog().show()
         }
 
-        binding.phoneNumberCard.setOnClickListener {
+        binding.cardButtonPhoneNumber.setOnClickListener {
             ProfileFragmentDirections.actionProfileFragmentToPhoneFragment().let {
                 findNavController().navigate(it)
             }

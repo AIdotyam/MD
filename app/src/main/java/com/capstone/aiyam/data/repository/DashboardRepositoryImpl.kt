@@ -2,6 +2,7 @@ package com.capstone.aiyam.data.repository
 
 import com.capstone.aiyam.data.dto.ResponseWrapper
 import com.capstone.aiyam.data.remote.DashboardService
+import com.capstone.aiyam.domain.model.Summary
 import com.capstone.aiyam.domain.model.DailySummary
 import com.capstone.aiyam.domain.model.MonthlySummary
 import com.capstone.aiyam.domain.repository.DashboardRepository
@@ -27,6 +28,16 @@ class DashboardRepositoryImpl @Inject constructor(
         try {
             val response = dashboardService.getMonthlySummaries(year)
             emit(ResponseWrapper.Success(response.data))
+        } catch (e: Exception) {
+            emit(ResponseWrapper.Error(e.message.toString()))
+        }
+    }
+
+    override fun getSummaries(): Flow<ResponseWrapper<List<Summary>>> = flow {
+        emit(ResponseWrapper.Loading)
+        try {
+            val response = dashboardService.getSummaries()
+            emit(ResponseWrapper.Success(response.data.alertsSummary))
         } catch (e: Exception) {
             emit(ResponseWrapper.Error(e.message.toString()))
         }

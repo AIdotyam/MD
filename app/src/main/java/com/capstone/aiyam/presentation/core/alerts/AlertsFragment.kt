@@ -144,6 +144,11 @@ class AlertsFragment : Fragment() {
         Toast.makeText(requireContext(), message, Toast.LENGTH_SHORT).show()
     }
 
+    override fun onResume() {
+        super.onResume()
+        viewModel.fetchAlerts()
+    }
+
     override fun onDestroyView() {
         super.onDestroyView()
         _binding = null

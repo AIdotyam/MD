@@ -44,7 +44,7 @@ class AlertsViewModel @Inject constructor(
         fetchAlerts()
     }
 
-    private fun fetchAlerts() { viewModelScope.launch {
+    fun fetchAlerts() { viewModelScope.launch {
         alertRepository.getAlerts().collect { _alerts.value = it }
     }}
 
