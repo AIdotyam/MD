@@ -40,11 +40,13 @@
         android:textSize="18sp"
         android:textStyle="bold"
         android:layout_marginTop="28dp"
+        android:alpha="0"
         app:layout_constraintTop_toBottomOf="@id/illustration"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.5"
-        android:layout_marginBottom="8dp"/>
+        android:layout_marginBottom="8dp"
+        tools:alpha="1" />
 
     <TextView
         android:id="@+id/subtitle"
@@ -53,11 +55,13 @@
         android:text="Please enter your phone number"
         android:textSize="14sp"
         android:textColor="#8A8A8A"
+        android:alpha="0"
         app:layout_constraintTop_toBottomOf="@id/title"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.5"
-        android:layout_marginBottom="16dp"/>
+        android:layout_marginBottom="16dp"
+        tools:alpha="1" />
 
     <LinearLayout
         android:id="@+id/phoneInputLayout"
@@ -78,7 +82,9 @@
             android:layout_height="wrap_content"
             android:text="+62"
             android:textSize="16sp"
-            android:layout_marginEnd="8dp" />
+            android:alpha="0"
+            android:layout_marginEnd="8dp"
+            tools:alpha="1" />
 
         <com.capstone.aiyam.presentation.shared.PhoneEditText
             android:id="@+id/phoneNumberEditText"
@@ -90,7 +96,9 @@
             android:maxLength="15"
             android:hint="@string/phone_number"
             android:imeOptions="actionDone"
-            tools:ignore="SpeakableTextPresentCheck" />
+            android:alpha="0"
+            tools:ignore="SpeakableTextPresentCheck"
+            tools:alpha="1" />
     </LinearLayout>
 
     <Button
@@ -100,10 +108,12 @@
         android:layout_marginTop="30dp"
         android:layout_marginHorizontal="40dp"
         android:text="Send"
+        android:alpha="0"
         app:layout_constraintTop_toBottomOf="@id/phoneInputLayout"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.5"/>
+        app:layout_constraintHorizontal_bias="0.5"
+        tools:alpha="1" />
 
     <androidx.constraintlayout.widget.Guideline
         android:id="@+id/guidelineHorizontal"

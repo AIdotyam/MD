@@ -51,7 +51,7 @@ class AlertsFragment : Fragment() {
     private fun observeRefresh() {
         binding.refreshLayout.setOnRefreshListener {
             showRefresh(true)
-            viewModel.refreshAlerts()
+            viewModel.fetchAlerts()
             binding.filterChipGroup.clearCheck()
         }
     }
@@ -135,7 +135,6 @@ class AlertsFragment : Fragment() {
     private fun handleError(error: String) {
         showLoading(false)
         showRefresh(false)
-        Log.d("AlertsFragment", error)
         showToast(error)
     }
 

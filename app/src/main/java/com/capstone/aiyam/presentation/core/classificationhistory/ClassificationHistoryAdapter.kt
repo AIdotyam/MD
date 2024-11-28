@@ -10,10 +10,10 @@ import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.capstone.aiyam.R
-import com.capstone.aiyam.databinding.ItemAlertHistoryBinding
 import com.capstone.aiyam.databinding.ItemClassificationHistoryBinding
 import com.capstone.aiyam.databinding.ItemHeaderBinding
 import com.capstone.aiyam.domain.model.Classification
+import com.capstone.aiyam.utils.getMimeTypeFromUrl
 import com.capstone.aiyam.utils.parseDateTime
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
@@ -32,28 +32,22 @@ class ClassificationHistoryAdapter(
                 tvTimestamp.text = classification.createdAt.parseDateTime()
 
                 val mediaUrl = classification.mediaUrl
-                if (mediaUrl.isNotEmpty()) {
-                    if (mediaUrl.endsWith(".mp4") || mediaUrl.endsWith(".mov") || mediaUrl.endsWith(".avi") || mediaUrl.endsWith(".mkv")) {
-                        CoroutineScope(Dispatchers.Main).launch {
-                            val thumbnail = getVideoThumbnail(mediaUrl)
-                            Glide.with(context)
-                                .load(thumbnail)
-                                .centerCrop()
-                                .error(R.drawable.video)
-                                .placeholder(R.drawable.video)
-                                .into(ivHistory)
-                        }
-                    } else {
+                val mimeType = mediaUrl.getMimeTypeFromUrl()
+
+                if (mimeType != null && mimeType.startsWith("video")) {
+                    CoroutineScope(Dispatchers.Main).launch {
+                        val thumbnail = getVideoThumbnail(mediaUrl)
                         Glide.with(context)
-                            .load(mediaUrl)
-                            .centerCrop()
+                            .load(thumbnail)
                             .error(R.drawable.video)
-                            .placeholder(R.drawable.image)
+                            .placeholder(R.drawable.video)
                             .into(ivHistory)
                     }
                 } else {
                     Glide.with(context)
-                        .load(R.drawable.image)
+                        .load(mediaUrl)
+                        .error(R.drawable.image)
+                        .placeholder(R.drawable.image)
                         .into(ivHistory)
                 }
             }

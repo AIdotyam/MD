@@ -33,7 +33,6 @@ class AlertsViewModel @Inject constructor(
                     else -> true
                 }
             }
-            Log.d("Filtered Alerts", filteredData.toString())
             ResponseWrapper.Success(filteredData)
         } else {
             response
@@ -47,10 +46,6 @@ class AlertsViewModel @Inject constructor(
     fun fetchAlerts() { viewModelScope.launch {
         alertRepository.getAlerts().collect { _alerts.value = it }
     }}
-
-    fun refreshAlerts() {
-        fetchAlerts()
-    }
 
     fun setFilterCriteria(criteria: String?) {
         _filterCriteria.value = criteria

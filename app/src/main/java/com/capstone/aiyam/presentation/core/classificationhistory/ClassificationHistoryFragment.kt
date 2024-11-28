@@ -79,28 +79,7 @@ class ClassificationHistoryFragment : Fragment() {
 
     private fun getHistories() { lifecycleScope.launch {
         viewLifecycleOwner.repeatOnLifecycle(Lifecycle.State.CREATED) {
-            try {
-                viewModel.getToken().collect { token ->
-                    Log.d("Firebase", token.toString())
-                    when (token) {
-                        is TokenResponse.Failed -> {
-                            handleError("Unauthorized")
-                        }
-
-                        is TokenResponse.Loading -> {
-                            showLoading(true)
-                        }
-
-                        is TokenResponse.Success -> {
-                            viewModel.fetchHistories(token.token)
-                            showLoading(false)
-                            showRefresh(false)
-                        }
-                    }
-                }
-            } catch (e: Exception) {
-                showToast(e.message.toString())
-            }
+            viewModel.fetchHistories()
         }
     }}
 

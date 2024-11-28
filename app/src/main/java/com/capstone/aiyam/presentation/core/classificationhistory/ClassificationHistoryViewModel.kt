@@ -21,28 +21,12 @@ import javax.inject.Inject
 
 @HiltViewModel
 class ClassificationHistoryViewModel @Inject constructor(
-    private val chickenRepository: ChickenRepository,
-    private val userRepository: UserRepository
+    private val chickenRepository: ChickenRepository
 ) : ViewModel() {
     private val _histories = MutableStateFlow<ResponseWrapper<List<Classification>>>(ResponseWrapper.Loading)
     val histories: StateFlow<ResponseWrapper<List<Classification>>> = _histories.asStateFlow()
 
-    private val user = userRepository.getFirebaseUser()
-
-    fun getToken(): Flow<TokenResponse> {
-        return when (user) {
-            is AuthorizationResponse.Success -> {
-                userRepository.getFirebaseToken(user.user)
-            }
-
-            is AuthorizationResponse.Error -> {
-                throw Exception(user.message)
-            }
-        }
-    }
-
-    fun fetchHistories(token: String) { viewModelScope.launch {
-        Log.d("Firebase", "User not found 3") // did not
-        chickenRepository.getHistories(token).collect { _histories.value = it }
+    fun fetchHistories() { viewModelScope.launch {
+        chickenRepository.getHistories().collect { _histories.value = it }
     }}
 }

@@ -6,6 +6,6 @@ import kotlinx.coroutines.flow.Flow
 import java.io.File
 
 interface ChickenRepository {
-    fun classifyChicken(token: String, file: File, mediaType: String): Flow<ResponseWrapper<Classification>>
-    fun getHistories(token: String): Flow<ResponseWrapper<List<Classification>>>
+    fun classifyChicken(file: File, mediaType: String): Flow<ResponseWrapper<Classification>>
+    fun getHistories(): Flow<ResponseWrapper<List<Classification>>>
 }

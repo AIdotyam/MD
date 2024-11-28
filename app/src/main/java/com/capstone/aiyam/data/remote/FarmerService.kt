@@ -10,16 +10,15 @@ import retrofit2.http.POST
 import retrofit2.http.PUT
 
 interface FarmerService {
-
     @POST("farmers")
     suspend fun createFarmer(
-//        @Header("Authorization") token: String,
+        @Header("Authorization") token: String,
         @Body request: CreateFarmerRequest
     ): DataWrapper<Farmer>
 
     @PUT("farmers/{uid}")
     suspend fun updateFarmer(
-//        @Header("Authorization") token: String,
+        @Header("Authorization") token: String,
         @Body request: UpdateNameRequest
     ): DataWrapper<Farmer>
 }

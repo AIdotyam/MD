@@ -1,5 +1,7 @@
 package com.capstone.aiyam.presentation.auth.phone
 
+import android.animation.AnimatorSet
+import android.animation.ObjectAnimator
 import android.os.Bundle
 import android.text.TextUtils
 import android.view.LayoutInflater
@@ -40,6 +42,7 @@ class PhoneFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+        animate()
 
         binding.sendButton.setOnClickListener {
             val phoneNumber = binding.phoneNumberEditText.text.toString()
@@ -107,6 +110,30 @@ class PhoneFragment : Fragment() {
     private fun showToast(message: String) {
         Toast.makeText(requireContext(), message, Toast.LENGTH_SHORT).show()
     }
+
+    private fun animate() { binding.apply {
+        ObjectAnimator.ofFloat(illustration, View.TRANSLATION_X, -30f, 30f).apply {
+            duration = 6000
+            repeatCount = ObjectAnimator.INFINITE
+            repeatMode = ObjectAnimator.REVERSE
+        }.start()
+
+        val title = ObjectAnimator.ofFloat(title, View.ALPHA, 1f).setDuration(100)
+        val subtitle = ObjectAnimator.ofFloat(subtitle, View.ALPHA, 1f).setDuration(100)
+        val phoneNumberEditText = ObjectAnimator.ofFloat(phoneNumberEditText, View.ALPHA, 1f).setDuration(100)
+        val countryCodeTextView = ObjectAnimator.ofFloat(countryCodeTextView, View.ALPHA, 1f).setDuration(100)
+        val sendButton = ObjectAnimator.ofFloat(sendButton, View.ALPHA, 1f).setDuration(100)
+
+        AnimatorSet().apply {
+            playSequentially(
+                title, subtitle,
+                phoneNumberEditText,
+                countryCodeTextView,
+                sendButton
+            )
+            startDelay = 100
+        }.start()
+    }}
 
     override fun onDestroyView() {
         super.onDestroyView()

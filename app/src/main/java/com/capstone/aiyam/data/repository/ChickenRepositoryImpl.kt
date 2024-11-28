@@ -4,6 +4,8 @@ import com.capstone.aiyam.domain.model.Classification
 import com.capstone.aiyam.data.remote.ChickenService
 import com.capstone.aiyam.domain.repository.ChickenRepository
 import com.capstone.aiyam.data.dto.ResponseWrapper
+import com.capstone.aiyam.domain.repository.UserRepository
+import com.capstone.aiyam.utils.withToken
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
 import okhttp3.MediaType.Companion.toMediaTypeOrNull
@@ -13,29 +15,38 @@ import java.io.File
 import javax.inject.Inject
 
 class ChickenRepositoryImpl @Inject constructor(
-    private val chickenService: ChickenService
+    private val chickenService: ChickenService,
+    private val userRepository: UserRepository
 ) : ChickenRepository {
-    override fun classifyChicken(token: String, file: File, mediaType: String): Flow<ResponseWrapper<Classification>> = flow {
+    private val user = userRepository.getFirebaseUser()
+
+    override fun classifyChicken(file: File, mediaType: String): Flow<ResponseWrapper<Classification>> = flow {
         emit(ResponseWrapper.Loading)
 
         val requestBody = file.asRequestBody(mediaType.toMediaTypeOrNull())
         val multipartBody =  MultipartBody.Part.createFormData("file", file.name, requestBody)
 
         try {
-            val auth = "Bearer $token"
-            val response = chickenService.postChicken(auth, multipartBody)
-            emit(ResponseWrapper.Success(response.data))
+            val chicken = withToken(
+                user, userRepository::getFirebaseToken
+            ) {
+                chickenService.postChicken(it, multipartBody)
+            }
+            emit(ResponseWrapper.Success(chicken.data))
         } catch (e: Exception) {
             emit(ResponseWrapper.Error(e.message.toString()))
         }
     }
 
-    override fun getHistories(token: String): Flow<ResponseWrapper<List<Classification>>> = flow {
+    override fun getHistories(): Flow<ResponseWrapper<List<Classification>>> = flow {
         emit(ResponseWrapper.Loading)
         try {
-            val auth = "Bearer $token"
-            val response = chickenService.getHistories(auth)
-            emit(ResponseWrapper.Success(response.data))
+            val histories = withToken(
+                user, userRepository::getFirebaseToken
+            ) {
+                chickenService.getHistories(it)
+            }
+            emit(ResponseWrapper.Success(histories.data))
         } catch (e: Exception) {
             emit(ResponseWrapper.Error(e.message.toString()))
         }

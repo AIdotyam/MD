@@ -63,6 +63,7 @@
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintEnd_toEndOf="parent"
                     android:layout_margin="16dp"
+                    app:cardBackgroundColor="@color/md_theme_primary"
                     android:background="@drawable/card_background">
 
                     <LinearLayout
@@ -77,6 +78,7 @@
                             android:text="Daily Chicken Count"
                             android:textSize="16sp"
                             android:textStyle="bold"
+                            android:textColor="@color/black"
                             android:layout_marginBottom="8dp" />
 
                         <LinearLayout
@@ -88,8 +90,8 @@
                                 android:id="@+id/dailyCount"
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
-                                android:text="43"
                                 android:textSize="16sp"
+                                android:textColor="@color/black"
                                 android:layout_marginBottom="8dp"
                                 android:layout_marginEnd="4dp"/>
 
@@ -97,8 +99,8 @@
                                 android:id="@+id/dailyLabel"
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
-                                android:text="Chickens Scanned"
                                 android:textSize="16sp"
+                                android:textColor="@color/black"
                                 android:layout_marginBottom="8dp" />
 
                         </LinearLayout>
@@ -107,7 +109,7 @@
                             android:id="@+id/dailyBarChart"
                             android:layout_width="match_parent"
                             android:layout_height="200dp"
-                            android:layout_marginTop="16dp" />
+                            android:layout_marginTop="16dp"/>
                     </LinearLayout>
                 </androidx.cardview.widget.CardView>
 
@@ -122,6 +124,7 @@
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintEnd_toEndOf="parent"
                     android:layout_margin="16dp"
+                    app:cardBackgroundColor="@color/md_theme_primary"
                     android:background="@drawable/card_background">
 
                     <LinearLayout
@@ -135,6 +138,7 @@
                             android:layout_height="wrap_content"
                             android:text="Monthly Mortality Trends"
                             android:textSize="16sp"
+                            android:textColor="@color/black"
                             android:textStyle="bold"
                             android:layout_marginBottom="8dp" />
 
@@ -147,8 +151,8 @@
                                 android:id="@+id/mortalityCount"
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
-                                android:text="8"
                                 android:textSize="16sp"
+                                android:textColor="@color/black"
                                 android:layout_marginBottom="8dp"
                                 android:layout_marginEnd="4dp"/>
 
@@ -156,8 +160,8 @@
                                 android:id="@+id/mortalityLabel"
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
-                                android:text="Chickens Dead"
                                 android:textSize="16sp"
+                                android:textColor="@color/black"
                                 android:layout_marginBottom="8dp" />
 
                         </LinearLayout>

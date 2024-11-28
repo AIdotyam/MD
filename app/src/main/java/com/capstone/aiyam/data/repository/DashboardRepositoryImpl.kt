@@ -6,40 +6,63 @@ import com.capstone.aiyam.domain.model.Summary
 import com.capstone.aiyam.domain.model.DailySummary
 import com.capstone.aiyam.domain.model.MonthlySummary
 import com.capstone.aiyam.domain.repository.DashboardRepository
+import com.capstone.aiyam.domain.repository.UserRepository
+import com.capstone.aiyam.utils.withToken
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
 import javax.inject.Inject
 
 class DashboardRepositoryImpl @Inject constructor(
-    private val dashboardService: DashboardService
+    private val dashboardService: DashboardService,
+    private val userRepository: UserRepository
 ) : DashboardRepository {
+    private val user = userRepository.getFirebaseUser()
+
     override fun getDailySummaries(year: Int, month: Int, week: Int): Flow<ResponseWrapper<List<DailySummary>>> = flow {
         emit(ResponseWrapper.Loading)
         try {
-            val response = dashboardService.getDailySummaries(year, month, week)
-            emit(ResponseWrapper.Success(response.data))
+            val dailySummaries = withToken(
+                user, userRepository::getFirebaseToken
+            ) {
+                dashboardService.getDailySummaries(it, year, month, week)
+            }
+            emit(ResponseWrapper.Success(dailySummaries.data))
+        } catch (e: IllegalAccessException) {
+            emit(ResponseWrapper.Error("Unauthorized: ${e.message}"))
         } catch (e: Exception) {
-            emit(ResponseWrapper.Error(e.message.toString()))
+            emit(ResponseWrapper.Error(e.message ?: "Unknown error"))
         }
     }
 
     override fun getMonthlySummaries(year: Int): Flow<ResponseWrapper<List<MonthlySummary>>> = flow {
         emit(ResponseWrapper.Loading)
         try {
-            val response = dashboardService.getMonthlySummaries(year)
-            emit(ResponseWrapper.Success(response.data))
+            val monthlySummaries = withToken(
+                user, userRepository::getFirebaseToken
+            ) {
+                dashboardService.getMonthlySummaries(it, year)
+            }
+            emit(ResponseWrapper.Success(monthlySummaries.data))
+        } catch (e: IllegalAccessException) {
+            emit(ResponseWrapper.Error("Unauthorized: ${e.message}"))
         } catch (e: Exception) {
-            emit(ResponseWrapper.Error(e.message.toString()))
+            emit(ResponseWrapper.Error(e.message ?: "Unknown error"))
         }
     }
 
     override fun getSummaries(): Flow<ResponseWrapper<List<Summary>>> = flow {
         emit(ResponseWrapper.Loading)
         try {
-            val response = dashboardService.getSummaries()
-            emit(ResponseWrapper.Success(response.data.alertsSummary))
+            val summaries = withToken(
+                user, userRepository::getFirebaseToken
+            ) {
+                dashboardService.getSummaries(it)
+            }
+            emit(ResponseWrapper.Success(summaries.data.alertsSummary))
+        } catch (e: IllegalAccessException) {
+            emit(ResponseWrapper.Error("Unauthorized: ${e.message}"))
         } catch (e: Exception) {
-            emit(ResponseWrapper.Error(e.message.toString()))
+            emit(ResponseWrapper.Error(e.message ?: "Unknown error"))
         }
     }
 }

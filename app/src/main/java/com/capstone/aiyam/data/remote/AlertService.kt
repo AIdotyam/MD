@@ -10,15 +10,14 @@ import retrofit2.http.PATCH
 import retrofit2.http.Path
 
 interface AlertService {
-
     @GET("notification")
     suspend fun getAlerts(
-//        @Header("Authorization") token: String,
+        @Header("Authorization") token: String,
     ): DataWrapper<List<Alerts>>
 
     @PATCH("notification/{id}")
     suspend fun updateAlertById(
-//        @Header("Authorization") token: String,
+        @Header("Authorization") token: String,
         @Path("id") id: Int,
         @Body request: UpdateAlertRequest
     ): DataWrapper<Alerts>
