@@ -57,7 +57,6 @@ android {
     buildFeatures {
         viewBinding = true
         buildConfig = true
-        dataBinding = true
     }
 }
 
@@ -106,7 +105,8 @@ dependencies {
     implementation(libs.chaosleung.pinview)
     implementation(libs.mpandroidchart)
     implementation(libs.androidx.viewpager2)
-    
+    implementation(libs.androidx.core.splashscreen)
+
     // Firebase
     implementation(platform(libs.firebase.bom))
     implementation(libs.firebase.analytics)

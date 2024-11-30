@@ -30,7 +30,7 @@
         android:label="@string/app_name"
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
-        android:theme="@style/Theme.Aiyam"
+        android:theme="@style/Theme.App.SplashScreen"
         tools:targetApi="31">
         <activity
             android:name=".MainActivity"
@@ -40,6 +40,7 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+
         <service android:name=".data.service.PushNotificationService"
             android:exported="false">
             <intent-filter>
@@ -47,5 +48,4 @@
             </intent-filter>
         </service>
     </application>
-
 </manifest>
