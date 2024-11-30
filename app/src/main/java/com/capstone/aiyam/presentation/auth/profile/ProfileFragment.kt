@@ -17,6 +17,7 @@ import com.bumptech.glide.Glide
 import com.capstone.aiyam.R
 import com.capstone.aiyam.databinding.FragmentProfileBinding
 import com.capstone.aiyam.domain.model.AuthorizationResponse
+import com.capstone.aiyam.presentation.shared.CustomAlertDialog
 import com.google.firebase.auth.FirebaseUser
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.launch
@@ -53,15 +54,28 @@ class ProfileFragment : Fragment() {
         }
 
         binding.signOutIcon.setOnClickListener {
-            alertDialog().show()
-        }
-
-        binding.cardButtonPhoneNumber.setOnClickListener {
-            ProfileFragmentDirections.actionProfileFragmentToPhoneFragment().let {
-                findNavController().navigate(it)
+            val dialog = CustomAlertDialog(
+                context = requireContext(),
+                title = "Sign out",
+                message = "Are you sure you want to sign out?",
+                negativeButtonClick = {}
+            ) {
+                viewModel.signOut()
+                showToast("Successfully signed out")
+                ProfileFragmentDirections.actionProfileFragmentToSplashFragment().let {
+                    findNavController().navigate(it)
+                }
             }
+
+            dialog.alert().show()
         }
 
+        handlePushNotification()
+        handleEmailNotification()
+        handlePhoneSetting()
+    }
+
+    private fun handlePushNotification() {
         binding.notificationSwitch.setOnCheckedChangeListener { _, isChecked ->
             viewModel.savePushNotificationSetting(isChecked)
         }
@@ -76,7 +90,9 @@ class ProfileFragment : Fragment() {
                 }
             }
         }
+    }
 
+    private fun handleEmailNotification() {
         binding.emailNotificationSwitch.setOnCheckedChangeListener { _, isChecked ->
             viewModel.saveEmailNotificationSetting(isChecked)
         }
@@ -93,43 +109,31 @@ class ProfileFragment : Fragment() {
         }
     }
 
-    private fun alertDialog(): AlertDialog {
-        val dialogView = requireActivity().layoutInflater.inflate(R.layout.custom_dialog, null)
-
-        val dialog = AlertDialog.Builder(requireContext())
-            .setView(dialogView)
-            .create()
-
-        val positiveButton = dialogView.findViewById<Button>(R.id.dialog_positive_button)
-        val negativeButton = dialogView.findViewById<Button>(R.id.dialog_negative_button)
-
-        positiveButton.setOnClickListener {
-            viewModel.signOut()
-            showToast("Successfully signed out")
-            dialog.dismiss()
-            ProfileFragmentDirections.actionProfileFragmentToSplashFragment().let {
-                findNavController().navigate(it)
+    private fun handlePhoneSetting() {
+        lifecycleScope.launch {
+            viewLifecycleOwner.repeatOnLifecycle(Lifecycle.State.CREATED) {
+                viewModel.getPhoneNumberSetting().collect {
+                    binding.phoneInput.text = it
+                }
             }
         }
 
-        negativeButton.setOnClickListener {
-            dialog.dismiss()
+        binding.cardButtonPhoneNumber.setOnClickListener {
+            ProfileFragmentDirections.actionProfileFragmentToPhoneFragment().let {
+                findNavController().navigate(it)
+            }
         }
-
-        return dialog
     }
 
     private fun handleUser(user: FirebaseUser) { binding.apply {
         Glide.with(requireContext())
             .load(user.photoUrl)
             .placeholder(R.drawable.baseline_people_24)
-            .error(R.drawable.baseline_people_24)
             .circleCrop()
             .into(profileImage)
 
         username.text = user.displayName
         emailInput.text = user.email
-        phoneInput.text = user.phoneNumber ?: ""
     }}
 
     private fun showToast(message: String) {

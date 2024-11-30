@@ -31,6 +31,8 @@ import com.capstone.aiyam.R
 import com.capstone.aiyam.databinding.FragmentClassificationBinding
 import com.capstone.aiyam.domain.model.Classification
 import com.capstone.aiyam.data.dto.ResponseWrapper
+import com.capstone.aiyam.presentation.auth.profile.ProfileFragmentDirections
+import com.capstone.aiyam.presentation.shared.CustomAlertDialog
 import com.capstone.aiyam.utils.gone
 import com.capstone.aiyam.utils.toFormattedTime
 import com.capstone.aiyam.utils.visible
@@ -321,28 +323,16 @@ class ClassificationFragment : Fragment() {
 
     @SuppressLint("SetTextI18n")
     private fun alertDialog(file: File, mediaType: String): AlertDialog {
-        val dialogView = requireActivity().layoutInflater.inflate(R.layout.custom_dialog, null)
-
-        dialogView.findViewById<TextView>(R.id.dialog_title).text = "Confirmation"
-        dialogView.findViewById<TextView>(R.id.dialog_message).text = "Proceed with classification?"
-
-        val dialog = AlertDialog.Builder(requireContext())
-            .setView(dialogView)
-            .create()
-
-        val positiveButton = dialogView.findViewById<Button>(R.id.dialog_positive_button)
-        val negativeButton = dialogView.findViewById<Button>(R.id.dialog_negative_button)
-
-        positiveButton.setOnClickListener {
+        val dialog = CustomAlertDialog(
+            context = requireContext(),
+            title = "Confirmation",
+            message = "Proceed with classification?",
+            negativeButtonClick = {}
+        ) {
             classify(file, mediaType)
-            dialog.dismiss()
         }
 
-        negativeButton.setOnClickListener {
-            dialog.dismiss()
-        }
-
-        return dialog
+        return dialog.alert()
     }
 
     override fun onDestroyView() {

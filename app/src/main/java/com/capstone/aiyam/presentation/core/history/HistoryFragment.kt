@@ -12,13 +12,15 @@ class HistoryFragment : Fragment() {
     private var _binding: FragmentHistoryBinding? = null
     private val binding get() = _binding!!
 
+    private lateinit var pagerAdapter: HistoryPagerAdapter
+
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
         _binding = FragmentHistoryBinding.inflate(inflater, container, false)
 
-        val pagerAdapter = HistoryPagerAdapter(requireActivity())
+        pagerAdapter = HistoryPagerAdapter(requireActivity())
 
         val viewPager = binding.viewPager
         val tabs = binding.tabs
@@ -30,6 +32,11 @@ class HistoryFragment : Fragment() {
         }.attach()
 
         return binding.root
+    }
+
+    override fun onResume() {
+        super.onResume()
+        pagerAdapter.notifyItemChanged(0)
     }
 
     override fun onDestroyView() {

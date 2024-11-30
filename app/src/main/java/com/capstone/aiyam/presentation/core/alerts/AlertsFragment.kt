@@ -1,5 +1,6 @@
 package com.capstone.aiyam.presentation.core.alerts
 
+import android.content.Context
 import androidx.fragment.app.viewModels
 import android.os.Bundle
 import android.util.Log
@@ -56,6 +57,14 @@ class AlertsFragment : Fragment() {
         }
     }
 
+    private fun observeAlerts() { lifecycleScope.launch {
+        viewLifecycleOwner.repeatOnLifecycle(Lifecycle.State.CREATED) {
+            viewModel.filteredAlerts.collect { response ->
+                handleAlerts(response)
+            }
+        }
+    }}
+
     private fun observeChips() {
         binding.filterChipGroup.setOnCheckedStateChangeListener { _, checkedIds ->
             val checkedId = checkedIds.firstOrNull()
@@ -66,14 +75,6 @@ class AlertsFragment : Fragment() {
             }
         }
     }
-
-    private fun observeAlerts() { lifecycleScope.launch {
-        viewLifecycleOwner.repeatOnLifecycle(Lifecycle.State.CREATED) {
-            viewModel.filteredAlerts.collect { response ->
-                handleAlerts(response)
-            }
-        }
-    }}
 
     private fun handleAlerts(response: ResponseWrapper<List<Alerts>>) {
         when (response) {
@@ -92,7 +93,6 @@ class AlertsFragment : Fragment() {
     private fun handleSuccess(alerts: List<Alerts>) {
         showLoading(false)
         showRefresh(false)
-        Log.d("Alerts Data", alerts.toString())
         adapter.submitList(groupAlertsByDate(alerts))
     }
 
@@ -140,11 +140,6 @@ class AlertsFragment : Fragment() {
 
     private fun showToast(message: String) {
         Toast.makeText(requireContext(), message, Toast.LENGTH_SHORT).show()
-    }
-
-    override fun onResume() {
-        super.onResume()
-        viewModel.fetchAlerts()
     }
 
     override fun onDestroyView() {

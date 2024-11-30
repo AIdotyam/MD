@@ -25,7 +25,7 @@ class DashboardRepositoryImpl @Inject constructor(
             val dailySummaries = withToken(
                 user, userRepository::getFirebaseToken
             ) {
-                Log.d("DashboardRepositoryImpl TOKEN", it)
+                Log.d("TOKEN", it)
                 dashboardService.getDailySummaries(it, year, month, week)
             }
             emit(ResponseWrapper.Success(dailySummaries.data))

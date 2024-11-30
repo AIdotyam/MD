@@ -1,5 +1,6 @@
 package com.capstone.aiyam.data.repository
 
+import android.util.Log
 import com.capstone.aiyam.data.dto.ResponseWrapper
 import com.capstone.aiyam.data.dto.UpdateAlertRequest
 import com.capstone.aiyam.data.remote.AlertService

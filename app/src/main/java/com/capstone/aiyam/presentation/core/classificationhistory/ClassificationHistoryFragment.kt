@@ -128,7 +128,6 @@ class ClassificationHistoryFragment : Fragment() {
     private fun handleError(error: String) {
         showLoading(false)
         showRefresh(false)
-        Log.d("AlertsFragment", error)
         showToast(error)
     }
 

@@ -4,14 +4,15 @@ import android.app.Application
 import androidx.datastore.preferences.core.edit
 import com.capstone.aiyam.data.local.preferences.PreferencesKey
 import com.capstone.aiyam.data.local.preferences.notificationPreferences
-import com.capstone.aiyam.domain.repository.NotificationPreferencesRepository
+import com.capstone.aiyam.data.local.preferences.settingsPreferences
+import com.capstone.aiyam.domain.repository.SettingsPreferencesRepository
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.map
 import javax.inject.Inject
 
-class NotificationPreferencesRepositoryImpl @Inject constructor(
+class SettingsPreferencesRepositoryImpl @Inject constructor(
     private val context: Application
-) : NotificationPreferencesRepository {
+) : SettingsPreferencesRepository {
     override fun getPushNotificationSetting(): Flow<Boolean> {
         return context.notificationPreferences.data.map {
             it[PreferencesKey.PUSH_NOTIFICATION_KEY] ?: false
@@ -33,6 +34,18 @@ class NotificationPreferencesRepositoryImpl @Inject constructor(
     override suspend fun saveEmailNotificationSetting(isActive: Boolean) {
         context.notificationPreferences.edit {
             it[PreferencesKey.EMAIL_NOTIFICATION_KEY] = isActive
+        }
+    }
+
+    override fun getPhoneNumberSetting(): Flow<String> {
+        return context.settingsPreferences.data.map {
+            it[PreferencesKey.PHONE_NUMBER_KEY] ?: ""
+        }
+    }
+
+    override suspend fun savePhoneNumberSetting(phoneNumber: String) {
+        context.notificationPreferences.edit {
+            it[PreferencesKey.PHONE_NUMBER_KEY] = phoneNumber
         }
     }
 }

@@ -6,6 +6,7 @@ import com.capstone.aiyam.BuildConfig
 import com.capstone.aiyam.data.remote.AlertService
 import com.capstone.aiyam.data.remote.ChickenService
 import com.capstone.aiyam.data.remote.DashboardService
+import com.capstone.aiyam.data.remote.FarmerService
 import com.google.firebase.Firebase
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.auth
@@ -75,5 +76,13 @@ object AppModule {
         retrofit: Retrofit
     ): DashboardService {
         return retrofit.create(DashboardService::class.java)
+    }
+
+    @Provides
+    @Singleton
+    fun provideFarmerService(
+        retrofit: Retrofit
+    ): FarmerService {
+        return retrofit.create(FarmerService::class.java)
     }
 }

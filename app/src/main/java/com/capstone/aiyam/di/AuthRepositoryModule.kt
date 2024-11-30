@@ -22,7 +22,7 @@ abstract class AuthRepositoryModule {
 
     @Binds
     @Singleton
-    abstract fun bindAuthorizationRepository(
-        authorizationRepositoryImpl: UserRepositoryImpl
+    abstract fun bindUserRepository(
+        userRepositoryImpl: UserRepositoryImpl
     ) : UserRepository
 }

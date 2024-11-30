@@ -1,6 +1,5 @@
 package com.capstone.aiyam.presentation.core.alerts
 
-import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.capstone.aiyam.data.dto.ResponseWrapper
