@@ -7,6 +7,7 @@ import android.content.pm.PackageManager
 import android.net.Uri
 import android.os.*
 import android.provider.MediaStore
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -31,7 +32,6 @@ import com.capstone.aiyam.R
 import com.capstone.aiyam.databinding.FragmentClassificationBinding
 import com.capstone.aiyam.domain.model.Classification
 import com.capstone.aiyam.data.dto.ResponseWrapper
-import com.capstone.aiyam.presentation.auth.profile.ProfileFragmentDirections
 import com.capstone.aiyam.presentation.shared.CustomAlertDialog
 import com.capstone.aiyam.utils.gone
 import com.capstone.aiyam.utils.toFormattedTime
@@ -41,8 +41,6 @@ import kotlinx.coroutines.launch
 import java.io.File
 import java.io.FileOutputStream
 import java.io.IOException
-import java.text.SimpleDateFormat
-import java.util.*
 
 @AndroidEntryPoint
 class ClassificationFragment : Fragment() {
@@ -63,17 +61,11 @@ class ClassificationFragment : Fragment() {
     private var isPhoto = true
 
     private val launcherGallery = registerForActivityResult(ActivityResultContracts.PickVisualMedia()) { uri ->
-        uri?.let {
-            onMediaSelected(uri)
-        } ?: showToast("Failed to select media")
+        uri?.let { onMediaSelected(uri) } ?: showToast("Failed to select media")
     }
 
     private fun startGallery() {
         launcherGallery.launch(PickVisualMediaRequest(ActivityResultContracts.PickVisualMedia.ImageAndVideo))
-    }
-
-    private fun showToast(message: String) {
-        Toast.makeText(requireContext(), message, Toast.LENGTH_SHORT).show()
     }
 
     override fun onCreateView(
@@ -155,7 +147,7 @@ class ClassificationFragment : Fragment() {
             .build()
 
         val recorder = Recorder.Builder()
-            .setQualitySelector(QualitySelector.from(Quality.HIGHEST))
+            .setQualitySelector(QualitySelector.from(Quality.SD))
             .build()
 
         videoCapture = VideoCapture.withOutput(recorder)
@@ -175,21 +167,15 @@ class ClassificationFragment : Fragment() {
     }
 
     private fun takePhoto() {
-        val outputOptions = ImageCapture.OutputFileOptions.Builder(
-            requireContext().contentResolver,
-            MediaStore.Images.Media.EXTERNAL_CONTENT_URI,
-            ContentValues().apply {
-                put(MediaStore.Images.Media.DISPLAY_NAME, generateFileName("jpg"))
-                put(MediaStore.Images.Media.MIME_TYPE, "image/jpeg")
-            }
-        ).build()
+        val tempFile = File.createTempFile("photo_", ".jpg", requireContext().cacheDir)
+        val outputOptions = ImageCapture.OutputFileOptions.Builder(tempFile).build()
 
         imageCapture.takePicture(
             outputOptions,
             ContextCompat.getMainExecutor(requireContext()),
             object : ImageCapture.OnImageSavedCallback {
                 override fun onImageSaved(outputFileResults: ImageCapture.OutputFileResults) {
-                    onImageCaptured(outputFileResults.savedUri)
+                    onCaptured(tempFile, "image/*")
                 }
 
                 override fun onError(exception: ImageCaptureException) {
@@ -200,6 +186,7 @@ class ClassificationFragment : Fragment() {
     }
 
     private val handler = Handler(Looper.getMainLooper())
+
     private val updateTimer = object : Runnable{
         override fun run() {
             val currentTime = SystemClock.elapsedRealtime() - binding.recodingTimerC.base
@@ -226,50 +213,43 @@ class ClassificationFragment : Fragment() {
             binding.captureIBLogo.setImageResource(R.drawable.ic_stop)
         }
 
-        val outputOptions = MediaStoreOutputOptions.Builder(
-            requireContext().contentResolver,
-            MediaStore.Video.Media.EXTERNAL_CONTENT_URI
-        ).apply {
-            setContentValues(ContentValues().apply {
-                put(MediaStore.Video.Media.DISPLAY_NAME, generateFileName("mp4"))
-                put(MediaStore.Video.Media.MIME_TYPE, "video/mp4")
-            })
-        }.build()
+        val tempFile = File.createTempFile("video_", ".mp4", requireContext().cacheDir)
+        val outputOptions = FileOutputOptions.Builder(tempFile).build()
 
-        recording = videoCapture.output.prepareRecording(requireContext(), outputOptions).start(ContextCompat.getMainExecutor(requireContext())) { recordEvent ->
-            if (recordEvent is VideoRecordEvent.Finalize) {
-                if (!recordEvent.hasError()) {
-                    onVideoCaptured(recordEvent.outputResults.outputUri)
-                } else {
-                    showToast("Failed: ${recordEvent.error}")
+        try {
+            recording = videoCapture.output.prepareRecording(requireContext(), outputOptions)
+                .start(ContextCompat.getMainExecutor(requireContext())) { recordEvent ->
+                    when (recordEvent) {
+                        is VideoRecordEvent.Start -> {}
+                        is VideoRecordEvent.Finalize -> {
+                            if (!recordEvent.hasError()) {
+                                onCaptured(tempFile, "video/*")
+                            } else {
+                                val errorMessage = when (val errorCode = recordEvent.error) {
+                                    VideoRecordEvent.Finalize.ERROR_INSUFFICIENT_STORAGE -> "Insufficient storage"
+                                    VideoRecordEvent.Finalize.ERROR_UNKNOWN -> "Unknown error"
+                                    else -> "Error code: $errorCode"
+                                }
+
+                                showToast("Video capture failed: $errorMessage")
+                            }
+                        }
+                    }
                 }
-            }
+        } catch (e: Exception) {
+            showToast("Failed to start video recording: ${e.message}")
+            e.printStackTrace()
         }
     }
 
-    private fun generateFileName(extension: String): String {
-        val timestamp = SimpleDateFormat("yyyyMMdd_HHmmss", Locale.US).format(Date())
-        return "VID_$timestamp.$extension"
+    private fun onCaptured(file: File, mediaType: String) {
+        alertDialog(file, mediaType).show()
     }
 
     private fun onMediaSelected(uri: Uri) {
         val file = uriToFile(uri)
         val mediaType = getMediaType(uri)
         alertDialog(file, mediaType).show()
-    }
-
-    private fun onImageCaptured(imageUri: Uri?) {
-        imageUri?.let {
-            val file = uriToFile(it)
-            alertDialog(file, "image/*").show()
-        }
-    }
-
-    private fun onVideoCaptured(videoUri: Uri?) {
-        videoUri?.let {
-            val file = uriToFile(it)
-            alertDialog(file, "video/*").show()
-        }
     }
 
     private fun getMediaType(uri: Uri): String {
@@ -328,11 +308,13 @@ class ClassificationFragment : Fragment() {
             title = "Confirmation",
             message = "Proceed with classification?",
             negativeButtonClick = {}
-        ) {
-            classify(file, mediaType)
-        }
+        ) { classify(file, mediaType) }
 
         return dialog.alert()
+    }
+
+    private fun showToast(message: String) {
+        Toast.makeText(requireContext(), message, Toast.LENGTH_SHORT).show()
     }
 
     override fun onDestroyView() {
