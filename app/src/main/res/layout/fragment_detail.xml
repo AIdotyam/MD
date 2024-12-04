@@ -56,7 +56,7 @@
                     android:contentDescription="@string/todo"
                     android:scaleType="centerCrop"
                     android:visibility="gone"
-                    tools:src="@drawable/aiyam" />
+                    tools:src="@drawable/logo" />
 
                 <androidx.media3.ui.PlayerView
                     android:id="@+id/headerVideo"
