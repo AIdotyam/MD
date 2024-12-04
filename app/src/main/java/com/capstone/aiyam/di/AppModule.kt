@@ -10,6 +10,8 @@ import com.capstone.aiyam.data.remote.FarmerService
 import com.google.firebase.Firebase
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.auth
+import com.google.firebase.messaging.FirebaseMessaging
+import com.google.firebase.messaging.messaging
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -28,6 +30,12 @@ object AppModule {
     @Singleton
     fun provideFirebaseAuth(): FirebaseAuth {
         return Firebase.auth
+    }
+
+    @Provides
+    @Singleton
+    fun provideFirebaseMessaging(): FirebaseMessaging {
+        return Firebase.messaging
     }
 
     @Provides

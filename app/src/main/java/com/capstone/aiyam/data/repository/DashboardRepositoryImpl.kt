@@ -18,46 +18,10 @@ class DashboardRepositoryImpl @Inject constructor(
     private val userRepository: UserRepository
 ) : DashboardRepository {
     private val user = userRepository.getFirebaseUser()
-
-    override fun getDailySummaries(year: Int, month: Int, week: Int): Flow<ResponseWrapper<List<DailySummary>>> = flow {
-        emit(ResponseWrapper.Loading)
-        try {
-            val dailySummaries = withToken(
-                user, userRepository::getFirebaseToken
-            ) {
-                Log.d("DashboardRepositoryImpl TOKEN", it)
-                dashboardService.getDailySummaries(it, year, month, week)
-            }
-            emit(ResponseWrapper.Success(dailySummaries.data))
-        } catch (e: IllegalAccessException) {
-            emit(ResponseWrapper.Error("Unauthorized: ${e.message}"))
-        } catch (e: Exception) {
-            emit(ResponseWrapper.Error(e.message ?: "Unknown error"))
-        }
-    }
-
-    override fun getMonthlySummaries(year: Int): Flow<ResponseWrapper<List<MonthlySummary>>> = flow {
-        emit(ResponseWrapper.Loading)
-        try {
-            val monthlySummaries = withToken(
-                user, userRepository::getFirebaseToken
-            ) {
-                dashboardService.getMonthlySummaries(it, year)
-            }
-            emit(ResponseWrapper.Success(monthlySummaries.data))
-        } catch (e: IllegalAccessException) {
-            emit(ResponseWrapper.Error("Unauthorized: ${e.message}"))
-        } catch (e: Exception) {
-            emit(ResponseWrapper.Error(e.message ?: "Unknown error"))
-        }
-    }
-
     override fun getSummaries(): Flow<ResponseWrapper<List<Summary>>> = flow {
         emit(ResponseWrapper.Loading)
         try {
-            val summaries = withToken(
-                user, userRepository::getFirebaseToken
-            ) {
+            val summaries = withToken(user, userRepository::getFirebaseToken) {
                 dashboardService.getSummaries(it)
             }
             emit(ResponseWrapper.Success(summaries.data.alertsSummary))

@@ -14,8 +14,10 @@ import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
 import androidx.navigation.fragment.findNavController
+import com.capstone.aiyam.data.dto.ResponseWrapper
 import com.capstone.aiyam.databinding.FragmentPhoneBinding
 import com.capstone.aiyam.domain.model.AuthenticationResponse
+import com.capstone.aiyam.domain.model.TargetAlerts
 import com.capstone.aiyam.utils.gone
 import com.capstone.aiyam.utils.visible
 import com.google.firebase.FirebaseException
@@ -55,53 +57,30 @@ class PhoneFragment : Fragment() {
         }
     }
 
-    private fun startPhoneVerification(phoneNumber: String) {
-        val callback = object : PhoneAuthProvider.OnVerificationStateChangedCallbacks() {
-            override fun onVerificationCompleted(credential: PhoneAuthCredential) {}
-
-            override fun onVerificationFailed(e: FirebaseException) {
-                e.message?.let { showToast(it) }
-            }
-
-            override fun onCodeSent(verificationId: String, token: PhoneAuthProvider.ForceResendingToken) {
-                showOtpBottomSheet(verificationId)
+    private fun startPhoneVerification(phoneNumber: String) { lifecycleScope.launch {
+        viewLifecycleOwner.repeatOnLifecycle(Lifecycle.State.CREATED) {
+            viewModel.postNumber(phoneNumber).collect { response ->
+                handleResult(response)
             }
         }
+    }}
 
-        viewModel.sendOtp(phoneNumber, callback)
-    }
-
-    private fun showOtpBottomSheet(verificationId: String) {
-        OtpFragment { otp ->
-            val credential = verifyCode(verificationId, otp)
-            lifecycleScope.launch {
-                viewLifecycleOwner.repeatOnLifecycle(Lifecycle.State.CREATED) {
-                    viewModel.linkPhoneNumber(credential).collect {
-                        handleOnAuth(it)
-                    }
-                }
-            }
-        }.show(parentFragmentManager, OtpFragment::class.java.simpleName)
-    }
-
-    private fun handleOnAuth(result: AuthenticationResponse ) {
+    private fun handleResult(result: ResponseWrapper<TargetAlerts>) {
         when(result) {
-            is AuthenticationResponse.Error -> {
+            is ResponseWrapper.Error -> {
                 onLoading(false)
-                showToast(result.message)
+                showToast(result.error)
             }
-            is AuthenticationResponse.Loading -> {
+            is ResponseWrapper.Loading -> {
                 onLoading(true)
             }
-            is AuthenticationResponse.Success -> {
+            is ResponseWrapper.Success -> {
                 onLoading(false)
                 showToast("Successfully linked phone number")
                 findNavController().popBackStack()
             }
         }
     }
-
-    private fun verifyCode(verificationId: String, code: String) = PhoneAuthProvider.getCredential(verificationId, code)
 
     private fun onLoading(isLoading: Boolean) {
         if (isLoading) binding.lpiLoading.visible() else binding.lpiLoading.gone()

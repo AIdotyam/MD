@@ -47,6 +47,8 @@ class HomeFragment : Fragment() {
             viewModel.init()
         }
 
+        viewModel.getPushToken()
+
         lifecycleScope.launch {
             viewLifecycleOwner.repeatOnLifecycle(Lifecycle.State.CREATED) {
                 viewModel.daily.collect {

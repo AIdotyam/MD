@@ -14,9 +14,11 @@ interface UserRepository {
     fun getFirebaseUser(): AuthorizationResponse
     fun firebaseSignOut()
     fun getFirebaseToken(user: FirebaseUser): Flow<TokenResponse>
+    fun getPushToken(): Flow<TokenResponse>
 
     fun updateFarmer(name: String): Flow<ResponseWrapper<Farmer>>
     fun getTargetAlerts(): Flow<ResponseWrapper<TargetAlerts>>
-    fun createTargetAlerts(phoneNumber: String, email: String): Flow<ResponseWrapper<TargetAlerts>>
-    fun updateTargetAlerts(phoneNumber: String?, email: String?): Flow<ResponseWrapper<TargetAlerts>>
+    fun createTargetAlerts(phoneNumber: String?): Flow<ResponseWrapper<TargetAlerts>>
+    fun updateEmailAlerts(email: String?): Flow<ResponseWrapper<TargetAlerts>>
+    fun updateNumberAlerts(number: String?): Flow<ResponseWrapper<TargetAlerts>>
 }

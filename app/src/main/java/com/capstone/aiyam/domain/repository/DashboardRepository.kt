@@ -7,7 +7,5 @@ import com.capstone.aiyam.domain.model.MonthlySummary
 import kotlinx.coroutines.flow.Flow
 
 interface DashboardRepository {
-    fun getDailySummaries(year: Int, month: Int, week: Int): Flow<ResponseWrapper<List<DailySummary>>>
-    fun getMonthlySummaries(year: Int): Flow<ResponseWrapper<List<MonthlySummary>>>
     fun getSummaries(): Flow<ResponseWrapper<List<Summary>>>
 }

@@ -14,9 +14,7 @@ private suspend fun getToken(
         is AuthorizationResponse.Success -> {
             tokenHandler(user.user).first()
         }
-        is AuthorizationResponse.Error -> {
-            throw IllegalAccessException(user.message)
-        }
+        is AuthorizationResponse.Error -> throw IllegalAccessException(user.message)
     }
 }
 

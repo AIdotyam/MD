@@ -1,10 +1,17 @@
 package com.capstone.aiyam.presentation.auth.profile
 
+import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.capstone.aiyam.data.dto.ResponseWrapper
+import com.capstone.aiyam.domain.model.AuthorizationResponse
+import com.capstone.aiyam.domain.model.TargetAlerts
 import com.capstone.aiyam.domain.repository.SettingsPreferencesRepository
 import com.capstone.aiyam.domain.repository.UserRepository
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.flow
+import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
@@ -16,17 +23,34 @@ class ProfileViewModel @Inject constructor(
     fun getUser() = userRepository.getFirebaseUser()
     fun signOut() = userRepository.firebaseSignOut()
 
+    init {
+        initializeTarget().launchIn(viewModelScope)
+    }
+
+    private fun initializeTarget() = userRepository.getTargetAlerts()
+
+    fun enableEmailAlerts(): Flow<ResponseWrapper<TargetAlerts>> {
+        return when(val user = getUser()) {
+            is AuthorizationResponse.Success -> {
+                userRepository.updateEmailAlerts(user.user.email)
+            }
+            is AuthorizationResponse.Error -> {
+                throw IllegalAccessException(user.message)
+            }
+        }
+    }
+
+    fun disableEmailAlerts(): Flow<ResponseWrapper<TargetAlerts>> {
+        return userRepository.updateEmailAlerts(null)
+    }
+
+    fun deleteNumber() = userRepository.updateNumberAlerts(null)
+
     fun savePushNotificationSetting(isActive: Boolean) { viewModelScope.launch {
         settingsPreferencesRepository.savePushNotificationSetting(isActive)
     }}
 
-    fun getPushNotificationSetting() = settingsPreferencesRepository.getPushNotificationSetting()
-
-    fun saveEmailNotificationSetting(isActive: Boolean) { viewModelScope.launch {
-        settingsPreferencesRepository.saveEmailNotificationSetting(isActive)
-    }}
-
-    fun getEmailNotificationSetting() = settingsPreferencesRepository.getEmailNotificationSetting()
-
     fun getPhoneNumberSetting() = settingsPreferencesRepository.getPhoneNumberSetting()
+    fun getPushNotificationSetting() = settingsPreferencesRepository.getPushNotificationSetting()
+    fun getEmailNotificationSetting() = settingsPreferencesRepository.getEmailNotificationSetting()
 }

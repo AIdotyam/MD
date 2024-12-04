@@ -1,8 +1,10 @@
 package com.capstone.aiyam.data.repository
 
 import android.app.Application
+import android.util.Log
 import androidx.datastore.preferences.core.edit
 import com.capstone.aiyam.data.local.preferences.PreferencesKey
+import com.capstone.aiyam.data.local.preferences.emailPreferences
 import com.capstone.aiyam.data.local.preferences.notificationPreferences
 import com.capstone.aiyam.data.local.preferences.settingsPreferences
 import com.capstone.aiyam.domain.repository.SettingsPreferencesRepository
@@ -26,19 +28,19 @@ class SettingsPreferencesRepositoryImpl @Inject constructor(
     }
 
     override fun getEmailNotificationSetting(): Flow<Boolean> {
-        return context.notificationPreferences.data.map {
+        return context.emailPreferences.data.map {
             it[PreferencesKey.EMAIL_NOTIFICATION_KEY] ?: false
         }
     }
 
     override suspend fun saveEmailNotificationSetting(isActive: Boolean) {
-        context.notificationPreferences.edit {
+        context.emailPreferences.edit {
             it[PreferencesKey.EMAIL_NOTIFICATION_KEY] = isActive
         }
     }
 
     override fun getPhoneNumberSetting(): Flow<String> {
-        return context.settingsPreferences.data.map {
+        return context.notificationPreferences.data.map {
             it[PreferencesKey.PHONE_NUMBER_KEY] ?: ""
         }
     }

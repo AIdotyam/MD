@@ -46,14 +46,26 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         app:layout_behavior="@string/appbar_scrolling_view_behavior"
-        android:layout_marginBottom="?android:attr/actionBarSize"
-        android:layout_margin="8dp">
+        android:layout_marginBottom="?android:attr/actionBarSize">
 
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="vertical"
             android:gravity="center_horizontal">
+
+            <com.google.android.material.progressindicator.LinearProgressIndicator
+                android:id="@+id/lpiLoading"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:indeterminate="true"
+                android:visibility="gone"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="@+id/refresh_layout_container"
+                app:trackCornerRadius="2dp"
+                app:trackThickness="4dp"
+                tools:visibility="visible" />
 
             <!-- Profile Image -->
             <ImageView
@@ -97,7 +109,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginBottom="8dp"
-                android:layout_margin="4dp"
+                android:layout_margin="12dp"
                 app:cardElevation="4dp"
                 app:cardCornerRadius="8dp">
 
@@ -127,7 +139,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginBottom="8dp"
-                android:layout_margin="4dp"
+                android:layout_margin="12dp"
                 app:cardElevation="4dp"
                 app:cardCornerRadius="8dp">
 
@@ -159,7 +171,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="16dp"
-                android:layout_margin="4dp"
+                android:layout_margin="12dp"
                 app:cardElevation="4dp"
                 app:cardCornerRadius="8dp">
 
@@ -180,37 +192,14 @@
                         android:id="@+id/cardButtonPhoneNumber"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="Change" />
-                </LinearLayout>
-            </androidx.cardview.widget.CardView>
-
-            <androidx.cardview.widget.CardView
-                android:id="@+id/telegramAlertCard"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="16dp"
-                android:layout_margin="4dp"
-                app:cardElevation="4dp"
-                app:cardCornerRadius="8dp">
-
-                <LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:orientation="horizontal"
-                    android:padding="8dp">
-
-                    <TextView
-                        android:id="@+id/cardTextTelegramAlert"
-                        android:layout_width="0dp"
-                        android:layout_height="wrap_content"
-                        android:layout_weight="1"
-                        android:text="@string/telegram_alert" />
+                        android:text="Enable" />
 
                     <Button
-                        android:id="@+id/cardButtonTelegramAlert"
+                        android:id="@+id/cardButtonDeletePhoneNumber"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="Configure" />
+                        android:text="Disable"
+                        android:visibility="gone" />
                 </LinearLayout>
             </androidx.cardview.widget.CardView>
         </LinearLayout>

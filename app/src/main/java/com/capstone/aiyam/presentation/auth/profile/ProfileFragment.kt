@@ -2,6 +2,7 @@ package com.capstone.aiyam.presentation.auth.profile
 
 import androidx.fragment.app.viewModels
 import android.os.Bundle
+import android.util.Log
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
@@ -15,9 +16,13 @@ import androidx.lifecycle.repeatOnLifecycle
 import androidx.navigation.fragment.findNavController
 import com.bumptech.glide.Glide
 import com.capstone.aiyam.R
+import com.capstone.aiyam.data.dto.ResponseWrapper
 import com.capstone.aiyam.databinding.FragmentProfileBinding
 import com.capstone.aiyam.domain.model.AuthorizationResponse
+import com.capstone.aiyam.domain.model.TargetAlerts
 import com.capstone.aiyam.presentation.shared.CustomAlertDialog
+import com.capstone.aiyam.utils.gone
+import com.capstone.aiyam.utils.visible
 import com.google.firebase.auth.FirebaseUser
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.launch
@@ -82,9 +87,6 @@ class ProfileFragment : Fragment() {
 
         lifecycleScope.launch {
             viewLifecycleOwner.repeatOnLifecycle(Lifecycle.State.CREATED) {
-
-                // TODO: Add some kind of API call to set notification setting
-                //  if action true, send notification token, else remove notification token
                 viewModel.getPushNotificationSetting().collect {
                     binding.notificationSwitch.isChecked = it
                 }
@@ -94,17 +96,40 @@ class ProfileFragment : Fragment() {
 
     private fun handleEmailNotification() {
         binding.emailNotificationSwitch.setOnCheckedChangeListener { _, isChecked ->
-            viewModel.saveEmailNotificationSetting(isChecked)
+            lifecycleScope.launch {
+                try {
+                    viewLifecycleOwner.repeatOnLifecycle(Lifecycle.State.CREATED) {
+                        val flow = if (isChecked) viewModel.enableEmailAlerts() else viewModel.disableEmailAlerts()
+                        flow.collect {
+                            handleSwitch(it)
+                        }
+                    }
+                } catch (e: Exception) {
+                    showToast(e.message.toString())
+                }
+            }
         }
+
 
         lifecycleScope.launch {
             viewLifecycleOwner.repeatOnLifecycle(Lifecycle.State.CREATED) {
-
-                // TODO: Add some kind of API call to set notification setting
-                //  if action true, send notification token, else remove notification token
                 viewModel.getEmailNotificationSetting().collect {
                     binding.emailNotificationSwitch.isChecked = it
                 }
+            }
+        }
+    }
+
+    private fun handleSwitch(target: ResponseWrapper<TargetAlerts>) {
+        when (target) {
+            is ResponseWrapper.Loading -> {
+                binding.lpiLoading.visible()
+            }
+            is ResponseWrapper.Success -> {
+                binding.lpiLoading.gone()
+            }
+            is ResponseWrapper.Error -> {
+                binding.lpiLoading.gone()
             }
         }
     }
@@ -114,6 +139,14 @@ class ProfileFragment : Fragment() {
             viewLifecycleOwner.repeatOnLifecycle(Lifecycle.State.CREATED) {
                 viewModel.getPhoneNumberSetting().collect {
                     binding.phoneInput.text = it
+
+                    if (it.isNotEmpty()) {
+                        binding.cardButtonPhoneNumber.gone()
+                        binding.cardButtonDeletePhoneNumber.visible()
+                    } else {
+                        binding.cardButtonPhoneNumber.visible()
+                        binding.cardButtonDeletePhoneNumber.gone()
+                    }
                 }
             }
         }
@@ -121,6 +154,16 @@ class ProfileFragment : Fragment() {
         binding.cardButtonPhoneNumber.setOnClickListener {
             ProfileFragmentDirections.actionProfileFragmentToPhoneFragment().let {
                 findNavController().navigate(it)
+            }
+        }
+
+        binding.cardButtonDeletePhoneNumber.setOnClickListener {
+            lifecycleScope.launch {
+                viewLifecycleOwner.repeatOnLifecycle(Lifecycle.State.CREATED) {
+                    viewModel.deleteNumber().collect{
+                        handleSwitch(it)
+                    }
+                }
             }
         }
     }
