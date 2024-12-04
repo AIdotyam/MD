@@ -86,6 +86,7 @@ dependencies {
     implementation(libs.converter.gson)
     implementation(libs.gson)
     implementation(libs.androidx.datastore.preferences)
+    implementation(libs.androidx.paging.runtime.ktx)
 
     // CameraX
     implementation(libs.androidx.camera.core)

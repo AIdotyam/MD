@@ -10,6 +10,7 @@ import com.capstone.aiyam.domain.repository.SettingsPreferencesRepository
 import com.capstone.aiyam.domain.repository.UserRepository
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.launch
@@ -29,13 +30,14 @@ class ProfileViewModel @Inject constructor(
 
     private fun initializeTarget() = userRepository.getTargetAlerts()
 
-    fun enableEmailAlerts(): Flow<ResponseWrapper<TargetAlerts>> {
-        return when(val user = getUser()) {
+    fun enableEmailAlerts(): Flow<ResponseWrapper<TargetAlerts>> = flow {
+        when (val user = getUser()) {
             is AuthorizationResponse.Success -> {
-                userRepository.updateEmailAlerts(user.user.email)
+                userRepository.updateEmailAlerts(user.user.email).collect { emit(it) }
             }
+
             is AuthorizationResponse.Error -> {
-                throw IllegalAccessException(user.message)
+                emit(ResponseWrapper.Error(user.message))
             }
         }
     }

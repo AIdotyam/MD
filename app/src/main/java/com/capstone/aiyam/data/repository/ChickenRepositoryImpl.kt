@@ -25,7 +25,6 @@ class ChickenRepositoryImpl @Inject constructor(
     override fun classifyChicken(file: File, mediaType: String): Flow<ResponseWrapper<Classification>> = flow {
         emit(ResponseWrapper.Loading)
 
-        if (mediaType == "image/*") file.reduceFileImage()
         val requestBody = file.asRequestBody(mediaType.toMediaTypeOrNull())
         val multipartBody =  MultipartBody.Part.createFormData("file", file.name, requestBody)
 

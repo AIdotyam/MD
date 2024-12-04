@@ -45,8 +45,7 @@
 
             <androidx.constraintlayout.widget.ConstraintLayout
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:paddingBottom="18dp">
+                android:layout_height="wrap_content">
 
                 <androidx.cardview.widget.CardView
                     android:id="@+id/dailyChickenCard"
@@ -58,7 +57,7 @@
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintEnd_toEndOf="parent"
                     android:layout_margin="16dp"
-                    app:cardBackgroundColor="@color/md_theme_primary"
+                    app:cardBackgroundColor="@color/md_theme_onPrimary"
                     android:background="@drawable/card_background">
 
                     <LinearLayout
@@ -112,64 +111,110 @@
                     android:id="@+id/mortalityTrendsCard"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
-                    app:cardElevation="4dp"
-                    app:cardCornerRadius="8dp"
-                    app:layout_constraintTop_toBottomOf="@id/dailyChickenCard"
-                    app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintEnd_toEndOf="parent"
                     android:layout_margin="16dp"
-                    app:cardBackgroundColor="@color/md_theme_primary"
-                    android:background="@drawable/card_background">
+                    android:background="@drawable/card_background"
+                    app:cardBackgroundColor="@color/md_theme_onPrimary"
+                    app:cardCornerRadius="8dp"
+                    app:cardElevation="4dp"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@id/dailyChickenCard">
 
                     <LinearLayout
+                        android:id="@+id/weeklyCardId"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:orientation="vertical"
                         android:padding="16dp">
 
-                        <TextView
-                            android:layout_width="wrap_content"
+                        <LinearLayout
+                            android:layout_width="match_parent"
                             android:layout_height="wrap_content"
-                            android:text="Monthly Mortality Trends"
-                            android:textSize="16sp"
-                            android:textColor="@color/black"
-                            android:textStyle="bold"
-                            android:layout_marginBottom="8dp" />
+                            android:orientation="vertical">
+
+                            <LinearLayout
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:gravity="center_vertical"
+                                android:orientation="horizontal">
+
+                                <TextView
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:gravity="center"
+                                    android:text="Weekly Alerts"
+                                    android:textColor="@color/black"
+                                    android:textSize="16sp"
+                                    android:textStyle="bold" />
+
+                                <View
+                                    android:layout_width="0dp"
+                                    android:layout_height="wrap_content"
+                                    android:layout_weight="1" />
+
+                                <com.google.android.material.button.MaterialButton
+                                    android:id="@+id/btn_previous"
+                                    style="@style/Widget.MaterialComponents.Button.OutlinedButton"
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:layout_marginEnd="8dp"
+                                    android:text="Previous"
+                                    android:textAllCaps="false"
+                                    android:textColor="@drawable/button_text_color"
+                                    app:strokeColor="@drawable/button_stroke_color" />
+
+                                <com.google.android.material.button.MaterialButton
+                                    android:id="@+id/btn_next"
+                                    style="@style/Widget.MaterialComponents.Button.OutlinedButton"
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:text="Next"
+                                    android:textAllCaps="false"
+                                    android:textColor="@drawable/button_text_color"
+                                    app:strokeColor="@drawable/button_stroke_color" />
+                            </LinearLayout>
+                        </LinearLayout>
 
                         <LinearLayout
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
-                            android:orientation="horizontal">
+                            android:orientation="horizontal"
+                            android:paddingVertical="8dp">
 
                             <TextView
                                 android:id="@+id/mortalityCount"
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
-                                android:textSize="16sp"
+                                android:layout_marginEnd="4dp"
                                 android:textColor="@color/black"
-                                android:layout_marginBottom="8dp"
-                                android:layout_marginEnd="4dp"/>
+                                android:textSize="16sp"
+                                tools:text="20" />
 
                             <TextView
                                 android:id="@+id/mortalityLabel"
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
-                                android:textSize="16sp"
                                 android:textColor="@color/black"
-                                android:layout_marginBottom="8dp" />
-
+                                android:textSize="16sp"
+                                tools:text="Something" />
                         </LinearLayout>
 
                         <com.github.mikephil.charting.charts.LineChart
                             android:id="@+id/mortalityLineChart"
                             android:layout_width="match_parent"
-                            android:layout_height="200dp"
-                            android:layout_marginTop="16dp" />
+                            android:layout_height="240dp"
+                            android:layout_marginTop="16dp"/>
                     </LinearLayout>
                 </androidx.cardview.widget.CardView>
 
+                <View
+                    android:layout_width="0dp"
+                    android:layout_height="20dp"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@+id/mortalityTrendsCard" />
             </androidx.constraintlayout.widget.ConstraintLayout>
         </ScrollView>
     </androidx.swiperefreshlayout.widget.SwipeRefreshLayout>
-
 </androidx.coordinatorlayout.widget.CoordinatorLayout>

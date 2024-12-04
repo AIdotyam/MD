@@ -18,6 +18,7 @@ import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.FirebaseUser
 import com.google.firebase.messaging.FirebaseMessaging
 import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.tasks.await
 import javax.inject.Inject
@@ -40,7 +41,7 @@ class UserRepositoryImpl @Inject constructor (
     override fun firebaseSignOut() = auth.signOut()
 
     override fun getFirebaseToken(user: FirebaseUser): Flow<TokenResponse> = flow {
-        user.getIdToken(true).await().token?.let {
+        user.getIdToken(false).await().token?.let {
             emit(TokenResponse.Success(it))
         } ?: run {
             emit(TokenResponse.Failed)
@@ -76,10 +77,8 @@ class UserRepositoryImpl @Inject constructor (
             }
 
             targetAlerts.data.phoneNumber?.let { phone ->
-                Log.d("Phone 2", "Phone number: $phone")
                 settingsPreferencesRepository.savePhoneNumberSetting(phone)
             } ?: run {
-                Log.d("Phone 3", "Phone number: ")
                 settingsPreferencesRepository.savePhoneNumberSetting("")
             }
 
@@ -101,7 +100,7 @@ class UserRepositoryImpl @Inject constructor (
             var targetAlerts: DataWrapper<TargetAlerts>? = null
             when(val user = getFirebaseUser()) {
                 is AuthorizationResponse.Success -> {
-                    user.user.getIdToken(true).await().token?.let {
+                    user.user.getIdToken(false).await().token?.let {
                         targetAlerts = farmerService.createTargetAlerts(it, TargetRequest(phoneNumber, user.user.email))
                     } ?: run {
                         emit(ResponseWrapper.Error("Failed to create target alerts"))
@@ -134,11 +133,7 @@ class UserRepositoryImpl @Inject constructor (
     override fun updateEmailAlerts(email: String?): Flow<ResponseWrapper<TargetAlerts>> = flow {
         emit(ResponseWrapper.Loading)
         try {
-            var phoneNumber: String? = null
-            settingsPreferencesRepository.getPhoneNumberSetting().collect {
-                if (it.isNotEmpty()) phoneNumber = it
-            }
-
+            val phoneNumber = settingsPreferencesRepository.getPhoneNumberSetting().first().takeIf { it.isNotEmpty() }
             val targetAlerts = withToken(getFirebaseUser(), ::getFirebaseToken) {
                 farmerService.updateTargetAlerts(it, TargetRequest(phoneNumber, email))
             }
@@ -161,7 +156,7 @@ class UserRepositoryImpl @Inject constructor (
             var targetAlerts: DataWrapper<TargetAlerts>? = null
             when(val user = getFirebaseUser()) {
                 is AuthorizationResponse.Success -> {
-                    user.user.getIdToken(true).await().token?.let {
+                    user.user.getIdToken(false).await().token?.let {
                         targetAlerts = farmerService.updateTargetAlerts(it, TargetRequest(number, user.user.email))
                     } ?: run {
                         emit(ResponseWrapper.Error("Failed to create target alerts"))

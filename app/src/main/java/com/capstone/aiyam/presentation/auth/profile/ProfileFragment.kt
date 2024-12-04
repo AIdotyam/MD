@@ -25,6 +25,7 @@ import com.capstone.aiyam.utils.gone
 import com.capstone.aiyam.utils.visible
 import com.google.firebase.auth.FirebaseUser
 import dagger.hilt.android.AndroidEntryPoint
+import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.launch
 
 @AndroidEntryPoint
@@ -95,41 +96,28 @@ class ProfileFragment : Fragment() {
     }
 
     private fun handleEmailNotification() {
-        binding.emailNotificationSwitch.setOnCheckedChangeListener { _, isChecked ->
-            lifecycleScope.launch {
-                try {
-                    viewLifecycleOwner.repeatOnLifecycle(Lifecycle.State.CREATED) {
-                        val flow = if (isChecked) viewModel.enableEmailAlerts() else viewModel.disableEmailAlerts()
-                        flow.collect {
-                            handleSwitch(it)
-                        }
-                    }
-                } catch (e: Exception) {
-                    showToast(e.message.toString())
-                }
-            }
-        }
-
-
         lifecycleScope.launch {
             viewLifecycleOwner.repeatOnLifecycle(Lifecycle.State.CREATED) {
-                viewModel.getEmailNotificationSetting().collect {
-                    binding.emailNotificationSwitch.isChecked = it
+                viewModel.getEmailNotificationSetting().collect { isEnabled ->
+                    binding.emailNotificationSwitch.isChecked = isEnabled
+                    binding.emailNotificationSwitch.setOnCheckedChangeListener { _, isChecked ->
+                        if (isChecked != isEnabled) {
+                            lifecycleScope.launch {
+                                viewLifecycleOwner.repeatOnLifecycle(Lifecycle.State.CREATED) {
+                                    if (isChecked) {
+                                        viewModel.enableEmailAlerts().collect {
+                                            handleSwitch(it)
+                                        }
+                                    } else {
+                                        viewModel.disableEmailAlerts().collect {
+                                            handleSwitch(it)
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
                 }
-            }
-        }
-    }
-
-    private fun handleSwitch(target: ResponseWrapper<TargetAlerts>) {
-        when (target) {
-            is ResponseWrapper.Loading -> {
-                binding.lpiLoading.visible()
-            }
-            is ResponseWrapper.Success -> {
-                binding.lpiLoading.gone()
-            }
-            is ResponseWrapper.Error -> {
-                binding.lpiLoading.gone()
             }
         }
     }
@@ -164,6 +152,20 @@ class ProfileFragment : Fragment() {
                         handleSwitch(it)
                     }
                 }
+            }
+        }
+    }
+
+    private fun handleSwitch(target: ResponseWrapper<TargetAlerts>) {
+        when (target) {
+            is ResponseWrapper.Loading -> {
+                binding.lpiLoading.visible()
+            }
+            is ResponseWrapper.Success -> {
+                binding.lpiLoading.gone()
+            }
+            is ResponseWrapper.Error -> {
+                binding.lpiLoading.gone()
             }
         }
     }

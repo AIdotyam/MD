@@ -15,8 +15,10 @@ import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
 import com.capstone.aiyam.data.dto.ResponseWrapper
 import com.capstone.aiyam.databinding.FragmentHomeBinding
+import com.capstone.aiyam.domain.model.Alerts
 import com.capstone.aiyam.domain.model.DailySummary
 import com.capstone.aiyam.domain.model.MonthlySummary
+import com.capstone.aiyam.domain.model.WeeklySummary
 import com.github.mikephil.charting.data.BarData
 import com.github.mikephil.charting.data.BarDataSet
 import com.github.mikephil.charting.data.BarEntry
@@ -24,6 +26,7 @@ import com.github.mikephil.charting.data.Entry
 import com.github.mikephil.charting.data.LineData
 import com.github.mikephil.charting.data.LineDataSet
 import dagger.hilt.android.AndroidEntryPoint
+import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
 
 @AndroidEntryPoint
@@ -43,49 +46,70 @@ class HomeFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        binding.swipeRefreshLayout.setOnRefreshListener {
-            viewModel.init()
+        observeButtons()
+        observeSummaries()
+        observeError()
+    }
+
+    /**
+     * Observes and updates the state of the Previous and Next buttons.
+     */
+    private fun observeButtons() { binding.apply {
+        btnNext.setOnClickListener {
+            viewModel.goToPreviousPage()
         }
 
-        viewModel.getPushToken()
+        btnPrevious.setOnClickListener {
+            viewModel.goToNextPage()
+        }
 
-        lifecycleScope.launch {
-            viewLifecycleOwner.repeatOnLifecycle(Lifecycle.State.CREATED) {
-                viewModel.daily.collect {
-                    when(it) {
-                        is ResponseWrapper.Success -> {
-                            setupDailyBarChart(it.data)
-                            binding.swipeRefreshLayout.isRefreshing = false
-                        }
-                        is ResponseWrapper.Loading -> {
+        swipeRefreshLayout.setOnRefreshListener {
+            viewModel.refreshData()
+        }
 
-                        }
-                        is ResponseWrapper.Error -> {
-                            handleError(it.error)
-                        }
-                    }
-                }
+        viewLifecycleOwner.lifecycleScope.launch {
+            viewModel.canNavigateNext.collect { canNavigate ->
+                btnPrevious.isEnabled = canNavigate
             }
         }
 
-        lifecycleScope.launch {
-            viewLifecycleOwner.repeatOnLifecycle(Lifecycle.State.CREATED) {
-                viewModel.monthly.collect {
-                    when(it) {
-                        is ResponseWrapper.Success -> {
-                            setupMortalityLineChart(it.data)
-                            binding.swipeRefreshLayout.isRefreshing = false
-                        }
-                        is ResponseWrapper.Loading -> {
-
-                        }
-                        is ResponseWrapper.Error -> {
-                            handleError(it.error)
-                        }
-                    }
-                }
+        viewLifecycleOwner.lifecycleScope.launch {
+            viewModel.canNavigatePrevious.collect { canNavigate ->
+                btnNext.isEnabled = canNavigate
             }
         }
+    }}
+
+    /**
+     * Observes the current page's summaries and updates the chart accordingly.
+     */
+    @SuppressLint("SetTextI18n")
+    private fun observeSummaries() {
+        viewLifecycleOwner.lifecycleScope.launch {
+            viewModel.currentPageSummaries.collectLatest { summaries ->
+                if (summaries.isNotEmpty()) setupWeeklyAlertsChart(summaries)
+            }
+        }
+    }
+
+    @SuppressLint("SetTextI18n")
+    private fun setupWeeklyAlertsChart(data: List<WeeklySummary>) {
+        val entries = data.reversed().mapIndexed { index, value ->
+            Entry(index.toFloat(), value.alertCount.toFloat())
+        }
+
+        val dataSet = LineDataSet(entries, "Alerts Trends").apply {
+            color = Color.RED
+            setCircleColor(Color.RED)
+        }
+
+        binding.mortalityLineChart.data = LineData(dataSet)
+        binding.mortalityLineChart.invalidate()
+
+        binding.mortalityLabel.text = "${data.last().formattedDate} - ${data[0].formattedDate}"
+
+        val totalAlerts = data.sumOf { it.alertCount }
+        binding.mortalityCount.text = "$totalAlerts Alerts | "
     }
 
     @SuppressLint("SetTextI18n")
@@ -105,27 +129,19 @@ class HomeFragment : Fragment() {
         binding.dailyCount.text = data.sumOf { it.chickenCount }.toString()
     }
 
-    @SuppressLint("SetTextI18n")
-    private fun setupMortalityLineChart(data: List<MonthlySummary>) {
-        val entries = data.mapIndexed { index, value ->
-            Entry(index.toFloat(), value.deadCount.toFloat())
-        }
-
-        val dataSet = LineDataSet(entries, "Mortality Trends").apply {
-            color = Color.RED
-            setCircleColor(Color.RED)
-        }
-
-        binding.mortalityLineChart.data = LineData(dataSet)
-        binding.mortalityLineChart.invalidate()
-
-        binding.mortalityLabel.text = "Annual Mortality Count"
-        binding.mortalityCount.text = data.sumOf { it.deadCount }.toString()
-    }
-
     private fun handleError(error: String) {
         binding.swipeRefreshLayout.isRefreshing = false
         showToast(error)
+    }
+
+    private fun observeError() {
+        viewLifecycleOwner.lifecycleScope.launch {
+            viewModel.errorMessage.collect { errorMsg ->
+                if (errorMsg != null) {
+                    showToast(errorMsg)
+                }
+            }
+        }
     }
 
     private fun showToast(message: String) {
