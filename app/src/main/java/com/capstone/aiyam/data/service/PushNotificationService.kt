@@ -5,6 +5,8 @@ import android.app.NotificationManager
 import android.app.PendingIntent
 import android.content.Context
 import android.content.Intent
+import android.media.RingtoneManager
+import android.net.Uri
 import android.os.Build
 import androidx.core.app.NotificationCompat
 import com.capstone.aiyam.MainActivity
@@ -35,12 +37,16 @@ class PushNotificationService : FirebaseMessagingService() {
     private fun showNotification(title: String?, body: String?, channelId: String = CHANNEL_ID) {
         val notificationManager = getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
 
+        val soundUri: Uri = RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION)
+
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
             val channel = NotificationChannel(
                 channelId,
                 "Channel human readable title",
                 NotificationManager.IMPORTANCE_HIGH
-            )
+            ).apply {
+                setSound(soundUri, null)
+            }
             notificationManager.createNotificationChannel(channel)
         }
 
@@ -58,7 +64,8 @@ class PushNotificationService : FirebaseMessagingService() {
         val notificationBuilder = NotificationCompat.Builder(this, channelId)
             .setContentTitle(title)
             .setContentText(body)
-            .setSmallIcon(R.drawable.sticker_8)
+            .setSmallIcon(R.drawable.aiyam)
+            .setSound(soundUri)
             .setAutoCancel(true)
             .setContentIntent(pendingIntent)
 

@@ -15,7 +15,7 @@
         android:layout_marginStart="20dp"
         android:layout_marginTop="8dp"
         android:contentDescription="@string/todo"
-        android:src="@drawable/sticker_6"
+        android:src="@drawable/aiyam"
         app:layout_constraintBottom_toBottomOf="@+id/dialog_title"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"

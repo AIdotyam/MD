@@ -3,7 +3,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".presentation.auth.splash.SplashFragment">
+    tools:context=".presentation.auth.splash.">
 
     <ImageView
         android:layout_width="200dp"
@@ -11,7 +11,7 @@
         android:layout_gravity="center"
         android:layout_margin="16dp"
         android:contentDescription="@string/todo"
-        android:src="@drawable/splash"
+        android:src="@drawable/logoaiyam"
         android:scaleType="centerInside"
         android:adjustViewBounds="true"/>
 

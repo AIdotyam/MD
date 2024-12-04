@@ -30,7 +30,7 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="@+id/guidelineHorizontal2"
-        app:srcCompat="@drawable/sticker_11" />
+        app:srcCompat="@drawable/logoaiyam" />
 
     <TextView
         android:id="@+id/title"
