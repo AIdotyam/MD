@@ -11,7 +11,7 @@ import retrofit2.http.Part
 
 interface ChickenService {
     @Multipart
-    @POST("upload")
+    @POST("processes")
     suspend fun postChicken(
         @Header("Authorization") token: String,
         @Part file: MultipartBody.Part

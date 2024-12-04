@@ -53,23 +53,19 @@ class MainActivity : AppCompatActivity() {
 
     private fun checkAllPermissions(): Boolean {
         val permissions = mutableListOf(
-            CAMERA_PERMISSION,
-            AUDIO_PERMISSION
+            CAMERA_PERMISSION, AUDIO_PERMISSION
         )
 
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
             permissions.add(NOTIFICATION_PERMISSION)
         }
 
-        return permissions.all {
-            ContextCompat.checkSelfPermission(this, it) == PackageManager.PERMISSION_GRANTED
-        }
+        return permissions.all { ContextCompat.checkSelfPermission(this, it) == PackageManager.PERMISSION_GRANTED }
     }
 
     private fun requestAllPermissions() {
         val permissionsToRequest = mutableListOf(
-            CAMERA_PERMISSION,
-            AUDIO_PERMISSION
+            CAMERA_PERMISSION, AUDIO_PERMISSION
         )
 
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {

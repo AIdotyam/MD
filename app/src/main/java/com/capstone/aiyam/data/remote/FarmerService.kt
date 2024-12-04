@@ -16,6 +16,11 @@ import retrofit2.http.POST
 import retrofit2.http.PUT
 
 interface FarmerService {
+    @POST("auth/googles")
+    suspend fun loginGoogle(
+        @Body request: GoogleRequest,
+    ): DataWrapper<Farmer>
+
     @POST("farmers")
     suspend fun createFarmer(
         @Header("Authorization") token: String,
@@ -27,11 +32,6 @@ interface FarmerService {
         @Header("Authorization") token: String,
         @Body request: UpdateNameRequest
     ): DataWrapper<Farmer>
-
-    @POST("auth/googles")
-    suspend fun loginGoogle(
-        @Body request: GoogleRequest,
-    ): DataWrapper<GoogleRequest>
 
     @GET("target-alerts")
     suspend fun getTargetAlerts(

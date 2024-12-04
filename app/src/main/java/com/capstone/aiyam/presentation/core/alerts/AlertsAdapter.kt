@@ -1,5 +1,6 @@
 package com.capstone.aiyam.presentation.core.alerts
 
+import android.annotation.SuppressLint
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.DiffUtil
@@ -16,8 +17,9 @@ class AlertsAdapter(
     inner class AlertViewHolder(
         val binding: ItemAlertHistoryBinding
     ) : RecyclerView.ViewHolder(binding.root) {
+        @SuppressLint("SetTextI18n")
         fun bind(alerts: Alerts){ binding.apply {
-            tvMessage.text = alerts.category
+            tvMessage.text = "Dead Chicken Detected"
             tvTimestamp.text = alerts.createdAt.parseDateTime()
             btnDetail.setOnClickListener { onClick(alerts) }
         }}

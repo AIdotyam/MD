@@ -2,7 +2,6 @@ package com.capstone.aiyam.presentation.core.classificationhistory
 
 import androidx.fragment.app.viewModels
 import android.os.Bundle
-import android.util.Log
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
@@ -16,9 +15,9 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import com.capstone.aiyam.data.dto.ResponseWrapper
 import com.capstone.aiyam.databinding.FragmentClassificationHistoryBinding
 import com.capstone.aiyam.domain.model.Classification
-import com.capstone.aiyam.domain.model.TokenResponse
 import com.capstone.aiyam.presentation.core.history.HistoryFragmentDirections
 import com.capstone.aiyam.utils.gone
+import com.capstone.aiyam.utils.parseDateToEnglish
 import com.capstone.aiyam.utils.visible
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.launch
@@ -86,15 +85,15 @@ class ClassificationHistoryFragment : Fragment() {
     private fun handleSuccess(histories: List<Classification>) {
         showLoading(false)
         showRefresh(false)
-        adapter.submitList(groupAlertsByDate(histories))
+        adapter.submitList(groupHistoriesByDate(histories))
     }
 
-    private fun groupAlertsByDate(histories: List<Classification>): List<ClassificationHistoryDisplayItem> {
+    private fun groupHistoriesByDate(histories: List<Classification>): List<ClassificationHistoryDisplayItem> {
         val groupedItems = mutableListOf<ClassificationHistoryDisplayItem>()
         var lastDate: String? = null
 
         histories.forEach { history ->
-            val date = history.createdAt.split("T")[0]
+            val date = history.createdAt.split("T")[0].parseDateToEnglish()
             if (date != lastDate) {
                 groupedItems.add(ClassificationHistoryDisplayItem.Header(date))
                 lastDate = date

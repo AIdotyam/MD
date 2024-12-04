@@ -1,7 +1,5 @@
 package com.capstone.aiyam.data.repository
 
-import com.capstone.aiyam.data.dto.CreateFarmerRequest
-import com.capstone.aiyam.data.dto.GoogleRequest
 import com.capstone.aiyam.data.dto.ResponseWrapper
 import com.capstone.aiyam.data.dto.TargetRequest
 import com.capstone.aiyam.data.dto.UpdateNameRequest
@@ -41,29 +39,15 @@ class UserRepositoryImpl @Inject constructor (
         }
     }
 
-    override fun createFarmer(uid: String, name: String, email: String): Flow<ResponseWrapper<Farmer>> = flow {
+    override fun createTargetAlerts(phoneNumber: String, email: String): Flow<ResponseWrapper<TargetAlerts>> = flow {
         emit(ResponseWrapper.Loading)
         try {
-            val farmer = withToken(
+            val targetAlerts = withToken(
                 getFirebaseUser(), ::getFirebaseToken
             ) {
-                farmerService.createFarmer(it, CreateFarmerRequest(uid, name, email))
+                farmerService.createTargetAlerts(it, TargetRequest(phoneNumber, email))
             }
-            emit(ResponseWrapper.Success(farmer.data))
-        } catch (e: Exception) {
-            emit(ResponseWrapper.Error(e.message.toString()))
-        }
-    }
-
-    override fun googleLogin(): Flow<ResponseWrapper<GoogleRequest>> = flow {
-        emit(ResponseWrapper.Loading)
-        try {
-            val user = withToken(
-                getFirebaseUser(), ::getFirebaseToken
-            ) {
-                farmerService.loginGoogle(GoogleRequest(it))
-            }
-            emit(ResponseWrapper.Success(user.data))
+            emit(ResponseWrapper.Success(targetAlerts.data))
         } catch (e: Exception) {
             emit(ResponseWrapper.Error(e.message.toString()))
         }
@@ -90,20 +74,6 @@ class UserRepositoryImpl @Inject constructor (
                 getFirebaseUser(), ::getFirebaseToken
             ) {
                 farmerService.getTargetAlerts(it)
-            }
-            emit(ResponseWrapper.Success(targetAlerts.data))
-        } catch (e: Exception) {
-            emit(ResponseWrapper.Error(e.message.toString()))
-        }
-    }
-
-    override fun createTargetAlerts(phoneNumber: String, email: String): Flow<ResponseWrapper<TargetAlerts>> = flow {
-        emit(ResponseWrapper.Loading)
-        try {
-            val targetAlerts = withToken(
-                getFirebaseUser(), ::getFirebaseToken
-            ) {
-                farmerService.createTargetAlerts(it, TargetRequest(phoneNumber, email))
             }
             emit(ResponseWrapper.Success(targetAlerts.data))
         } catch (e: Exception) {

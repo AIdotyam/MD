@@ -12,8 +12,6 @@ data class Alerts(
     val mediaUrl: String,
     @SerializedName("created_at")
     val createdAt: String,
-    @SerializedName("category")
-    val category: String,
     @SerializedName("is_read")
     val isRead: Boolean
 ): Parcelable

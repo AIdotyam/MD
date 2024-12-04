@@ -27,7 +27,7 @@ suspend fun <T> withToken(
 ): T {
     return when (val tokenResponse = getToken(user, tokenHandler)) {
         is TokenResponse.Success -> {
-            val authHeader = "Bearer ${tokenResponse.token}"
+            val authHeader = tokenResponse.token
             block(authHeader)
         }
         is TokenResponse.Failed -> throw IllegalAccessException("Failed to obtain token")

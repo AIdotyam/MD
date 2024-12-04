@@ -29,13 +29,8 @@ android {
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
 
-        buildConfigField(
-            "String",
-            "CLIENT_KEY",
-            "${apikeyProperties["CLIENT_KEY"]}"
-        )
-
-        buildConfigField("String", "ENDPOINT", "\"http://192.168.10.3:8082/\"")
+        buildConfigField("String", "CLIENT_KEY", "${apikeyProperties["CLIENT_KEY"]}")
+        buildConfigField("String", "URL", "${apikeyProperties["URL"]}")
     }
 
     buildTypes {
@@ -47,13 +42,16 @@ android {
             )
         }
     }
+
     compileOptions {
         sourceCompatibility = JavaVersion.VERSION_11
         targetCompatibility = JavaVersion.VERSION_11
     }
+
     kotlinOptions {
         jvmTarget = "11"
     }
+    
     buildFeatures {
         viewBinding = true
         buildConfig = true

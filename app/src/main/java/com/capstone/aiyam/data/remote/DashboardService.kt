@@ -1,6 +1,6 @@
 package com.capstone.aiyam.data.remote
 
-import com.capstone.aiyam.data.dto.SummaryRequest
+import com.capstone.aiyam.data.dto.SummaryResponse
 import com.capstone.aiyam.data.dto.DataWrapper
 import com.capstone.aiyam.domain.model.DailySummary
 import com.capstone.aiyam.domain.model.MonthlySummary
@@ -26,5 +26,5 @@ interface DashboardService {
     @GET("summaries")
     suspend fun getSummaries(
         @Header("Authorization") token: String,
-    ): DataWrapper<SummaryRequest>
+    ): DataWrapper<SummaryResponse>
 }

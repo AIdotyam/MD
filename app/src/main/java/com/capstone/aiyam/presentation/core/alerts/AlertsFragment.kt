@@ -1,9 +1,7 @@
 package com.capstone.aiyam.presentation.core.alerts
 
-import android.content.Context
 import androidx.fragment.app.viewModels
 import android.os.Bundle
-import android.util.Log
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
@@ -20,9 +18,12 @@ import com.capstone.aiyam.databinding.FragmentAlertsBinding
 import com.capstone.aiyam.domain.model.Alerts
 import com.capstone.aiyam.presentation.core.history.HistoryFragmentDirections
 import com.capstone.aiyam.utils.gone
+import com.capstone.aiyam.utils.parseDateToEnglish
 import com.capstone.aiyam.utils.visible
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.launch
+import kotlinx.datetime.LocalDate
+import java.time.format.DateTimeFormatter
 
 @AndroidEntryPoint
 class AlertsFragment : Fragment() {
@@ -101,7 +102,8 @@ class AlertsFragment : Fragment() {
         var lastDate: String? = null
 
         alerts.forEach { alert ->
-            val date = alert.createdAt.split("T")[0]
+            val date = alert.createdAt.split("T")[0].parseDateToEnglish()
+
             if (date != lastDate) {
                 groupedItems.add(AlertsDisplayItem.Header(date))
                 lastDate = date

@@ -5,12 +5,14 @@ import android.os.Build
 import android.util.Patterns
 import android.webkit.MimeTypeMap
 import androidx.annotation.RequiresApi
+import kotlinx.datetime.LocalDate
 import kotlinx.datetime.LocalDateTime
 import kotlinx.datetime.TimeZone
 import kotlinx.datetime.toInstant
 import kotlinx.datetime.toLocalDateTime
 import java.net.URLConnection.*
 import java.text.SimpleDateFormat
+import java.time.format.TextStyle
 import java.util.Locale
 
 fun String.parseDate(): String? {
@@ -30,7 +32,13 @@ fun String.parseDateTime(): String {
     val instant = parsedDateTime.toInstant(TimeZone.UTC)
     val date = instant.toLocalDateTime(TimeZone.UTC).date
     val time = instant.toLocalDateTime(TimeZone.UTC).time
-    return "$date | $time"
+
+    val year = date.year.toString()
+    val month = date.month.getDisplayName(TextStyle.FULL, Locale.ENGLISH)
+    val dayOfWeek = date.dayOfWeek.getDisplayName(TextStyle.FULL, Locale.ENGLISH)
+
+    val formattedTime = "${time.hour.toString().padStart(2, '0')}:${time.minute.toString().padStart(2, '0')}:${time.second.toString().padStart(2, '0')}"
+    return "$dayOfWeek, $month $year $formattedTime"
 }
 
 @SuppressLint("DefaultLocale")
@@ -70,4 +78,14 @@ fun String.isValidPhoneNumber(): Boolean {
     // Regex to check if phone starts with 8 and contains 10-12 digits
     val regex = "^8\\d{9,11}$".toRegex()
     return regex.matches(this)
+}
+
+fun String.parseDateToEnglish(): String {
+    val date = LocalDate.parse(this)
+
+    val year = date.year.toString()
+    val month = date.month.getDisplayName(TextStyle.FULL, Locale.ENGLISH)
+    val dayOfWeek = date.dayOfWeek.getDisplayName(TextStyle.FULL, Locale.ENGLISH)
+
+    return "$dayOfWeek, $month $year"
 }

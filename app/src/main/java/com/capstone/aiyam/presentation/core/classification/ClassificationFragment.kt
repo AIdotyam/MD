@@ -2,18 +2,14 @@ package com.capstone.aiyam.presentation.core.classification
 
 import android.Manifest
 import android.annotation.SuppressLint
-import android.content.ContentValues
 import android.content.pm.PackageManager
 import android.net.Uri
 import android.os.*
-import android.provider.MediaStore
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.webkit.MimeTypeMap
-import android.widget.Button
-import android.widget.TextView
 import android.widget.Toast
 import androidx.activity.result.PickVisualMediaRequest
 import androidx.activity.result.contract.ActivityResultContracts
@@ -33,6 +29,7 @@ import com.capstone.aiyam.databinding.FragmentClassificationBinding
 import com.capstone.aiyam.domain.model.Classification
 import com.capstone.aiyam.data.dto.ResponseWrapper
 import com.capstone.aiyam.presentation.shared.CustomAlertDialog
+import com.capstone.aiyam.presentation.shared.LoadingDialog
 import com.capstone.aiyam.utils.gone
 import com.capstone.aiyam.utils.toFormattedTime
 import com.capstone.aiyam.utils.visible
@@ -52,6 +49,7 @@ class ClassificationFragment : Fragment() {
     private val multiplePermissionId = 14
     private val permissions = arrayOf(Manifest.permission.CAMERA)
 
+    private var progressDialogFragment: LoadingDialog? = null
     private lateinit var videoCapture: VideoCapture<Recorder>
     private lateinit var imageCapture: ImageCapture
     private lateinit var cameraProvider: ProcessCameraProvider
@@ -142,7 +140,7 @@ class ClassificationFragment : Fragment() {
 
         imageCapture = ImageCapture.Builder()
             .setTargetAspectRatio(aspectRatio)
-            .setCaptureMode(ImageCapture.CAPTURE_MODE_MAXIMIZE_QUALITY)
+            .setCaptureMode(ImageCapture.CAPTURE_MODE_MINIMIZE_LATENCY)
             .setTargetRotation(binding.previewView.display.rotation)
             .build()
 
@@ -289,12 +287,20 @@ class ClassificationFragment : Fragment() {
     private fun handleOnClassify(result: ResponseWrapper<Classification>) {
         when(result) {
             is ResponseWrapper.Error -> {
+                progressDialogFragment?.dismiss()
+                progressDialogFragment = null
                 showToast(result.error)
             }
             is ResponseWrapper.Loading -> {
                 showToast("File has been uploaded")
+                if (progressDialogFragment == null) {
+                    progressDialogFragment = LoadingDialog()
+                }
+                progressDialogFragment?.show(parentFragmentManager, "progressDialog")
             }
             is ResponseWrapper.Success -> {
+                progressDialogFragment?.dismiss()
+                progressDialogFragment = null
                 val action = ClassificationFragmentDirections.actionClassificationFragmentToDetailFragment(result.data)
                 findNavController().navigate(action)
             }

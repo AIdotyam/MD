@@ -22,8 +22,15 @@ import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.tasks.await
 import com.capstone.aiyam.BuildConfig
+import com.capstone.aiyam.data.dto.CreateFarmerRequest
+import com.capstone.aiyam.data.dto.GoogleRequest
+import com.capstone.aiyam.data.dto.ResponseWrapper
+import com.capstone.aiyam.data.dto.SuspendWrapper
+import com.capstone.aiyam.data.remote.FarmerService
 import com.capstone.aiyam.domain.repository.AuthenticationRepository
+import com.capstone.aiyam.domain.repository.UserRepository
 import com.capstone.aiyam.utils.createNonce
+import com.capstone.aiyam.utils.withToken
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.FirebaseAuthInvalidCredentialsException
 import com.google.firebase.auth.FirebaseAuthUserCollisionException
@@ -36,15 +43,14 @@ import javax.inject.Inject
 class AuthenticationRepositoryImpl @Inject constructor(
     private val context: Application,
     private val auth: FirebaseAuth,
-    private val manager: CredentialManager
+    private val manager: CredentialManager,
+    private val farmerService: FarmerService
 ): AuthenticationRepository {
-
     override fun createAccountWithEmail(username: String, email: String, password: String): Flow<AuthenticationResponse> = flow {
         emit(AuthenticationResponse.Loading)
         try {
             auth.createUserWithEmailAndPassword(email, password).await()
             updateUserDisplayName(username)
-            emit(AuthenticationResponse.Success)
         } catch (e: FirebaseAuthUserCollisionException) {
             emit(AuthenticationResponse.Error("Email already in use"))
             return@flow
@@ -56,6 +62,22 @@ class AuthenticationRepositoryImpl @Inject constructor(
             return@flow
         } catch (e: Exception) {
             emit(AuthenticationResponse.Error("Failed to create account"))
+            return@flow
+        }
+
+        val user = auth.currentUser
+        try {
+            val firebaseIdToken = user?.getIdToken(true)?.await()?.token
+                ?: throw Exception("Firebase ID Token not found")
+            farmerService.createFarmer(firebaseIdToken, CreateFarmerRequest(user.uid, username, email))
+            emit(AuthenticationResponse.Success)
+        } catch (e: Exception) {
+            try { user?.delete()?.await() } catch (de: Exception) {
+                de.printStackTrace()
+            }
+
+            e.printStackTrace()
+            emit(AuthenticationResponse.Error(e.message ?: ""))
             return@flow
         }
     }
@@ -97,6 +119,7 @@ class AuthenticationRepositoryImpl @Inject constructor(
 
     override fun signInWithGoogle(): Flow<AuthenticationResponse> = flow {
         emit(AuthenticationResponse.Loading)
+
         val googleIdOption = GetGoogleIdOption.Builder()
             .setFilterByAuthorizedAccounts(false)
             .setServerClientId(BuildConfig.CLIENT_KEY)
@@ -110,7 +133,6 @@ class AuthenticationRepositoryImpl @Inject constructor(
 
         try {
             val credential = manager.getCredential(context, request).credential
-
             if (credential !is CustomCredential) {
                 throw Exception("Credential not found")
             }
@@ -123,11 +145,21 @@ class AuthenticationRepositoryImpl @Inject constructor(
             val firebaseCredential = GoogleAuthProvider.getCredential(googleIdTokenCredential.idToken, null)
 
             auth.signInWithCredential(firebaseCredential).await()
-            emit(AuthenticationResponse.Success)
         } catch (e: GoogleIdTokenParsingException) {
             e.printStackTrace()
             emit(AuthenticationResponse.Error(e.message ?: ""))
             return@flow
+        } catch (e: Exception) {
+            e.printStackTrace()
+            emit(AuthenticationResponse.Error(e.message ?: ""))
+            return@flow
+        }
+
+        try {
+            val firebaseIdToken = auth.currentUser?.getIdToken(true)?.await()?.token
+                ?: throw Exception("Firebase ID Token not found")
+            farmerService.loginGoogle(GoogleRequest(token = firebaseIdToken))
+            emit(AuthenticationResponse.Success)
         } catch (e: Exception) {
             e.printStackTrace()
             emit(AuthenticationResponse.Error(e.message ?: ""))

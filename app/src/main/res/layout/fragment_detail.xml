@@ -76,58 +76,8 @@
                 android:textStyle="bold"
                 android:layout_marginBottom="16dp" />
 
-            <!-- Cards -->
             <androidx.cardview.widget.CardView
-                android:id="@+id/totalAyamCard"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginVertical="10dp"
-                android:layout_marginHorizontal="26dp"
-                style="@style/NormalCardView" >
-
-                <LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:padding="16dp"
-                    android:orientation="vertical"
-                    android:gravity="center">
-
-                    <LinearLayout
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:orientation="horizontal"
-                        android:gravity="center"
-                        android:layout_marginBottom="8dp">
-
-                        <ImageView
-                            android:layout_width="36dp"
-                            android:layout_height="36dp"
-                            android:src="@drawable/chicken"
-                            android:contentDescription="@string/todo" />
-
-                        <TextView
-                            android:id="@+id/totalAyamValue"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:layout_marginStart="8dp"
-                            android:text="@string/_32"
-                            android:textStyle="bold"
-                            android:textSize="24sp"
-                            android:textColor="?attr/colorOnPrimary" />
-                    </LinearLayout>
-
-                    <TextView
-                        android:id="@+id/totalAyamLabel"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="@string/chicken_count"
-                        android:textColor="?attr/colorOnPrimary"
-                        android:textSize="17sp" />
-                </LinearLayout>
-            </androidx.cardview.widget.CardView>
-
-            <androidx.cardview.widget.CardView
-                android:id="@+id/ayamMatiCard"
+                android:id="@+id/chickenValueCard"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginVertical="10dp"
@@ -141,33 +91,16 @@
                     android:orientation="vertical"
                     android:gravity="center">
 
-                    <LinearLayout
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:orientation="horizontal"
-                        android:gravity="center"
-                        android:layout_marginBottom="8dp">
-
-                        <ImageView
-                            android:layout_width="36dp"
-                            android:layout_height="36dp"
-                            android:src="@drawable/skull"
-                            android:contentDescription="@string/todo" />
-
-                        <TextView
-                            android:id="@+id/ayamMatiValue"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:layout_marginStart="8dp"
-                            android:text="3"
-                            android:textSize="24sp"
-                            android:textStyle="bold"
-                            android:textColor="?attr/colorOnPrimary"
-                            tools:ignore="HardcodedText" />
-                    </LinearLayout>
+                    <ImageView
+                        android:id="@+id/predictIcon"
+                        android:layout_width="36dp"
+                        android:layout_height="36dp"
+                        android:layout_marginBottom="8dp"
+                        android:src="@drawable/skull"
+                        android:contentDescription="@string/todo" />
 
                     <TextView
-                        android:id="@+id/ayamMatiLabel"
+                        android:id="@+id/predictValue"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:text="@string/dead_count"
@@ -176,57 +109,6 @@
                 </LinearLayout>
             </androidx.cardview.widget.CardView>
 
-            <androidx.cardview.widget.CardView
-                android:id="@+id/crowdingCard"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginVertical="10dp"
-                android:layout_marginHorizontal="26dp"
-                style="@style/NormalCardView">
-
-                <LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:padding="16dp"
-                    android:orientation="vertical"
-                    android:gravity="center">
-
-                    <LinearLayout
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:orientation="horizontal"
-                        android:gravity="center"
-                        android:layout_marginBottom="8dp">
-
-                        <ImageView
-                            android:layout_width="36dp"
-                            android:layout_height="36dp"
-                            android:src="@drawable/round"
-                            android:contentDescription="@string/todo" />
-
-                        <TextView
-                            android:id="@+id/crowdingValue"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:layout_marginStart="8dp"
-                            android:text="Low"
-                            android:textSize="24sp"
-                            android:textStyle="bold"
-                            android:textColor="?attr/colorOnPrimary"
-                            tools:ignore="HardcodedText" />
-                    </LinearLayout>
-
-                    <TextView
-                        android:id="@+id/crowdingLabel"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="@string/crowding"
-                        android:textColor="?attr/colorOnPrimary"
-                        android:textSize="17sp" />
-                </LinearLayout>
-            </androidx.cardview.widget.CardView>
-
-            <!-- Back Button -->
             <Button
                 android:id="@+id/backButton"
                 android:layout_width="match_parent"

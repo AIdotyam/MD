@@ -7,13 +7,11 @@
     android:layout_height="match_parent"
     tools:context=".presentation.core.home.HomeFragment">
 
-    <!-- AppBarLayout for the Toolbar -->
     <com.google.android.material.appbar.AppBarLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:theme="@style/ThemeOverlay.MaterialComponents.Dark.ActionBar">
 
-        <!-- Toolbar -->
         <com.google.android.material.appbar.MaterialToolbar
             android:id="@+id/topAppBar"
             android:layout_width="match_parent"
@@ -34,7 +32,6 @@
 
     </com.google.android.material.appbar.AppBarLayout>
 
-    <!-- SwipeRefreshLayout to enable pull-to-refresh functionality -->
     <androidx.swiperefreshlayout.widget.SwipeRefreshLayout
         android:id="@+id/swipeRefreshLayout"
         android:layout_width="match_parent"
@@ -42,17 +39,15 @@
         app:layout_behavior="@string/appbar_scrolling_view_behavior"
         android:layout_marginBottom="?android:attr/actionBarSize">
 
-        <!-- Scrollable Content -->
         <ScrollView
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:fillViewport="true">
+            android:layout_height="match_parent">
 
             <androidx.constraintlayout.widget.ConstraintLayout
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content">
+                android:layout_height="wrap_content"
+                android:paddingBottom="18dp">
 
-                <!-- Daily Chicken Count Card -->
                 <androidx.cardview.widget.CardView
                     android:id="@+id/dailyChickenCard"
                     android:layout_width="0dp"
@@ -113,7 +108,6 @@
                     </LinearLayout>
                 </androidx.cardview.widget.CardView>
 
-                <!-- Mortality Trends Card -->
                 <androidx.cardview.widget.CardView
                     android:id="@+id/mortalityTrendsCard"
                     android:layout_width="0dp"

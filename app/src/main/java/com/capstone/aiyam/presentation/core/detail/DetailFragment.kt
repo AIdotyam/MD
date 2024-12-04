@@ -16,6 +16,7 @@ import com.capstone.aiyam.databinding.FragmentDetailBinding
 import com.capstone.aiyam.domain.model.Classification
 import com.capstone.aiyam.utils.getMimeTypeFromUrl
 import com.capstone.aiyam.utils.parseDateTime
+import com.capstone.aiyam.utils.parseDateToEnglish
 
 class DetailFragment : Fragment() {
     private var _binding: FragmentDetailBinding? = null
@@ -38,6 +39,14 @@ class DetailFragment : Fragment() {
 
     @SuppressLint("SetTextI18n")
     private fun bindViews(classification: Classification) { binding.apply {
+        if (classification.deadChicken) {
+            predictValue.text = "Dead Chicken Detected"
+            predictIcon.setImageResource(R.drawable.skull)
+        } else {
+            predictValue.text = "No Dead Chicken Detected"
+            predictIcon.setImageResource(R.drawable.chicken)
+        }
+
         dateTitle.text = classification.createdAt.parseDateTime()
 
         val mediaUrl = classification.mediaUrl
@@ -64,10 +73,6 @@ class DetailFragment : Fragment() {
             headerImage.visibility = View.VISIBLE
             Glide.with(requireContext()).load(R.drawable.baseline_broken_image_24).into(headerImage)
         }
-
-        crowdingValue.text = classification.crowdDensity
-        ayamMatiValue.text = classification.deadCount.toString()
-        totalAyamValue.text = classification.chickenCount.toString()
 
         backButton.setOnClickListener {
             findNavController().popBackStack()
