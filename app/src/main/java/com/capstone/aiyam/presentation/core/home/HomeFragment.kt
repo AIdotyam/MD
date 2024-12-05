@@ -11,10 +11,7 @@ import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
 import com.capstone.aiyam.databinding.FragmentHomeBinding
-import com.capstone.aiyam.domain.model.DailySummary
 import com.capstone.aiyam.domain.model.WeeklySummary
-import com.github.mikephil.charting.data.BarData
-import com.github.mikephil.charting.data.BarDataSet
 import com.github.mikephil.charting.data.BarEntry
 import com.github.mikephil.charting.data.Entry
 import com.github.mikephil.charting.data.LineData
@@ -47,26 +44,46 @@ class HomeFragment : Fragment() {
 
     private fun observeButtons() { binding.apply {
         btnNext.setOnClickListener {
-            viewModel.goToPreviousPage()
+            viewModel.goToAlertsPreviousPage()
         }
 
         btnPrevious.setOnClickListener {
-            viewModel.goToNextPage()
+            viewModel.goToAlertsNextPage()
+        }
+
+        viewLifecycleOwner.lifecycleScope.launch {
+            viewModel.canNavigateAlertsNext.collect { canNavigate ->
+                btnPrevious.isEnabled = canNavigate
+            }
+        }
+
+        viewLifecycleOwner.lifecycleScope.launch {
+            viewModel.canNavigateAlertsPrevious.collect { canNavigate ->
+                btnNext.isEnabled = canNavigate
+            }
         }
 
         swipeRefreshLayout.setOnRefreshListener {
             viewModel.refreshData()
         }
 
+        btnNextScan.setOnClickListener {
+            viewModel.goToScansPreviousPage()
+        }
+
+        btnPreviousScan.setOnClickListener {
+            viewModel.goToScansPreviousPage()
+        }
+
         viewLifecycleOwner.lifecycleScope.launch {
-            viewModel.canNavigateNext.collect { canNavigate ->
-                btnPrevious.isEnabled = canNavigate
+            viewModel.canNavigateScansNext.collect { canNavigate ->
+                btnPreviousScan.isEnabled = canNavigate
             }
         }
 
         viewLifecycleOwner.lifecycleScope.launch {
-            viewModel.canNavigatePrevious.collect { canNavigate ->
-                btnNext.isEnabled = canNavigate
+            viewModel.canNavigateScansPrevious.collect { canNavigate ->
+                btnNextScan.isEnabled = canNavigate
             }
         }
     }}
@@ -74,8 +91,14 @@ class HomeFragment : Fragment() {
     @SuppressLint("SetTextI18n")
     private fun observeSummaries() {
         viewLifecycleOwner.lifecycleScope.launch {
-            viewModel.currentPageSummaries.collectLatest { summaries ->
+            viewModel.currentPageAlertsSummaries.collectLatest { summaries ->
                 if (summaries.isNotEmpty()) setupWeeklyAlertsChart(summaries)
+            }
+        }
+
+        viewLifecycleOwner.lifecycleScope.launch {
+            viewModel.currentPageScansSummaries.collectLatest { summaries ->
+                if (summaries.isNotEmpty()) setupWeeklyScanChart(summaries)
             }
         }
     }
@@ -90,33 +113,32 @@ class HomeFragment : Fragment() {
 
         val dataSet = LineDataSet(entries, "Alerts Trends").apply {
             color = Color.RED
-            setCircleColor(Color.RED)
+            setCircleColor(Color.BLACK)
         }
 
         binding.mortalityLineChart.data = LineData(dataSet)
         binding.mortalityLineChart.invalidate()
 
         binding.mortalityLabel.text = "${data.last().formattedDate} - ${data[0].formattedDate}"
-
-        val totalAlerts = data.sumOf { it.count }
-        binding.mortalityCount.text = "$totalAlerts Alerts | "
+        binding.mortalityCount.text = "${data.sumOf { it.count }} Alerts |"
     }
 
     @SuppressLint("SetTextI18n")
-    private fun setupDailyBarChart(data: List<DailySummary>) {
+    private fun setupWeeklyScanChart(data: List<WeeklySummary>) {
         val entries = data.mapIndexed { index, value ->
-            BarEntry(index.toFloat(), value.chickenCount.toFloat())
+            BarEntry(index.toFloat(), value.count.toFloat())
         }
 
-        val dataSet = BarDataSet(entries, "Daily Count").apply {
-            color = Color.BLUE
+        val dataSet = LineDataSet(entries, "Scan Count").apply {
+            color = Color.GREEN
+            setCircleColor(Color.BLACK)
         }
 
-        binding.dailyBarChart.data = BarData(dataSet)
-        binding.dailyBarChart.invalidate()
+        binding.scanLineChart.data = LineData(dataSet)
+        binding.scanLineChart.invalidate()
 
-        binding.dailyLabel.text = "Weekly Chickens Scanned"
-        binding.dailyCount.text = data.sumOf { it.chickenCount }.toString()
+        binding.scanLabel.text = "${data.last().formattedDate} - ${data[0].formattedDate}"
+        binding.scanCount.text = "${data.sumOf { it.count }} Scans |"
     }
 
     private fun handleError(error: String) {
