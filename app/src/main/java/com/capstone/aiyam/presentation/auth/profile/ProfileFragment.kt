@@ -173,7 +173,7 @@ class ProfileFragment : Fragment() {
     private fun handleUser(user: FirebaseUser) { binding.apply {
         Glide.with(requireContext())
             .load(user.photoUrl)
-            .placeholder(R.drawable.baseline_people_24)
+            .placeholder(R.drawable.baseline_person_24)
             .circleCrop()
             .into(profileImage)
 

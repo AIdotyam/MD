@@ -4,25 +4,25 @@
     <group>
         <item
             android:id="@+id/homeFragment"
-            android:icon="@drawable/baseline_dashboard_24"
+            android:icon="@drawable/baseline_home_24"
             android:title="@string/home"
             android:enabled="true"/>
 
         <item
             android:id="@+id/classificationFragment"
-            android:icon="@drawable/baseline_file_upload_24"
+            android:icon="@drawable/baseline_add_a_photo_24"
             android:title="@string/upload"
             android:enabled="true"/>
 
         <item
             android:id="@+id/historyFragment"
-            android:icon="@drawable/baseline_crisis_alert_24"
+            android:icon="@drawable/baseline_history_24"
             android:title="@string/history"
             android:enabled="true"/>
 
         <item
             android:id="@+id/profileFragment"
-            android:icon="@drawable/baseline_people_24"
+            android:icon="@drawable/baseline_person_24"
             android:title="@string/profile"
             android:enabled="true"/>
     </group>
