@@ -9,6 +9,7 @@ import androidx.viewpager2.widget.ViewPager2
 import com.capstone.aiyam.R
 import com.capstone.aiyam.databinding.FragmentPageOneBinding
 import com.capstone.aiyam.databinding.FragmentPageThreeBinding
+import com.capstone.aiyam.utils.gone
 
 class PageOneFragment : Fragment() {
     private var _binding: FragmentPageOneBinding? = null
@@ -23,6 +24,8 @@ class PageOneFragment : Fragment() {
         val viewPager = requireActivity().findViewById<ViewPager2>(R.id.viewPagerOnboarding)
 
         binding.btnPrevious.isEnabled = false
+        binding.btnPrevious.gone()
+
         binding.btnNext.setOnClickListener {
             viewPager.currentItem = 1
         }
