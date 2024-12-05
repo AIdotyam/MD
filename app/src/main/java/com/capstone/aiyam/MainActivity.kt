@@ -6,6 +6,7 @@ import android.os.Build
 import android.os.Bundle
 import android.os.Handler
 import android.os.Looper
+import android.util.Log
 import android.view.View
 import android.widget.Toast
 import androidx.activity.OnBackPressedCallback
@@ -26,6 +27,7 @@ import androidx.navigation.fragment.NavHostFragment
 import com.capstone.aiyam.databinding.ActivityMainBinding
 import com.google.android.material.bottomnavigation.BottomNavigationView
 import dagger.hilt.android.AndroidEntryPoint
+import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.launch
 
 @AndroidEntryPoint
@@ -96,16 +98,12 @@ class MainActivity : AppCompatActivity() {
         handleBackPress(navController)
 
         lifecycleScope.launch {
-            repeatOnLifecycle(Lifecycle.State.CREATED) {
-                viewModel.isAuthenticated.collect {
+            repeatOnLifecycle(Lifecycle.State.STARTED) {
+                viewModel.startDestination.collect { destination ->
                     val navGraph = navController.navInflater.inflate(R.navigation.navigation_root)
-                    val startDestination = if (it) R.id.homeFragment else R.id.signinFragment
-
-                    navGraph.setStartDestination(startDestination)
+                    navGraph.setStartDestination(destination)
                     navController.graph = navGraph
-
-                    val navView: BottomNavigationView = binding.navView
-                    setNavigation(navView, navController)
+                    setNavigation(binding.navView, navController)
                 }
             }
         }
@@ -163,6 +161,7 @@ class MainActivity : AppCompatActivity() {
                 R.id.detailFragment -> navView.visibility = View.GONE
                 R.id.alertDetailFragment -> navView.visibility = View.GONE
                 R.id.phoneFragment -> navView.visibility = View.GONE
+                R.id.onboardingFragment -> navView.visibility = View.GONE
                 else -> navView.visibility = View.VISIBLE
             }
         }
@@ -184,7 +183,8 @@ class MainActivity : AppCompatActivity() {
             R.id.historyFragment,
             R.id.classificationFragment,
             R.id.signinFragment,
-            R.id.signupFragment
+            R.id.signupFragment,
+            R.id.onboardingFragment
         )
         return navController.currentDestination?.id in topLevelDestinations
     }

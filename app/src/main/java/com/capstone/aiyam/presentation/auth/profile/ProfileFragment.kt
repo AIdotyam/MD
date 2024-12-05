@@ -1,5 +1,10 @@
 package com.capstone.aiyam.presentation.auth.profile
 
+import android.content.ClipData
+import android.content.ClipboardManager
+import android.content.Context
+import android.content.Intent
+import android.net.Uri
 import androidx.fragment.app.viewModels
 import android.os.Bundle
 import android.util.Log
@@ -154,7 +159,60 @@ class ProfileFragment : Fragment() {
                 }
             }
         }
+
+        binding.cardButtonTelegram.setOnClickListener {
+            performCopyAndRedirect()
+        }
     }
+
+    private fun performCopyAndRedirect() {
+        val textToCopy = when(val user = viewModel.getUser()) {
+            is AuthorizationResponse.Success -> {
+                user.user.uid
+            }
+            else -> {
+                ""
+            }
+        }
+        val copySuccessful = copyTextToClipboard(textToCopy)
+
+        if (copySuccessful) {
+            redirectToTelegram()
+        } else {
+            Toast.makeText(requireContext(), "Failed to copy your id.", Toast.LENGTH_SHORT).show()
+        }
+    }
+
+    private fun copyTextToClipboard(text: String): Boolean {
+        return try {
+            val clipboard = requireContext().getSystemService(Context.CLIPBOARD_SERVICE) as ClipboardManager
+            val clip = ClipData.newPlainText("label", text)
+            clipboard.setPrimaryClip(clip)
+            true
+        } catch (e: Exception) {
+            e.printStackTrace()
+            false
+        }
+    }
+
+    private fun redirectToTelegram() {
+        val telegramUsername = "MissRose_bot"
+        val telegramUri = Uri.parse("tg://resolve?domain=$telegramUsername")
+        val intent = Intent(Intent.ACTION_VIEW, telegramUri)
+
+        if (intent.resolveActivity(requireContext().packageManager) != null) {
+            startActivity(intent)
+        } else {
+            val webUri = Uri.parse("https://t.me/$telegramUsername")
+            val webIntent = Intent(Intent.ACTION_VIEW, webUri)
+            if (webIntent.resolveActivity(requireContext().packageManager) != null) {
+                startActivity(webIntent)
+            } else {
+                Toast.makeText(requireContext(), "Unable to open Telegram.", Toast.LENGTH_SHORT).show()
+            }
+        }
+    }
+
 
     private fun handleSwitch(target: ResponseWrapper<TargetAlerts>) {
         when (target) {

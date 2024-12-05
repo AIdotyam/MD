@@ -105,6 +105,7 @@ dependencies {
     implementation(libs.mpandroidchart)
     implementation(libs.androidx.viewpager2)
     implementation(libs.androidx.core.splashscreen)
+    implementation(libs.dotsindicator)
 
     // Firebase
     implementation(platform(libs.firebase.bom))

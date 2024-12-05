@@ -1,11 +1,14 @@
 package com.capstone.aiyam.presentation.core.home
 
+import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.capstone.aiyam.data.dto.ResponseWrapper
 import com.capstone.aiyam.domain.model.Alerts
 import com.capstone.aiyam.domain.model.WeeklySummary
 import com.capstone.aiyam.domain.repository.AlertRepository
+import com.google.firebase.Firebase
+import com.google.firebase.auth.auth
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
@@ -17,20 +20,17 @@ import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.onStart
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.tasks.await
 import java.time.LocalDateTime
 import java.time.format.DateTimeFormatter
-import java.time.temporal.WeekFields
-import java.util.Locale
 import javax.inject.Inject
 
 @HiltViewModel
 class HomeViewModel @Inject constructor(
     private val alertRepository: AlertRepository
 ) : ViewModel() {
+    private val pageSize = 7
 
-    private val pageSize = 7 // Days per page
-
-    // StateFlows to manage UI states
     private val _weeklySummaries = MutableStateFlow<List<WeeklySummary>>(emptyList())
     private val _currentPage = MutableStateFlow(0)
     private val _isLoading = MutableStateFlow(false)
@@ -38,7 +38,6 @@ class HomeViewModel @Inject constructor(
     private val _errorMessage = MutableStateFlow<String?>(null)
     val errorMessage: StateFlow<String?> = _errorMessage.asStateFlow()
 
-    // Derived state for current page's summaries
     val currentPageSummaries: StateFlow<List<WeeklySummary>> = combine(
         _weeklySummaries,
         _currentPage
@@ -52,7 +51,6 @@ class HomeViewModel @Inject constructor(
         }
     }.stateIn(viewModelScope, SharingStarted.Eagerly, emptyList())
 
-    // Derived states for button enablement
     val canNavigateNext: StateFlow<Boolean> = combine(
         _weeklySummaries,
         _currentPage
@@ -69,12 +67,10 @@ class HomeViewModel @Inject constructor(
         fetchWeeklySummaries()
     }
 
-    /**
-     * Fetches alerts from the repository, aggregates them per week,
-     * and updates the summaries.
-     */
     private fun fetchWeeklySummaries() {
         viewModelScope.launch {
+            Firebase.auth.currentUser?.getIdToken(false)?.await()?.token?.let { Log.d("TOKEN", it) }
+
             alertRepository.getAlerts()
                 .onStart {
                     _isLoading.value = true
@@ -105,21 +101,15 @@ class HomeViewModel @Inject constructor(
         }
     }
 
-    /**
-     * Aggregates the list of alerts into weekly summaries.
-     */
     private fun aggregateAlertsByDay(alerts: List<Alerts>): List<WeeklySummary> {
         return alerts.groupBy { alert ->
             val dateTime = LocalDateTime.parse(alert.createdAt, DateTimeFormatter.ISO_DATE_TIME)
-            dateTime.toLocalDate() // Extracts the date part
+            dateTime.toLocalDate()
         }.map { (date, alerts) ->
-            WeeklySummary(date = date, alertCount = alerts.size)
-        }.sortedByDescending { it.date } // Sort days in ascending order
+            WeeklySummary(date = date, count = alerts.size)
+        }.sortedByDescending { it.date }
     }
 
-    /**
-     * Navigates to the next page if possible.
-     */
     fun goToNextPage() {
         val totalPages = (_weeklySummaries.value.size + pageSize - 1) / pageSize
         if (_currentPage.value < totalPages - 1) {
@@ -127,18 +117,12 @@ class HomeViewModel @Inject constructor(
         }
     }
 
-    /**
-     * Navigates to the previous page if possible.
-     */
     fun goToPreviousPage() {
         if (_currentPage.value > 0) {
             _currentPage.value -= 1
         }
     }
 
-    /**
-     * Refreshes the data by re-fetching alerts.
-     */
     fun refreshData() {
         fetchWeeklySummaries()
     }

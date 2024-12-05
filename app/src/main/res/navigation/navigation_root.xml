@@ -116,4 +116,13 @@
             android:id="@+id/action_historyFragment_to_detailFragment"
             app:destination="@id/detailFragment" />
     </fragment>
+    <fragment
+        android:id="@+id/onboardingFragment"
+        android:name="com.capstone.aiyam.presentation.core.onboarding.OnboardingFragment"
+        android:label="fragment_onboarding"
+        tools:layout="@layout/fragment_onboarding" >
+        <action
+            android:id="@+id/action_onboardingFragment_to_signinFragment"
+            app:destination="@id/signinFragment" />
+    </fragment>
 </navigation>

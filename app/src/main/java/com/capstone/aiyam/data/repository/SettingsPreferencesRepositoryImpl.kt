@@ -1,12 +1,12 @@
 package com.capstone.aiyam.data.repository
 
 import android.app.Application
-import android.util.Log
 import androidx.datastore.preferences.core.edit
 import com.capstone.aiyam.data.local.preferences.PreferencesKey
 import com.capstone.aiyam.data.local.preferences.emailPreferences
 import com.capstone.aiyam.data.local.preferences.notificationPreferences
 import com.capstone.aiyam.data.local.preferences.settingsPreferences
+import com.capstone.aiyam.data.local.preferences.telegramPreferences
 import com.capstone.aiyam.domain.repository.SettingsPreferencesRepository
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.map
@@ -40,14 +40,38 @@ class SettingsPreferencesRepositoryImpl @Inject constructor(
     }
 
     override fun getPhoneNumberSetting(): Flow<String> {
-        return context.notificationPreferences.data.map {
+        return context.settingsPreferences.data.map {
             it[PreferencesKey.PHONE_NUMBER_KEY] ?: ""
         }
     }
 
     override suspend fun savePhoneNumberSetting(phoneNumber: String) {
-        context.notificationPreferences.edit {
+        context.settingsPreferences.edit {
             it[PreferencesKey.PHONE_NUMBER_KEY] = phoneNumber
+        }
+    }
+
+    override fun getTelegramNotificationSetting(): Flow<Boolean> {
+        return context.telegramPreferences.data.map {
+            it[PreferencesKey.TELEGRAM_KEY] ?: false
+        }
+    }
+
+    override suspend fun saveTelegramNotificationSetting(isActive: Boolean) {
+        context.telegramPreferences.edit {
+            it[PreferencesKey.TELEGRAM_KEY] = isActive
+        }
+    }
+
+    override fun getOnBoarding(): Flow<Boolean> {
+        return context.telegramPreferences.data.map {
+            it[PreferencesKey.TELEGRAM_KEY] ?: false
+        }
+    }
+
+    override suspend fun saveOnBoarding(isActive: Boolean) {
+        context.telegramPreferences.edit {
+            it[PreferencesKey.TELEGRAM_KEY] = isActive
         }
     }
 }

@@ -3,21 +3,15 @@ package com.capstone.aiyam.presentation.core.home
 import android.annotation.SuppressLint
 import android.graphics.Color
 import android.os.Bundle
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
-import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.lifecycleScope
-import androidx.lifecycle.repeatOnLifecycle
-import com.capstone.aiyam.data.dto.ResponseWrapper
 import com.capstone.aiyam.databinding.FragmentHomeBinding
-import com.capstone.aiyam.domain.model.Alerts
 import com.capstone.aiyam.domain.model.DailySummary
-import com.capstone.aiyam.domain.model.MonthlySummary
 import com.capstone.aiyam.domain.model.WeeklySummary
 import com.github.mikephil.charting.data.BarData
 import com.github.mikephil.charting.data.BarDataSet
@@ -51,9 +45,6 @@ class HomeFragment : Fragment() {
         observeError()
     }
 
-    /**
-     * Observes and updates the state of the Previous and Next buttons.
-     */
     private fun observeButtons() { binding.apply {
         btnNext.setOnClickListener {
             viewModel.goToPreviousPage()
@@ -80,9 +71,6 @@ class HomeFragment : Fragment() {
         }
     }}
 
-    /**
-     * Observes the current page's summaries and updates the chart accordingly.
-     */
     @SuppressLint("SetTextI18n")
     private fun observeSummaries() {
         viewLifecycleOwner.lifecycleScope.launch {
@@ -94,8 +82,10 @@ class HomeFragment : Fragment() {
 
     @SuppressLint("SetTextI18n")
     private fun setupWeeklyAlertsChart(data: List<WeeklySummary>) {
+        binding.swipeRefreshLayout.isRefreshing = false
+
         val entries = data.reversed().mapIndexed { index, value ->
-            Entry(index.toFloat(), value.alertCount.toFloat())
+            Entry(index.toFloat(), value.count.toFloat())
         }
 
         val dataSet = LineDataSet(entries, "Alerts Trends").apply {
@@ -108,7 +98,7 @@ class HomeFragment : Fragment() {
 
         binding.mortalityLabel.text = "${data.last().formattedDate} - ${data[0].formattedDate}"
 
-        val totalAlerts = data.sumOf { it.alertCount }
+        val totalAlerts = data.sumOf { it.count }
         binding.mortalityCount.text = "$totalAlerts Alerts | "
     }
 
@@ -138,7 +128,7 @@ class HomeFragment : Fragment() {
         viewLifecycleOwner.lifecycleScope.launch {
             viewModel.errorMessage.collect { errorMsg ->
                 if (errorMsg != null) {
-                    showToast(errorMsg)
+                    handleError(errorMsg)
                 }
             }
         }

@@ -280,8 +280,6 @@ val dummyAlerts = listOf(
     Alerts(194, "https://example.com/media/194", "2024-12-02T22:25:33.120Z", true)
 )
 
-
-
 class AlertRepositoryImpl @Inject constructor(
     private val alertService: AlertService,
     private val userRepository: UserRepository

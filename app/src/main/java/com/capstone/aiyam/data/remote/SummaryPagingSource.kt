@@ -49,7 +49,7 @@ class SummaryPagingSource(
             val year = dateTime.year
             "$year-W$weekNumber"
         }.map { (week, alerts) ->
-            WeeklySummary(date = LocalDate.now(), alertCount = alerts.size)
+            WeeklySummary(date = LocalDate.now(), count = alerts.size)
         }.sortedBy { it.date }
     }
 
