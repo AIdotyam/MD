@@ -87,14 +87,27 @@ class ProfileFragment : Fragment() {
     }
 
     private fun handlePushNotification() {
-        binding.notificationSwitch.setOnCheckedChangeListener { _, isChecked ->
-            viewModel.savePushNotificationSetting(isChecked)
-        }
-
         lifecycleScope.launch {
             viewLifecycleOwner.repeatOnLifecycle(Lifecycle.State.CREATED) {
-                viewModel.getPushNotificationSetting().collect {
-                    binding.notificationSwitch.isChecked = it
+                viewModel.getPushNotificationSetting().collect { isEnabled ->
+                    binding.notificationSwitch.isChecked = isEnabled
+                    binding.notificationSwitch.setOnCheckedChangeListener { _, isChecked ->
+                        if (isChecked != isEnabled) {
+                            lifecycleScope.launch {
+                                viewLifecycleOwner.repeatOnLifecycle(Lifecycle.State.CREATED) {
+                                    if (isChecked) {
+                                        viewModel.enablePushAlerts().collect {
+                                            handleSwitch(it)
+                                        }
+                                    } else {
+                                        viewModel.disablePushAlerts().collect {
+                                            handleSwitch(it)
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
                 }
             }
         }

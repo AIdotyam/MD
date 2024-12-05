@@ -1,5 +1,6 @@
 package com.capstone.aiyam.presentation.core.classificationhistory
 
+import android.annotation.SuppressLint
 import android.content.Context
 import android.graphics.Bitmap
 import android.media.MediaMetadataRetriever
@@ -27,8 +28,10 @@ class ClassificationHistoryAdapter(
         val context: Context,
         val binding: ItemClassificationHistoryBinding
     ) : RecyclerView.ViewHolder(binding.root) {
+        @SuppressLint("SetTextI18n")
         fun bind(classification: Classification) {
             binding.apply {
+                tvMessage.text = if (classification.deadChicken) "Dead Chicken Detected" else "Healthy Chicken"
                 tvTimestamp.text = classification.createdAt.parseDateTime()
 
                 val mediaUrl = classification.mediaUrl

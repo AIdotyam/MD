@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.cardview.widget.CardView
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.cardview.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_margin="3dp"
     app:cardCornerRadius="12dp"
     app:cardElevation="4dp">
@@ -26,8 +26,8 @@
                 android:id="@+id/icon_warning"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:padding="12dp"
-                android:src="@drawable/alert_icon"
+                android:padding="2dp"
+                android:src="@drawable/image"
                 android:contentDescription="@string/todo" />
 
         </androidx.cardview.widget.CardView>
@@ -45,9 +45,9 @@
                 android:id="@+id/tv_message"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Dead Chicken Detected"
                 android:textSize="16sp"
-                android:textStyle="bold" />
+                android:textStyle="bold"
+                tools:text="Dead Chicken Detected" />
 
             <TextView
                 android:id="@+id/tv_timestamp"

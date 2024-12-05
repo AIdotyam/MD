@@ -76,6 +76,12 @@ class UserRepositoryImpl @Inject constructor (
                 farmerService.getTargetAlerts(it)
             }
 
+            targetAlerts.data.fcm?.let {
+                settingsPreferencesRepository.savePushNotificationSetting(true)
+            } ?: run {
+                settingsPreferencesRepository.savePushNotificationSetting(false)
+            }
+
             targetAlerts.data.phoneNumber?.let { phone ->
                 settingsPreferencesRepository.savePhoneNumberSetting(phone)
             } ?: run {
@@ -94,48 +100,32 @@ class UserRepositoryImpl @Inject constructor (
         }
     }
 
-    override fun createTargetAlerts(phoneNumber: String?): Flow<ResponseWrapper<TargetAlerts>> = flow {
+    override fun createTargetAlerts(): Flow<ResponseWrapper<TargetAlerts>> = flow {
         emit(ResponseWrapper.Loading)
         try {
-            var targetAlerts: DataWrapper<TargetAlerts>? = null
-            when(val user = getFirebaseUser()) {
-                is AuthorizationResponse.Success -> {
-                    user.user.getIdToken(false).await().token?.let {
-                        targetAlerts = farmerService.createTargetAlerts(it, TargetRequest(phoneNumber, user.user.email))
-                    } ?: run {
-                        emit(ResponseWrapper.Error("Failed to create target alerts"))
-                        return@flow
-                    }
-                }
-                is AuthorizationResponse.Error -> {
-                    emit(ResponseWrapper.Error(user.message))
-                    return@flow
-                }
+            val targetAlerts = withToken(getFirebaseUser(), ::getFirebaseToken) {
+                farmerService.createTargetAlerts(it, TargetRequest(null, null, null))
             }
 
-            targetAlerts?.let {
-                it.data.phoneNumber?.let { phone ->
-                    settingsPreferencesRepository.savePhoneNumberSetting(phone)
-                } ?: run {
-                    settingsPreferencesRepository.savePhoneNumberSetting("")
-                }
-
-                emit(ResponseWrapper.Success(it.data))
-            } ?: run {
-                emit(ResponseWrapper.Error("Failed to create target alerts"))
-                return@flow
-            }
+            emit(ResponseWrapper.Success(targetAlerts.data))
         } catch (e: Exception) {
             emit(ResponseWrapper.Error(e.message.toString()))
+            return@flow
         }
     }
 
     override fun updateEmailAlerts(email: String?): Flow<ResponseWrapper<TargetAlerts>> = flow {
         emit(ResponseWrapper.Loading)
         try {
+            val pushToken = if (settingsPreferencesRepository.getPushNotificationSetting().first()) {
+                messaging.token.await()
+            } else {
+                null
+            }
+
             val phoneNumber = settingsPreferencesRepository.getPhoneNumberSetting().first().takeIf { it.isNotEmpty() }
             val targetAlerts = withToken(getFirebaseUser(), ::getFirebaseToken) {
-                farmerService.updateTargetAlerts(it, TargetRequest(phoneNumber, email))
+                farmerService.updateTargetAlerts(it, TargetRequest(phoneNumber, email, pushToken))
             }
 
             targetAlerts.data.email?.let {
@@ -150,14 +140,55 @@ class UserRepositoryImpl @Inject constructor (
         }
     }
 
-    override fun updateNumberAlerts(number: String?): Flow<ResponseWrapper<TargetAlerts>> = flow {
+    override fun updatePushAlerts(token: String?): Flow<ResponseWrapper<TargetAlerts>> = flow {
         emit(ResponseWrapper.Loading)
         try {
+            val phoneNumber = settingsPreferencesRepository.getPhoneNumberSetting().first().takeIf { it.isNotEmpty() }
+
             var targetAlerts: DataWrapper<TargetAlerts>? = null
             when(val user = getFirebaseUser()) {
                 is AuthorizationResponse.Success -> {
                     user.user.getIdToken(false).await().token?.let {
-                        targetAlerts = farmerService.updateTargetAlerts(it, TargetRequest(number, user.user.email))
+                        targetAlerts = farmerService.updateTargetAlerts(it, TargetRequest(phoneNumber, user.user.email, token))
+                    } ?: run {
+                        emit(ResponseWrapper.Error("Failed to create target alerts"))
+                        return@flow
+                    }
+                }
+                is AuthorizationResponse.Error -> {
+                    emit(ResponseWrapper.Error(user.message))
+                    return@flow
+                }
+            }
+
+            targetAlerts?.let {
+                it.data.fcm?.let {
+                    settingsPreferencesRepository.savePushNotificationSetting(true)
+                } ?: run {
+                    settingsPreferencesRepository.savePushNotificationSetting(false)
+                }
+
+                emit(ResponseWrapper.Success(it.data))
+            } ?: run {
+                emit(ResponseWrapper.Error("Failed to update phone number"))
+                return@flow
+            }
+        } catch (e: Exception) {
+            emit(ResponseWrapper.Error(e.message.toString()))
+            return@flow
+        }
+    }
+
+    override fun updateNumberAlerts(number: String?): Flow<ResponseWrapper<TargetAlerts>> = flow {
+        emit(ResponseWrapper.Loading)
+        try {
+            val pushToken = if (settingsPreferencesRepository.getPushNotificationSetting().first()) messaging.token.await() else null
+
+            var targetAlerts: DataWrapper<TargetAlerts>? = null
+            when(val user = getFirebaseUser()) {
+                is AuthorizationResponse.Success -> {
+                    user.user.getIdToken(false).await().token?.let {
+                        targetAlerts = farmerService.updateTargetAlerts(it, TargetRequest(number, user.user.email, pushToken))
                     } ?: run {
                         emit(ResponseWrapper.Error("Failed to create target alerts"))
                         return@flow
@@ -183,6 +214,7 @@ class UserRepositoryImpl @Inject constructor (
             }
         } catch (e: Exception) {
             emit(ResponseWrapper.Error(e.message.toString()))
+            return@flow
         }
     }
 }

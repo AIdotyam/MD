@@ -5,6 +5,7 @@ import androidx.datastore.preferences.core.edit
 import com.capstone.aiyam.data.local.preferences.PreferencesKey
 import com.capstone.aiyam.data.local.preferences.emailPreferences
 import com.capstone.aiyam.data.local.preferences.notificationPreferences
+import com.capstone.aiyam.data.local.preferences.onBoardingPreferences
 import com.capstone.aiyam.data.local.preferences.settingsPreferences
 import com.capstone.aiyam.data.local.preferences.telegramPreferences
 import com.capstone.aiyam.domain.repository.SettingsPreferencesRepository
@@ -64,13 +65,13 @@ class SettingsPreferencesRepositoryImpl @Inject constructor(
     }
 
     override fun getOnBoarding(): Flow<Boolean> {
-        return context.telegramPreferences.data.map {
+        return context.onBoardingPreferences.data.map {
             it[PreferencesKey.TELEGRAM_KEY] ?: false
         }
     }
 
     override suspend fun saveOnBoarding(isActive: Boolean) {
-        context.telegramPreferences.edit {
+        context.onBoardingPreferences.edit {
             it[PreferencesKey.TELEGRAM_KEY] = isActive
         }
     }

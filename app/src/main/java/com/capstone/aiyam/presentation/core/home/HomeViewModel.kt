@@ -9,6 +9,7 @@ import com.capstone.aiyam.domain.model.WeeklySummary
 import com.capstone.aiyam.domain.repository.AlertRepository
 import com.google.firebase.Firebase
 import com.google.firebase.auth.auth
+import com.google.firebase.messaging.FirebaseMessaging
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
@@ -70,6 +71,7 @@ class HomeViewModel @Inject constructor(
     private fun fetchWeeklySummaries() {
         viewModelScope.launch {
             Firebase.auth.currentUser?.getIdToken(false)?.await()?.token?.let { Log.d("TOKEN", it) }
+            FirebaseMessaging.getInstance().token.await()?.let { Log.d("TOKEN MSG", it) }
 
             alertRepository.getAlerts()
                 .onStart {

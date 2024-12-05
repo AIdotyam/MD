@@ -7,4 +7,6 @@ data class TargetRequest (
     val phoneNumber: String?,
     @SerializedName("email")
     val email: String?,
+    @SerializedName("fcm")
+    val fcm: String?,
 )

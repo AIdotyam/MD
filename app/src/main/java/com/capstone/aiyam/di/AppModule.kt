@@ -12,6 +12,7 @@ import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.auth
 import com.google.firebase.messaging.FirebaseMessaging
 import com.google.firebase.messaging.messaging
+import com.google.gson.GsonBuilder
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -55,12 +56,17 @@ object AppModule {
             .addInterceptor(loggingInterceptor)
             .build()
 
+        val gson = GsonBuilder()
+            .serializeNulls()
+            .create()
+
         return Retrofit.Builder()
             .baseUrl(BuildConfig.URL)
-            .addConverterFactory(GsonConverterFactory.create())
+            .addConverterFactory(GsonConverterFactory.create(gson))
             .client(client)
             .build()
     }
+
 
     @Provides
     @Singleton

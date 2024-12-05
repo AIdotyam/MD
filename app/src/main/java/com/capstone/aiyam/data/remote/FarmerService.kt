@@ -47,6 +47,6 @@ interface FarmerService {
     @PATCH("target-alerts")
     suspend fun updateTargetAlerts(
         @Header("Authorization") token: String,
-        @Body request: TargetRequest // can null
+        @Body request: TargetRequest
     ): DataWrapper<TargetAlerts>
 }

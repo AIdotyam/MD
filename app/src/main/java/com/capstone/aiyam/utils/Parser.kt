@@ -37,8 +37,8 @@ fun String.parseDateTime(): String {
     val month = date.month.getDisplayName(TextStyle.FULL, Locale.ENGLISH)
     val dayOfWeek = date.dayOfWeek.getDisplayName(TextStyle.FULL, Locale.ENGLISH)
 
-    val formattedTime = "${time.hour.toString().padStart(2, '0')}:${time.minute.toString().padStart(2, '0')}:${time.second.toString().padStart(2, '0')}"
-    return "$dayOfWeek, $month $year $formattedTime"
+    val formattedTime = "${time.hour.toString().padStart(2, '0')}:${time.minute.toString().padStart(2, '0')}"
+    return "$dayOfWeek, ${date.dayOfMonth} $month $year - $formattedTime"
 }
 
 @SuppressLint("DefaultLocale")
@@ -87,5 +87,5 @@ fun String.parseDateToEnglish(): String {
     val month = date.month.getDisplayName(TextStyle.FULL, Locale.ENGLISH)
     val dayOfWeek = date.dayOfWeek.getDisplayName(TextStyle.FULL, Locale.ENGLISH)
 
-    return "$dayOfWeek, $month $year"
+    return "$dayOfWeek, ${date.dayOfMonth} $month $year"
 }

@@ -17,7 +17,7 @@ interface ChickenService {
         @Part file: MultipartBody.Part
     ): DataWrapper<Classification>
 
-    @GET("histories")
+    @GET("capture-results")
     suspend fun getHistories(
         @Header("Authorization") token: String,
     ): DataWrapper<List<Classification>>

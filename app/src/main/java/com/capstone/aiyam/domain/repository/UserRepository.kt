@@ -18,7 +18,8 @@ interface UserRepository {
 
     fun updateFarmer(name: String): Flow<ResponseWrapper<Farmer>>
     fun getTargetAlerts(): Flow<ResponseWrapper<TargetAlerts>>
-    fun createTargetAlerts(phoneNumber: String?): Flow<ResponseWrapper<TargetAlerts>>
+    fun createTargetAlerts(): Flow<ResponseWrapper<TargetAlerts>>
     fun updateEmailAlerts(email: String?): Flow<ResponseWrapper<TargetAlerts>>
+    fun updatePushAlerts(token: String?): Flow<ResponseWrapper<TargetAlerts>>
     fun updateNumberAlerts(number: String?): Flow<ResponseWrapper<TargetAlerts>>
 }
