@@ -40,6 +40,12 @@ class HomeViewModel @Inject constructor(
     private val _errorMessage = MutableStateFlow<String?>(null)
     val errorMessage: StateFlow<String?> = _errorMessage.asStateFlow()
 
+    var alertsCount = MutableStateFlow(0)
+        private set
+
+    var scansCount = MutableStateFlow(0)
+        private set
+
     init {
         fetchWeeklySummaries()
         fetchWeeklyScans()
@@ -70,7 +76,6 @@ class HomeViewModel @Inject constructor(
     val canNavigateAlertsPrevious: StateFlow<Boolean> = _currentAlertsPage.map { page ->
         page > 0
     }.stateIn(viewModelScope, SharingStarted.Eagerly, false)
-
 
     private fun aggregateAlertsByDay(alerts: List<Alerts>): List<WeeklySummary> {
         return alerts.groupBy { alert ->
@@ -113,6 +118,7 @@ class HomeViewModel @Inject constructor(
                         is ResponseWrapper.Success -> {
                             _isLoading.value = false
                             val summaries = aggregateAlertsByDay(response.data)
+                            alertsCount.value = response.data.size
                             _weeklyAlerts.value = summaries
                             _currentAlertsPage.value = 0
                         }
@@ -194,6 +200,7 @@ class HomeViewModel @Inject constructor(
                     is ResponseWrapper.Success -> {
                         _isLoading.value = false
                         val summaries = aggregateScansByDay(response.data)
+                        scansCount.value = response.data.size
                         _weeklyScans.value = summaries
                         _currentScansPage.value = 0
                     }

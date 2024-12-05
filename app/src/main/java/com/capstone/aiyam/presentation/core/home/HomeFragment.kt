@@ -72,7 +72,7 @@ class HomeFragment : Fragment() {
         }
 
         btnPreviousScan.setOnClickListener {
-            viewModel.goToScansPreviousPage()
+            viewModel.goToScansNextPage()
         }
 
         viewLifecycleOwner.lifecycleScope.launch {
@@ -90,6 +90,18 @@ class HomeFragment : Fragment() {
 
     @SuppressLint("SetTextI18n")
     private fun observeSummaries() {
+        viewLifecycleOwner.lifecycleScope.launch {
+            viewModel.alertsCount.collectLatest { count ->
+                binding.alertsValue.text = "$count"
+            }
+        }
+
+        viewLifecycleOwner.lifecycleScope.launch {
+            viewModel.scansCount.collectLatest { count ->
+                binding.scannedValue.text = "$count"
+            }
+        }
+
         viewLifecycleOwner.lifecycleScope.launch {
             viewModel.currentPageAlertsSummaries.collectLatest { summaries ->
                 if (summaries.isNotEmpty()) setupWeeklyAlertsChart(summaries)
