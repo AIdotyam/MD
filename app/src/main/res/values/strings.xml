@@ -70,10 +70,10 @@
     <string name="hello_blank_fragment">Hello blank fragment</string>
 
     <!-- onboarding -->
-    <string name="jud1">Peternakan Lebih Efisien</string>
-    <string name="des1">Kelola peternakan ayam Anda dengan teknologi cerdas. Gunakan kamera ponsel untuk memindai ayam, mengidentifikasi jumlah yang mati, dan memastikan kesehatan ternak Anda tetap terpantau. Peternakan Anda layak mendapatkan solusi terbaik!</string>
-    <string name="jud2">Ambil Foto, Dapatkan Data</string>
-    <string name="des2">Cukup foto ayam Anda, dan biarkan AI.YAM bekerja untuk Anda. Dengan deteksi berbasis AI, Anda bisa langsung mengetahui jumlah ayam yang terpantau, jumlah kematian, dan statistik penting lainnya. Lebih cepat, lebih cerdas, lebih akurat.</string>
-    <string name="jud3">Mulai Optimalkan Peternakan Anda</string>
-    <string name="des3">Siap untuk membuat peternakan ayam Anda lebih cerdas? Dengan AI.YAM, Anda akan mendapatkan tips pengelolaan, laporan otomatis, dan cara untuk meningkatkan efisiensi peternakan Anda. Yuk, mulai perjalanan ke peternakan modern sekarang juga!</string>
+    <string name="jud1">More Efficient Chicken Farming</string>
+    <string name="des1">Manage your chicken farm with smart technology. Use your phone camera to scan chickens, identify dead chickens, and keep track of your livestocks health. Your farm deserves the best solution!</string>
+    <string name="jud2">Take a Photo, Get Data</string>
+    <string name="des2">Just take a photo of your chickens, and let AI.yam do the work for you. With AI-based detection, you can instantly see the number of chickens monitored, the number of deaths, and other important statistics. Faster, smarter, more accurate.</string>
+    <string name="jud3">Start Optimizing Your Farm</string>
+    <string name="des3">Ready to make your chicken farm smarter? With AI.yam, you will get management tips, automated reports, and ways to improve your farm efficiency. Lets start your journey to modern farming today!</string>
 </resources>
