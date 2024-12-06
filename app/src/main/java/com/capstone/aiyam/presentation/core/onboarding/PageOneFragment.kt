@@ -23,8 +23,6 @@ class PageOneFragment : Fragment() {
 
         val viewPager = requireActivity().findViewById<ViewPager2>(R.id.viewPagerOnboarding)
 
-        binding.btnPrevious.isEnabled = false
-        binding.btnPrevious.gone()
 
         binding.btnNext.setOnClickListener {
             viewPager.currentItem = 1
