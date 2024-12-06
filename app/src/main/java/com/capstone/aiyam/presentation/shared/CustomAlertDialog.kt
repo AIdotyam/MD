@@ -17,7 +17,6 @@ class CustomAlertDialog(
     fun alert(): AlertDialog {
         val dialogView = LayoutInflater.from(context).inflate(R.layout.custom_dialog, null)
 
-        // Set the dialog's title and message dynamically
         dialogView.findViewById<TextView>(R.id.dialog_title).text = title
         dialogView.findViewById<TextView>(R.id.dialog_message).text = message
 

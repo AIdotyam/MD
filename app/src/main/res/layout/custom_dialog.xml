@@ -23,29 +23,29 @@
 
     <TextView
         android:id="@+id/dialog_title"
-        android:layout_width="165dp"
-        android:layout_height="25dp"
-        android:layout_marginStart="12dp"
-        android:layout_marginTop="8dp"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="6dp"
+        android:layout_marginTop="12dp"
         android:gravity="start"
-        android:textSize="18sp"
+        android:textSize="14sp"
         android:textStyle="bold"
         tools:text="@string/confirmation"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.4"
+        app:layout_constraintHorizontal_bias="0.3"
         app:layout_constraintStart_toEndOf="@id/dialog_icon"
         app:layout_constraintTop_toTopOf="parent" />
 
     <TextView
         android:id="@+id/dialog_message"
-        android:layout_width="218dp"
-        android:layout_height="20dp"
-        android:layout_marginTop="4dp"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
         android:layout_marginHorizontal="8dp"
+        android:layout_marginTop="3dp"
         android:gravity="start"
         tools:text="@string/are_you_sure_you_want_to_log_out"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="1.0"
+        app:layout_constraintHorizontal_bias="0.8"
         app:layout_constraintStart_toEndOf="@+id/dialog_icon"
         app:layout_constraintTop_toBottomOf="@+id/dialog_title" />
 

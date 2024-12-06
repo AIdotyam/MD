@@ -41,7 +41,7 @@ interface FarmerService {
     @POST("target-alerts")
     suspend fun createTargetAlerts(
         @Header("Authorization") token: String,
-        @Body request: TargetRequest // don't null
+        @Body request: TargetRequest
     ): DataWrapper<TargetAlerts>
 
     @PATCH("target-alerts")

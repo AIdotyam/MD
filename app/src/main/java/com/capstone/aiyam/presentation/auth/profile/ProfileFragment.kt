@@ -174,7 +174,16 @@ class ProfileFragment : Fragment() {
         }
 
         binding.cardButtonTelegram.setOnClickListener {
-            performCopyAndRedirect()
+            val dialog = CustomAlertDialog(
+                context = requireContext(),
+                title = "Redirect to Telegram",
+                message = "Please paste your ID to the bot",
+                negativeButtonClick = {}
+            ) {
+                performCopyAndRedirect()
+            }
+
+            dialog.alert().show()
         }
     }
 

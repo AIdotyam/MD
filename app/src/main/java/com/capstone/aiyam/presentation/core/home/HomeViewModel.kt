@@ -99,41 +99,39 @@ class HomeViewModel @Inject constructor(
         }
     }
 
-    private fun fetchWeeklySummaries() {
-        viewModelScope.launch {
-            Firebase.auth.currentUser?.getIdToken(false)?.await()?.token?.let { Log.d("TOKEN", it) }
-            FirebaseMessaging.getInstance().token.await()?.let { Log.d("TOKEN MSG", it) }
+    private fun fetchWeeklySummaries() { viewModelScope.launch {
+        Firebase.auth.currentUser?.getIdToken(false)?.await()?.token?.let { Log.d("TOKEN", it) }
+        FirebaseMessaging.getInstance().token.await()?.let { Log.d("TOKEN MSG", it) }
 
-            alertRepository.getAlerts()
-                .onStart {
-                    _isLoading.value = true
-                    _errorMessage.value = null
-                }
-                .catch { e ->
-                    _isLoading.value = false
-                    _errorMessage.value = e.message ?: "An unexpected error occurred."
-                }
-                .collect { response ->
-                    when (response) {
-                        is ResponseWrapper.Success -> {
-                            _isLoading.value = false
-                            val summaries = aggregateAlertsByDay(response.data)
-                            alertsCount.value = response.data.size
-                            _weeklyAlerts.value = summaries
-                            _currentAlertsPage.value = 0
-                        }
-                        is ResponseWrapper.Error -> {
-                            _isLoading.value = false
-                            _errorMessage.value = response.error
-                        }
-                        is ResponseWrapper.Loading -> {
-                            _isLoading.value = true
-                            _errorMessage.value = null
-                        }
+        alertRepository.getAlerts()
+            .onStart {
+                _isLoading.value = true
+                _errorMessage.value = null
+            }
+            .catch { e ->
+                _isLoading.value = false
+                _errorMessage.value = e.message ?: "An unexpected error occurred."
+            }
+            .collect { response ->
+                when (response) {
+                    is ResponseWrapper.Success -> {
+                        _isLoading.value = false
+                        val summaries = aggregateAlertsByDay(response.data)
+                        alertsCount.value = response.data.size
+                        _weeklyAlerts.value = summaries
+                        _currentAlertsPage.value = 0
+                    }
+                    is ResponseWrapper.Error -> {
+                        _isLoading.value = false
+                        _errorMessage.value = response.error
+                    }
+                    is ResponseWrapper.Loading -> {
+                        _isLoading.value = true
+                        _errorMessage.value = null
                     }
                 }
-        }
-    }
+            }
+    }}
 
     // ------------------------------------------------
 

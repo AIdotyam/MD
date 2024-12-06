@@ -5,7 +5,6 @@ import androidx.credentials.CredentialManager
 import com.capstone.aiyam.BuildConfig
 import com.capstone.aiyam.data.remote.AlertService
 import com.capstone.aiyam.data.remote.ChickenService
-import com.capstone.aiyam.data.remote.DashboardService
 import com.capstone.aiyam.data.remote.FarmerService
 import com.google.firebase.Firebase
 import com.google.firebase.auth.FirebaseAuth
@@ -54,6 +53,10 @@ object AppModule {
 
         val client = OkHttpClient.Builder()
             .addInterceptor(loggingInterceptor)
+            .callTimeout(30, java.util.concurrent.TimeUnit.SECONDS)
+            .connectTimeout(30, java.util.concurrent.TimeUnit.SECONDS)
+            .readTimeout(30, java.util.concurrent.TimeUnit.SECONDS)
+            .writeTimeout(30, java.util.concurrent.TimeUnit.SECONDS)
             .build()
 
         val gson = GsonBuilder()
@@ -82,14 +85,6 @@ object AppModule {
         retrofit: Retrofit
     ) : AlertService {
         return retrofit.create(AlertService::class.java)
-    }
-
-    @Provides
-    @Singleton
-    fun provideDashboardService(
-        retrofit: Retrofit
-    ): DashboardService {
-        return retrofit.create(DashboardService::class.java)
     }
 
     @Provides
