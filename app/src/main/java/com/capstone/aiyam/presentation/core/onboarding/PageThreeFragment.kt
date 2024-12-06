@@ -10,7 +10,6 @@ import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
 import androidx.viewpager2.widget.ViewPager2
 import com.capstone.aiyam.R
-import com.capstone.aiyam.databinding.FragmentOnboardingBinding
 import com.capstone.aiyam.databinding.FragmentPageThreeBinding
 import dagger.hilt.android.AndroidEntryPoint
 

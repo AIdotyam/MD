@@ -14,8 +14,8 @@ import com.capstone.aiyam.R
 import com.capstone.aiyam.databinding.ItemAlertHistoryBinding
 import com.capstone.aiyam.databinding.ItemHeaderBinding
 import com.capstone.aiyam.domain.model.Alerts
-import com.capstone.aiyam.domain.model.Classification
 import com.capstone.aiyam.utils.getMimeTypeFromUrl
+import com.capstone.aiyam.utils.getRandomDead
 import com.capstone.aiyam.utils.parseDateTime
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
@@ -32,7 +32,7 @@ class AlertsAdapter(
         @SuppressLint("SetTextI18n")
         fun bind(alerts: Alerts) {
             binding.apply {
-                tvMessage.text = "Dead Chicken Detected"
+                tvMessage.text = getRandomDead()
                 tvTimestamp.text = alerts.createdAt.parseDateTime()
 
                 val mediaUrl = alerts.mediaUrl

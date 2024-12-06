@@ -27,17 +27,24 @@ fun String.parseDate(): String? {
     }
 }
 
+fun String.parseTime(): String {
+    val parsedDateTime = LocalDateTime.parse(this.removeSuffix("Z"))
+    val instant = parsedDateTime.toInstant(TimeZone.UTC)
+    val time = instant.toLocalDateTime(TimeZone.UTC).time
+
+    return "${time.hour.toString().padStart(2, '0')}:${time.minute.toString().padStart(2, '0')}"
+}
+
 fun String.parseDateTime(): String {
     val parsedDateTime = LocalDateTime.parse(this.removeSuffix("Z"))
     val instant = parsedDateTime.toInstant(TimeZone.UTC)
     val date = instant.toLocalDateTime(TimeZone.UTC).date
-    val time = instant.toLocalDateTime(TimeZone.UTC).time
 
     val year = date.year.toString()
     val month = date.month.getDisplayName(TextStyle.FULL, Locale.ENGLISH)
     val dayOfWeek = date.dayOfWeek.getDisplayName(TextStyle.FULL, Locale.ENGLISH)
 
-    val formattedTime = "${time.hour.toString().padStart(2, '0')}:${time.minute.toString().padStart(2, '0')}"
+    val formattedTime = this.parseTime()
     return "$dayOfWeek, ${date.dayOfMonth} $month $year - $formattedTime"
 }
 

@@ -22,8 +22,6 @@ import com.capstone.aiyam.utils.parseDateToEnglish
 import com.capstone.aiyam.utils.visible
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.launch
-import kotlinx.datetime.LocalDate
-import java.time.format.DateTimeFormatter
 
 @AndroidEntryPoint
 class AlertsFragment : Fragment() {

@@ -15,6 +15,7 @@ import com.capstone.aiyam.databinding.ItemClassificationHistoryBinding
 import com.capstone.aiyam.databinding.ItemHeaderBinding
 import com.capstone.aiyam.domain.model.Classification
 import com.capstone.aiyam.utils.getMimeTypeFromUrl
+import com.capstone.aiyam.utils.getRandomDead
 import com.capstone.aiyam.utils.parseDateTime
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
@@ -31,7 +32,7 @@ class ClassificationHistoryAdapter(
         @SuppressLint("SetTextI18n")
         fun bind(classification: Classification) {
             binding.apply {
-                tvMessage.text = if (classification.deadChicken) "Dead Chicken Detected" else "Healthy Chicken"
+                tvMessage.text = if (classification.deadChicken) getRandomDead() else "Healthy Chicken"
                 tvTimestamp.text = classification.createdAt.parseDateTime()
 
                 val mediaUrl = classification.mediaUrl

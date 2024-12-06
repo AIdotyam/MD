@@ -30,6 +30,7 @@
                 android:layout_height="match_parent"
                 android:contentDescription="@string/todo"
                 android:padding="12dp"
+                android:scaleType="centerCrop"
                 android:src="@drawable/image" />
 
         </androidx.cardview.widget.CardView>
@@ -38,7 +39,7 @@
             android:id="@+id/linearLayout"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:layout_marginStart="24dp"
+            android:layout_marginStart="12dp"
             android:orientation="vertical"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"

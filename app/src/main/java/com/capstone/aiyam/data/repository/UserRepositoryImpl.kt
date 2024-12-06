@@ -24,7 +24,6 @@ import kotlinx.coroutines.tasks.await
 import javax.inject.Inject
 
 class UserRepositoryImpl @Inject constructor (
-    private val context: Application,
     private val auth: FirebaseAuth,
     private val messaging: FirebaseMessaging,
     private val farmerService: FarmerService,

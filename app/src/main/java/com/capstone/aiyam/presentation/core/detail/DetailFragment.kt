@@ -1,7 +1,6 @@
 package com.capstone.aiyam.presentation.core.detail
 
 import android.annotation.SuppressLint
-import androidx.fragment.app.viewModels
 import android.os.Bundle
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
@@ -16,7 +15,6 @@ import com.capstone.aiyam.databinding.FragmentDetailBinding
 import com.capstone.aiyam.domain.model.Classification
 import com.capstone.aiyam.utils.getMimeTypeFromUrl
 import com.capstone.aiyam.utils.parseDateTime
-import com.capstone.aiyam.utils.parseDateToEnglish
 
 class DetailFragment : Fragment() {
     private var _binding: FragmentDetailBinding? = null
