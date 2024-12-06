@@ -9,7 +9,9 @@ import android.view.ViewGroup
 import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
+import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.lifecycleScope
+import androidx.lifecycle.repeatOnLifecycle
 import com.capstone.aiyam.databinding.FragmentHomeBinding
 import com.capstone.aiyam.domain.model.WeeklySummary
 import com.github.mikephil.charting.data.BarEntry
@@ -51,20 +53,25 @@ class HomeFragment : Fragment() {
             viewModel.goToAlertsNextPage()
         }
 
-        viewLifecycleOwner.lifecycleScope.launch {
-            viewModel.canNavigateAlertsNext.collect { canNavigate ->
-                btnPrevious.isEnabled = canNavigate
+        lifecycleScope.launch {
+            viewLifecycleOwner.repeatOnLifecycle(Lifecycle.State.CREATED) {
+                viewModel.canNavigateAlertsNext.collect { canNavigate ->
+                    btnPrevious.isEnabled = canNavigate
+                }
             }
         }
 
-        viewLifecycleOwner.lifecycleScope.launch {
-            viewModel.canNavigateAlertsPrevious.collect { canNavigate ->
-                btnNext.isEnabled = canNavigate
+        lifecycleScope.launch {
+            viewLifecycleOwner.repeatOnLifecycle(Lifecycle.State.CREATED) {
+                viewModel.canNavigateAlertsPrevious.collect { canNavigate ->
+                    btnNext.isEnabled = canNavigate
+                }
             }
         }
 
         swipeRefreshLayout.setOnRefreshListener {
             viewModel.refreshData()
+            binding.swipeRefreshLayout.isRefreshing = false
         }
 
         btnNextScan.setOnClickListener {
@@ -75,50 +82,60 @@ class HomeFragment : Fragment() {
             viewModel.goToScansNextPage()
         }
 
-        viewLifecycleOwner.lifecycleScope.launch {
-            viewModel.canNavigateScansNext.collect { canNavigate ->
-                btnPreviousScan.isEnabled = canNavigate
+        lifecycleScope.launch {
+            viewLifecycleOwner.repeatOnLifecycle(Lifecycle.State.CREATED) {
+                viewModel.canNavigateScansNext.collect { canNavigate ->
+                    btnPreviousScan.isEnabled = canNavigate
+                }
             }
         }
 
-        viewLifecycleOwner.lifecycleScope.launch {
-            viewModel.canNavigateScansPrevious.collect { canNavigate ->
-                btnNextScan.isEnabled = canNavigate
+        lifecycleScope.launch {
+            viewLifecycleOwner.repeatOnLifecycle(Lifecycle.State.CREATED) {
+                viewModel.canNavigateScansPrevious.collect { canNavigate ->
+                    btnNextScan.isEnabled = canNavigate
+                }
             }
         }
     }}
 
     @SuppressLint("SetTextI18n")
     private fun observeSummaries() {
-        viewLifecycleOwner.lifecycleScope.launch {
-            viewModel.alertsCount.collectLatest { count ->
-                binding.alertsValue.text = "$count"
+        lifecycleScope.launch {
+            viewLifecycleOwner.repeatOnLifecycle(Lifecycle.State.CREATED) {
+                viewModel.alertsCount.collectLatest { count ->
+                    binding.alertsValue.text = "$count"
+                }
             }
         }
 
-        viewLifecycleOwner.lifecycleScope.launch {
-            viewModel.scansCount.collectLatest { count ->
-                binding.scannedValue.text = "$count"
+        lifecycleScope.launch {
+            viewLifecycleOwner.repeatOnLifecycle(Lifecycle.State.CREATED) {
+                viewModel.scansCount.collectLatest { count ->
+                    binding.scannedValue.text = "$count"
+                }
             }
         }
 
-        viewLifecycleOwner.lifecycleScope.launch {
-            viewModel.currentPageAlertsSummaries.collectLatest { summaries ->
-                if (summaries.isNotEmpty()) setupWeeklyAlertsChart(summaries)
+        lifecycleScope.launch {
+            viewLifecycleOwner.repeatOnLifecycle(Lifecycle.State.CREATED) {
+                viewModel.currentPageAlertsSummaries.collectLatest { summaries ->
+                    if (summaries.isNotEmpty()) setupWeeklyAlertsChart(summaries)
+                }
             }
         }
 
-        viewLifecycleOwner.lifecycleScope.launch {
-            viewModel.currentPageScansSummaries.collectLatest { summaries ->
-                if (summaries.isNotEmpty()) setupWeeklyScanChart(summaries)
+        lifecycleScope.launch {
+            viewLifecycleOwner.repeatOnLifecycle(Lifecycle.State.CREATED) {
+                viewModel.currentPageScansSummaries.collectLatest { summaries ->
+                    if (summaries.isNotEmpty()) setupWeeklyScanChart(summaries)
+                }
             }
         }
     }
 
     @SuppressLint("SetTextI18n")
     private fun setupWeeklyAlertsChart(data: List<WeeklySummary>) {
-        binding.swipeRefreshLayout.isRefreshing = false
-
         val entries = data.reversed().mapIndexed { index, value ->
             Entry(index.toFloat(), value.count.toFloat())
         }

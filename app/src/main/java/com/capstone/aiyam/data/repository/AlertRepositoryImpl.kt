@@ -292,7 +292,7 @@ class AlertRepositoryImpl @Inject constructor(
             val alerts = withToken(user, userRepository::getFirebaseToken) {
                 alertService.getAlerts(it)
             }
-            emit(ResponseWrapper.Success(dummyAlerts.reversed()))
+            emit(ResponseWrapper.Success(alerts.data))
         } catch (e: Exception) {
             emit(ResponseWrapper.Error(e.message.toString()))
         }

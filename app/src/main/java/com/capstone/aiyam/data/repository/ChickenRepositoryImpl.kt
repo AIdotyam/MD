@@ -1562,7 +1562,7 @@ class ChickenRepositoryImpl @Inject constructor(
             val histories = withToken(user, userRepository::getFirebaseToken) {
                 chickenService.getHistories(it)
             }
-            emit(ResponseWrapper.Success(dummyClassifications.reversed()))
+            emit(ResponseWrapper.Success(histories.data))
         } catch (e: Exception) {
             emit(ResponseWrapper.Error(e.message.toString()))
         }
