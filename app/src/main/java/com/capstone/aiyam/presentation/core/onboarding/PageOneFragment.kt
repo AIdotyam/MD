@@ -8,8 +8,6 @@ import android.view.ViewGroup
 import androidx.viewpager2.widget.ViewPager2
 import com.capstone.aiyam.R
 import com.capstone.aiyam.databinding.FragmentPageOneBinding
-import com.capstone.aiyam.databinding.FragmentPageThreeBinding
-import com.capstone.aiyam.utils.gone
 
 class PageOneFragment : Fragment() {
     private var _binding: FragmentPageOneBinding? = null
