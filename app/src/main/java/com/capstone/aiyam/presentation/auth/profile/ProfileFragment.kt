@@ -209,8 +209,6 @@ class ProfileFragment : Fragment() {
     }
 
     private fun redirectToTelegram() {
-//        https://web.telegram.org/a/#7580188558
-//        https://t.me/#7580188558
         val telegramUsername = "MissRose_bot"
         val telegramUri = Uri.parse("tg://resolve?domain=$telegramUsername")
         val intent = Intent(Intent.ACTION_VIEW, telegramUri)
@@ -227,7 +225,6 @@ class ProfileFragment : Fragment() {
             }
         }
     }
-
 
     private fun handleSwitch(target: ResponseWrapper<TargetAlerts>) {
         when (target) {

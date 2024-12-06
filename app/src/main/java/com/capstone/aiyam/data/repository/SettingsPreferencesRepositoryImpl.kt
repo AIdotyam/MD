@@ -66,13 +66,13 @@ class SettingsPreferencesRepositoryImpl @Inject constructor(
 
     override fun getOnBoarding(): Flow<Boolean> {
         return context.onBoardingPreferences.data.map {
-            it[PreferencesKey.TELEGRAM_KEY] ?: false
+            it[PreferencesKey.ON_BOARDING_KEY] ?: false
         }
     }
 
     override suspend fun saveOnBoarding(isActive: Boolean) {
         context.onBoardingPreferences.edit {
-            it[PreferencesKey.TELEGRAM_KEY] = isActive
+            it[PreferencesKey.ON_BOARDING_KEY] = isActive
         }
     }
 }

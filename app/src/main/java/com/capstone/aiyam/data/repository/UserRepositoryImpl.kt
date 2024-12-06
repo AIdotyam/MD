@@ -144,12 +144,13 @@ class UserRepositoryImpl @Inject constructor (
         emit(ResponseWrapper.Loading)
         try {
             val phoneNumber = settingsPreferencesRepository.getPhoneNumberSetting().first().takeIf { it.isNotEmpty() }
-
+            val isActive = settingsPreferencesRepository.getEmailNotificationSetting().first()
             var targetAlerts: DataWrapper<TargetAlerts>? = null
             when(val user = getFirebaseUser()) {
                 is AuthorizationResponse.Success -> {
                     user.user.getIdToken(false).await().token?.let {
-                        targetAlerts = farmerService.updateTargetAlerts(it, TargetRequest(phoneNumber, user.user.email, token))
+                        val email = if (isActive) user.user.email else null
+                        targetAlerts = farmerService.updateTargetAlerts(it, TargetRequest(phoneNumber, email, token))
                     } ?: run {
                         emit(ResponseWrapper.Error("Failed to create target alerts"))
                         return@flow
@@ -183,12 +184,13 @@ class UserRepositoryImpl @Inject constructor (
         emit(ResponseWrapper.Loading)
         try {
             val pushToken = if (settingsPreferencesRepository.getPushNotificationSetting().first()) messaging.token.await() else null
-
+            val isActive = settingsPreferencesRepository.getEmailNotificationSetting().first()
             var targetAlerts: DataWrapper<TargetAlerts>? = null
             when(val user = getFirebaseUser()) {
                 is AuthorizationResponse.Success -> {
+                    val email = if (isActive) user.user.email else null
                     user.user.getIdToken(false).await().token?.let {
-                        targetAlerts = farmerService.updateTargetAlerts(it, TargetRequest(number, user.user.email, pushToken))
+                        targetAlerts = farmerService.updateTargetAlerts(it, TargetRequest(number, email, pushToken))
                     } ?: run {
                         emit(ResponseWrapper.Error("Failed to create target alerts"))
                         return@flow
