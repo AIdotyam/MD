@@ -68,4 +68,12 @@
     <string name="phone_label">Telegram and Whatsapp Alerts</string>
     <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>
+
+    <!-- onboarding -->
+    <string name="jud1">Peternakan Lebih Efisien</string>
+    <string name="des1">Kelola peternakan ayam Anda dengan teknologi cerdas. Gunakan kamera ponsel untuk memindai ayam, mengidentifikasi jumlah yang mati, dan memastikan kesehatan ternak Anda tetap terpantau. Peternakan Anda layak mendapatkan solusi terbaik!</string>
+    <string name="jud2">Ambil Foto, Dapatkan Data</string>
+    <string name="des2">Cukup foto ayam Anda, dan biarkan AI.YAM bekerja untuk Anda. Dengan deteksi berbasis AI, Anda bisa langsung mengetahui jumlah ayam yang terpantau, jumlah kematian, dan statistik penting lainnya. Lebih cepat, lebih cerdas, lebih akurat.</string>
+    <string name="jud3">Mulai Optimalkan Peternakan Anda</string>
+    <string name="des3">Siap untuk membuat peternakan ayam Anda lebih cerdas? Dengan AI.YAM, Anda akan mendapatkan tips pengelolaan, laporan otomatis, dan cara untuk meningkatkan efisiensi peternakan Anda. Yuk, mulai perjalanan ke peternakan modern sekarang juga!</string>
 </resources>
