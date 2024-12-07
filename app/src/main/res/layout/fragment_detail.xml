@@ -42,28 +42,14 @@
             android:layout_height="wrap_content"
             android:orientation="vertical">
 
-            <!-- Image Header -->
-            <FrameLayout
-                android:id="@+id/mediaContainer"
+            <ImageView
+                android:id="@+id/headerImage"
                 android:layout_width="match_parent"
                 android:layout_height="500dp"
-                android:layout_marginBottom="16dp">
-
-                <ImageView
-                    android:id="@+id/headerImage"
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:contentDescription="@string/todo"
-                    android:scaleType="fitCenter"
-                    android:visibility="gone"
-                    tools:src="@drawable/logo" />
-
-                <androidx.media3.ui.PlayerView
-                    android:id="@+id/headerVideo"
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:visibility="gone" />
-            </FrameLayout>
+                android:layout_marginBottom="16dp"
+                android:contentDescription="@string/todo"
+                android:scaleType="fitCenter"
+                tools:src="@drawable/logo" />
 
             <TextView
                 android:id="@+id/dateTitle"

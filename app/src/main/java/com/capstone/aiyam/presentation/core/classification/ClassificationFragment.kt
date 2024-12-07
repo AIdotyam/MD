@@ -50,13 +50,12 @@ class ClassificationFragment : Fragment() {
     private val permissions = arrayOf(Manifest.permission.CAMERA)
 
     private var progressDialogFragment: LoadingDialog? = null
-    private lateinit var videoCapture: VideoCapture<Recorder>
+
     private lateinit var imageCapture: ImageCapture
     private lateinit var cameraProvider: ProcessCameraProvider
-    private var recording: Recording? = null
+
     private var lensFacing = CameraSelector.LENS_FACING_BACK
     private var aspectRatio = AspectRatio.RATIO_16_9
-    private var isPhoto = true
 
     private val launcherGallery = registerForActivityResult(ActivityResultContracts.PickVisualMedia()) { uri ->
         uri?.let { onMediaSelected(uri) } ?: showToast("Failed to select media")
@@ -96,25 +95,11 @@ class ClassificationFragment : Fragment() {
             bindCameraUseCases()
         }
 
-        binding.toggleGroup.addOnButtonCheckedListener { _, checkedId, isChecked ->
-            when (checkedId) {
-                R.id.photoButton -> {
-                    if (isChecked) {
-                        isPhoto = true
-                        binding.captureIBLogo.setImageResource(R.drawable.baseline_photo_camera_24)
-                    }
-                }
-                R.id.videoButton -> {
-                    if (isChecked) {
-                        isPhoto = false
-                        binding.captureIBLogo.setImageResource(R.drawable.ic_start)
-                    }
-                }
-            }
-        }
+
+        binding.captureIBLogo.setImageResource(R.drawable.baseline_photo_camera_24)
 
         binding.captureIB.setOnClickListener {
-            if (isPhoto) takePhoto() else captureVideo()
+            takePhoto()
         }
     }
 
@@ -144,12 +129,6 @@ class ClassificationFragment : Fragment() {
             .setTargetRotation(binding.previewView.display.rotation)
             .build()
 
-        val recorder = Recorder.Builder()
-            .setQualitySelector(QualitySelector.from(Quality.SD))
-            .build()
-
-        videoCapture = VideoCapture.withOutput(recorder)
-
         val cameraSelector = CameraSelector.Builder()
             .requireLensFacing(lensFacing)
             .build()
@@ -157,7 +136,7 @@ class ClassificationFragment : Fragment() {
         cameraProvider.unbindAll()
 
         try {
-            cameraProvider.bindToLifecycle(viewLifecycleOwner, cameraSelector, preview, imageCapture, videoCapture)
+            cameraProvider.bindToLifecycle(viewLifecycleOwner, cameraSelector, preview, imageCapture)
         } catch (e: Exception) {
             e.printStackTrace()
             showToast("Failed: ${e.message}")
@@ -173,7 +152,7 @@ class ClassificationFragment : Fragment() {
             ContextCompat.getMainExecutor(requireContext()),
             object : ImageCapture.OnImageSavedCallback {
                 override fun onImageSaved(outputFileResults: ImageCapture.OutputFileResults) {
-                    onCaptured(tempFile, "image/*")
+                    alertDialog(tempFile, "image/*").show()
                 }
 
                 override fun onError(exception: ImageCaptureException) {
@@ -181,67 +160,6 @@ class ClassificationFragment : Fragment() {
                 }
             }
         )
-    }
-
-    private val handler = Handler(Looper.getMainLooper())
-
-    private val updateTimer = object : Runnable{
-        override fun run() {
-            val currentTime = SystemClock.elapsedRealtime() - binding.recodingTimerC.base
-            val timeString = currentTime.toFormattedTime()
-            binding.recodingTimerC.text = timeString
-            handler.postDelayed(this,1000)
-        }
-    }
-
-    private fun captureVideo() {
-        if (recording != null) {
-            recording?.stop()
-            recording = null
-
-            binding.recodingTimerC.gone()
-            binding.recodingTimerC.stop()
-            handler.removeCallbacks(updateTimer)
-            binding.captureIBLogo.setImageResource(R.drawable.ic_start)
-            return
-        } else {
-            binding.recodingTimerC.visible()
-            binding.recodingTimerC.base = SystemClock.elapsedRealtime()
-            binding.recodingTimerC.start()
-            binding.captureIBLogo.setImageResource(R.drawable.ic_stop)
-        }
-
-        val tempFile = File.createTempFile("video_", ".mp4", requireContext().cacheDir)
-        val outputOptions = FileOutputOptions.Builder(tempFile).build()
-
-        try {
-            recording = videoCapture.output.prepareRecording(requireContext(), outputOptions)
-                .start(ContextCompat.getMainExecutor(requireContext())) { recordEvent ->
-                    when (recordEvent) {
-                        is VideoRecordEvent.Start -> {}
-                        is VideoRecordEvent.Finalize -> {
-                            if (!recordEvent.hasError()) {
-                                onCaptured(tempFile, "video/*")
-                            } else {
-                                val errorMessage = when (val errorCode = recordEvent.error) {
-                                    VideoRecordEvent.Finalize.ERROR_INSUFFICIENT_STORAGE -> "Insufficient storage"
-                                    VideoRecordEvent.Finalize.ERROR_UNKNOWN -> "Unknown error"
-                                    else -> "Error code: $errorCode"
-                                }
-
-                                showToast("Video capture failed: $errorMessage")
-                            }
-                        }
-                    }
-                }
-        } catch (e: Exception) {
-            showToast("Failed to start video recording: ${e.message}")
-            e.printStackTrace()
-        }
-    }
-
-    private fun onCaptured(file: File, mediaType: String) {
-        alertDialog(file, mediaType).show()
     }
 
     private fun onMediaSelected(uri: Uri) {

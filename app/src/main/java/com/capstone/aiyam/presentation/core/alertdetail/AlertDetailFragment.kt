@@ -79,30 +79,7 @@ class AlertDetailFragment : Fragment() {
 
         dateTitle.text = alert.createdAt.parseDateTime()
 
-        val mediaUrl = alert.mediaUrl
-        val mimeType = mediaUrl.getMimeTypeFromUrl()
-
-        if (mimeType != null && mimeType.startsWith("video")) {
-            headerVideo.visibility = View.VISIBLE
-
-            val mediaItem = MediaItem.Builder()
-                .setUri(mediaUrl)
-                .build()
-
-            player = ExoPlayer.Builder(requireContext()).build().also { exoPlayer ->
-                exoPlayer.setMediaItem(mediaItem)
-                exoPlayer.playWhenReady = true
-                exoPlayer.prepare()
-            }
-
-            binding.headerVideo.player = player
-        } else if (mimeType != null && mimeType.startsWith("image")) {
-            headerImage.visibility = View.VISIBLE
-            Glide.with(requireContext()).load(mediaUrl).into(headerImage)
-        } else {
-            headerImage.visibility = View.VISIBLE
-            Glide.with(requireContext()).load(R.drawable.baseline_broken_image_24).into(headerImage)
-        }
+        Glide.with(requireContext()).load(alert.mediaUrl).placeholder(R.drawable.baseline_broken_image_24).into(headerImage)
     }}
 
     private fun showLoading(isLoading: Boolean) {

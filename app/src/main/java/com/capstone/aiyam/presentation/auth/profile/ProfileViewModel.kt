@@ -60,5 +60,4 @@ class ProfileViewModel @Inject constructor(
 
     fun getPhoneNumberSetting() = settingsPreferencesRepository.getPhoneNumberSetting()
     fun getPushNotificationSetting() = settingsPreferencesRepository.getPushNotificationSetting()
-    fun getEmailNotificationSetting() = settingsPreferencesRepository.getEmailNotificationSetting()
 }

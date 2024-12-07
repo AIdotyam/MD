@@ -47,30 +47,7 @@ class DetailFragment : Fragment() {
 
         dateTitle.text = classification.createdAt.parseDateTime()
 
-        val mediaUrl = classification.mediaUrl
-        val mimeType = mediaUrl.getMimeTypeFromUrl()
-
-        if (mimeType != null && mimeType.startsWith("video")) {
-            headerVideo.visibility = View.VISIBLE
-
-            val mediaItem = MediaItem.Builder()
-                .setUri(mediaUrl)
-                .build()
-
-            player = ExoPlayer.Builder(requireContext()).build().also { exoPlayer ->
-                exoPlayer.setMediaItem(mediaItem)
-                exoPlayer.playWhenReady = true
-                exoPlayer.prepare()
-            }
-
-            binding.headerVideo.player = player
-        } else if (mimeType != null && mimeType.startsWith("image")) {
-            headerImage.visibility = View.VISIBLE
-            Glide.with(requireContext()).load(mediaUrl).into(headerImage)
-        } else {
-            headerImage.visibility = View.VISIBLE
-            Glide.with(requireContext()).load(R.drawable.baseline_broken_image_24).into(headerImage)
-        }
+        Glide.with(requireContext()).load(classification.mediaUrl).placeholder(R.drawable.baseline_broken_image_24).into(headerImage)
 
         backButton.setOnClickListener {
             findNavController().popBackStack()

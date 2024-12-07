@@ -70,34 +70,6 @@
 
     </androidx.cardview.widget.CardView>
 
-    <com.google.android.material.button.MaterialButtonToggleGroup
-        android:id="@+id/toggleGroup"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginBottom="36dp"
-        app:layout_constraintBottom_toTopOf="@+id/captureIB"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:singleSelection="true"
-        app:selectionRequired="true"
-        app:checkedButton="@id/photoButton">
-
-        <com.google.android.material.button.MaterialButton
-            android:id="@+id/photoButton"
-            style="?attr/materialButtonOutlinedStyle"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Photo" />
-
-        <com.google.android.material.button.MaterialButton
-            android:id="@+id/videoButton"
-            style="?attr/materialButtonOutlinedStyle"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Video" />
-
-    </com.google.android.material.button.MaterialButtonToggleGroup>
-
     <Chronometer
         android:id="@+id/recodingTimerC"
         android:layout_width="wrap_content"

@@ -1,5 +1,6 @@
 package com.capstone.aiyam.presentation.core.home
 
+import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.capstone.aiyam.data.dto.ResponseWrapper
@@ -8,6 +9,8 @@ import com.capstone.aiyam.domain.model.Classification
 import com.capstone.aiyam.domain.model.WeeklySummary
 import com.capstone.aiyam.domain.repository.AlertRepository
 import com.capstone.aiyam.domain.repository.ChickenRepository
+import com.google.firebase.Firebase
+import com.google.firebase.auth.auth
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
@@ -19,6 +22,7 @@ import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.onStart
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.tasks.await
 import java.time.LocalDateTime
 import java.time.format.DateTimeFormatter
 import javax.inject.Inject
@@ -99,8 +103,7 @@ class HomeViewModel @Inject constructor(
     }
 
     private fun fetchWeeklySummaries() { viewModelScope.launch {
-//        Firebase.auth.currentUser?.getIdToken(false)?.await()?.token?.let { Log.d("TOKEN", it) }
-//        FirebaseMessaging.getInstance().token.await()?.let { Log.d("TOKEN MSG", it) }
+        Firebase.auth.currentUser?.getIdToken(false)?.await()?.token?.let { Log.d("TOKEN", it) }
 
         alertRepository.getAlerts()
             .onStart {
