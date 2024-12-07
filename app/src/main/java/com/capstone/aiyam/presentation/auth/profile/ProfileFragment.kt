@@ -82,7 +82,6 @@ class ProfileFragment : Fragment() {
         }
 
         handlePushNotification()
-        handleEmailNotification()
         handlePhoneSetting()
     }
 
@@ -101,33 +100,6 @@ class ProfileFragment : Fragment() {
                                         }
                                     } else {
                                         viewModel.disablePushAlerts().collect {
-                                            handleSwitch(it)
-                                        }
-                                    }
-                                }
-                            }
-                        }
-                    }
-                }
-            }
-        }
-    }
-
-    private fun handleEmailNotification() {
-        lifecycleScope.launch {
-            viewLifecycleOwner.repeatOnLifecycle(Lifecycle.State.CREATED) {
-                viewModel.getEmailNotificationSetting().collect { isEnabled ->
-                    binding.emailNotificationSwitch.isChecked = isEnabled
-                    binding.emailNotificationSwitch.setOnCheckedChangeListener { _, isChecked ->
-                        if (isChecked != isEnabled) {
-                            lifecycleScope.launch {
-                                viewLifecycleOwner.repeatOnLifecycle(Lifecycle.State.CREATED) {
-                                    if (isChecked) {
-                                        viewModel.enableEmailAlerts().collect {
-                                            handleSwitch(it)
-                                        }
-                                    } else {
-                                        viewModel.disableEmailAlerts().collect {
                                             handleSwitch(it)
                                         }
                                     }
@@ -170,67 +142,6 @@ class ProfileFragment : Fragment() {
                         handleSwitch(it)
                     }
                 }
-            }
-        }
-
-        binding.cardButtonTelegram.setOnClickListener {
-            val dialog = CustomAlertDialog(
-                context = requireContext(),
-                title = "Redirect to Telegram",
-                message = "Please paste your ID to the bot",
-                negativeButtonClick = {}
-            ) {
-                performCopyAndRedirect()
-            }
-
-            dialog.alert().show()
-        }
-    }
-
-    private fun performCopyAndRedirect() {
-        val textToCopy = when(val user = viewModel.getUser()) {
-            is AuthorizationResponse.Success -> {
-                user.user.uid
-            }
-            else -> {
-                ""
-            }
-        }
-        val copySuccessful = copyTextToClipboard(textToCopy)
-
-        if (copySuccessful) {
-            redirectToTelegram()
-        } else {
-            Toast.makeText(requireContext(), "Failed to copy your id.", Toast.LENGTH_SHORT).show()
-        }
-    }
-
-    private fun copyTextToClipboard(text: String): Boolean {
-        return try {
-            val clipboard = requireContext().getSystemService(Context.CLIPBOARD_SERVICE) as ClipboardManager
-            val clip = ClipData.newPlainText("label", text)
-            clipboard.setPrimaryClip(clip)
-            true
-        } catch (e: Exception) {
-            e.printStackTrace()
-            false
-        }
-    }
-
-    private fun redirectToTelegram() {
-        val telegramUsername = "MissRose_bot"
-        val telegramUri = Uri.parse("tg://resolve?domain=$telegramUsername")
-        val intent = Intent(Intent.ACTION_VIEW, telegramUri)
-
-        if (intent.resolveActivity(requireContext().packageManager) != null) {
-            startActivity(intent)
-        } else {
-            val webUri = Uri.parse("https://t.me/$telegramUsername")
-            val webIntent = Intent(Intent.ACTION_VIEW, webUri)
-            if (webIntent.resolveActivity(requireContext().packageManager) != null) {
-                startActivity(webIntent)
-            } else {
-                Toast.makeText(requireContext(), "Unable to open Telegram.", Toast.LENGTH_SHORT).show()
             }
         }
     }

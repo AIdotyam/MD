@@ -133,36 +133,6 @@
             </androidx.cardview.widget.CardView>
 
             <androidx.cardview.widget.CardView
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginBottom="8dp"
-                android:layout_margin="12dp"
-                app:cardElevation="4dp"
-                app:cardCornerRadius="8dp">
-
-                <LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:orientation="horizontal"
-                    android:padding="8dp">
-
-                    <!-- Email Notification Text and Switch -->
-                    <TextView
-                        android:id="@+id/notificationTextEmail"
-                        android:layout_width="0dp"
-                        android:layout_height="wrap_content"
-                        android:layout_weight="1"
-                        android:text="@string/email_notifications" />
-
-                    <androidx.appcompat.widget.SwitchCompat
-                        android:id="@+id/emailNotificationSwitch"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content" />
-                </LinearLayout>
-
-            </androidx.cardview.widget.CardView>
-
-            <androidx.cardview.widget.CardView
                 android:id="@+id/phoneNumberCard"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -182,7 +152,7 @@
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
                         android:layout_weight="1"
-                        android:text="Whatsapp Alerts" />
+                        android:text="Whatsapp Notifications" />
 
                     <com.google.android.material.button.MaterialButton
                         android:id="@+id/cardButtonPhoneNumber"
@@ -197,54 +167,6 @@
 
                     <com.google.android.material.button.MaterialButton
                         android:id="@+id/cardButtonDeletePhoneNumber"
-                        style="@style/Widget.MaterialComponents.Button.OutlinedButton"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_marginEnd="8dp"
-                        android:text="Disable"
-                        android:textAllCaps="false"
-                        android:textColor="@drawable/button_text_color"
-                        app:strokeColor="@drawable/button_stroke_color"
-                        android:visibility="gone"/>
-                </LinearLayout>
-            </androidx.cardview.widget.CardView>
-
-            <androidx.cardview.widget.CardView
-                android:id="@+id/telegramCard"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="16dp"
-                android:layout_margin="12dp"
-                app:cardElevation="4dp"
-                app:cardCornerRadius="8dp">
-
-                <LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:orientation="horizontal"
-                    android:padding="8dp">
-
-                    <TextView
-                        android:id="@+id/cardTextTelegram"
-                        android:layout_width="0dp"
-                        android:layout_height="wrap_content"
-                        android:layout_weight="1"
-                        android:text="Telegram Alerts" />
-
-
-                    <com.google.android.material.button.MaterialButton
-                        android:id="@+id/cardButtonTelegram"
-                        style="@style/Widget.MaterialComponents.Button.OutlinedButton"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_marginEnd="8dp"
-                        android:text="Enable"
-                        android:textAllCaps="false"
-                        android:textColor="@drawable/button_text_color"
-                        app:strokeColor="@drawable/button_stroke_color" />
-
-                    <com.google.android.material.button.MaterialButton
-                        android:id="@+id/cardButtonDeleteTelegram"
                         style="@style/Widget.MaterialComponents.Button.OutlinedButton"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"

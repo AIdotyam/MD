@@ -17,9 +17,7 @@ import com.bumptech.glide.Glide
 import com.capstone.aiyam.R
 import com.capstone.aiyam.data.dto.ResponseWrapper
 import com.capstone.aiyam.databinding.FragmentAlertDetailBinding
-import com.capstone.aiyam.databinding.FragmentHomeBinding
 import com.capstone.aiyam.domain.model.Alerts
-import com.capstone.aiyam.presentation.core.detail.DetailFragmentArgs
 import com.capstone.aiyam.utils.getMimeTypeFromUrl
 import com.capstone.aiyam.utils.gone
 import com.capstone.aiyam.utils.parseDateTime

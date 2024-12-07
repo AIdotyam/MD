@@ -40,22 +40,6 @@ class ProfileViewModel @Inject constructor(
 
     private fun initializeTarget() = userRepository.getTargetAlerts()
 
-    fun enableEmailAlerts(): Flow<ResponseWrapper<TargetAlerts>> = flow {
-        when (val user = getUser()) {
-            is AuthorizationResponse.Success -> {
-                userRepository.updateEmailAlerts(user.user.email).collect { emit(it) }
-            }
-
-            is AuthorizationResponse.Error -> {
-                emit(ResponseWrapper.Error(user.message))
-            }
-        }
-    }
-
-    fun disableEmailAlerts(): Flow<ResponseWrapper<TargetAlerts>> {
-        return userRepository.updateEmailAlerts(null)
-    }
-
     fun enablePushAlerts(): Flow<ResponseWrapper<TargetAlerts>> = flow {
         when (val token = getFcmToken().first()) {
             is TokenResponse.Success -> {

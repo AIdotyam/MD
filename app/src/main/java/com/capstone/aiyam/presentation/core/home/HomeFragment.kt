@@ -120,13 +120,6 @@ class HomeFragment : Fragment() {
                         shimmerCardTwo.stopShimmer()
                         shimmerLayoutMortality.gone()
                         shimmerLayoutMortality.stopShimmer()
-
-//                        mortalityTrendsCard.gone()
-//                        cardTwo.alpha = 0f
-//                        shimmerCardTwo.alpha = 1f
-//                        shimmerCardTwo.startShimmer()
-//                        shimmerLayoutMortality.visible()
-//                        shimmerLayoutMortality.startShimmer()
                     }
                 }
             }
@@ -149,13 +142,6 @@ class HomeFragment : Fragment() {
                         shimmerCardOne.stopShimmer()
                         shimmerLayoutScans.gone()
                         shimmerLayoutScans.stopShimmer()
-
-//                        dailyChickenCard.gone()
-//                        cardOne.alpha = 0f
-//                        shimmerCardOne.alpha = 1f
-//                        shimmerCardOne.startShimmer()
-//                        shimmerLayoutScans.visible()
-//                        shimmerLayoutScans.startShimmer()
                     }
                 }
             }

@@ -1,7 +1,5 @@
 package com.capstone.aiyam.data.repository
 
-import android.app.Application
-import android.util.Log
 import com.capstone.aiyam.data.dto.DataWrapper
 import com.capstone.aiyam.data.dto.ResponseWrapper
 import com.capstone.aiyam.data.dto.TargetRequest
@@ -87,12 +85,6 @@ class UserRepositoryImpl @Inject constructor (
                 settingsPreferencesRepository.savePhoneNumberSetting("")
             }
 
-            targetAlerts.data.email?.let {
-                settingsPreferencesRepository.saveEmailNotificationSetting(true)
-            } ?: run {
-                settingsPreferencesRepository.saveEmailNotificationSetting(false)
-            }
-
             emit(ResponseWrapper.Success(targetAlerts.data))
         } catch (e: Exception) {
             emit(ResponseWrapper.Error(e.message.toString()))
@@ -103,39 +95,13 @@ class UserRepositoryImpl @Inject constructor (
         emit(ResponseWrapper.Loading)
         try {
             val targetAlerts = withToken(getFirebaseUser(), ::getFirebaseToken) {
-                farmerService.createTargetAlerts(it, TargetRequest(null, null, null))
+                farmerService.createTargetAlerts(it, TargetRequest(null, null))
             }
 
             emit(ResponseWrapper.Success(targetAlerts.data))
         } catch (e: Exception) {
             emit(ResponseWrapper.Error(e.message.toString()))
             return@flow
-        }
-    }
-
-    override fun updateEmailAlerts(email: String?): Flow<ResponseWrapper<TargetAlerts>> = flow {
-        emit(ResponseWrapper.Loading)
-        try {
-            val pushToken = if (settingsPreferencesRepository.getPushNotificationSetting().first()) {
-                messaging.token.await()
-            } else {
-                null
-            }
-
-            val phoneNumber = settingsPreferencesRepository.getPhoneNumberSetting().first().takeIf { it.isNotEmpty() }
-            val targetAlerts = withToken(getFirebaseUser(), ::getFirebaseToken) {
-                farmerService.updateTargetAlerts(it, TargetRequest(phoneNumber, email, pushToken))
-            }
-
-            targetAlerts.data.email?.let {
-                settingsPreferencesRepository.saveEmailNotificationSetting(true)
-            } ?: run {
-                settingsPreferencesRepository.saveEmailNotificationSetting(false)
-            }
-
-            emit(ResponseWrapper.Success(targetAlerts.data))
-        } catch (e: Exception) {
-            emit(ResponseWrapper.Error(e.message.toString()))
         }
     }
 
@@ -143,39 +109,19 @@ class UserRepositoryImpl @Inject constructor (
         emit(ResponseWrapper.Loading)
         try {
             val phoneNumber = settingsPreferencesRepository.getPhoneNumberSetting().first().takeIf { it.isNotEmpty() }
-            val isActive = settingsPreferencesRepository.getEmailNotificationSetting().first()
-            var targetAlerts: DataWrapper<TargetAlerts>? = null
-            when(val user = getFirebaseUser()) {
-                is AuthorizationResponse.Success -> {
-                    user.user.getIdToken(false).await().token?.let {
-                        val email = if (isActive) user.user.email else null
-                        targetAlerts = farmerService.updateTargetAlerts(it, TargetRequest(phoneNumber, email, token))
-                    } ?: run {
-                        emit(ResponseWrapper.Error("Failed to create target alerts"))
-                        return@flow
-                    }
-                }
-                is AuthorizationResponse.Error -> {
-                    emit(ResponseWrapper.Error(user.message))
-                    return@flow
-                }
+            val targetAlerts = withToken(getFirebaseUser(), ::getFirebaseToken) {
+                farmerService.updateTargetAlerts(it, TargetRequest(phoneNumber, token))
             }
 
-            targetAlerts?.let {
-                it.data.fcm?.let {
-                    settingsPreferencesRepository.savePushNotificationSetting(true)
-                } ?: run {
-                    settingsPreferencesRepository.savePushNotificationSetting(false)
-                }
-
-                emit(ResponseWrapper.Success(it.data))
+            targetAlerts.data.fcm?.let {
+                settingsPreferencesRepository.savePushNotificationSetting(true)
             } ?: run {
-                emit(ResponseWrapper.Error("Failed to update phone number"))
-                return@flow
+                settingsPreferencesRepository.savePushNotificationSetting(false)
             }
+
+            emit(ResponseWrapper.Success(targetAlerts.data))
         } catch (e: Exception) {
             emit(ResponseWrapper.Error(e.message.toString()))
-            return@flow
         }
     }
 
@@ -183,36 +129,17 @@ class UserRepositoryImpl @Inject constructor (
         emit(ResponseWrapper.Loading)
         try {
             val pushToken = if (settingsPreferencesRepository.getPushNotificationSetting().first()) messaging.token.await() else null
-            val isActive = settingsPreferencesRepository.getEmailNotificationSetting().first()
-            var targetAlerts: DataWrapper<TargetAlerts>? = null
-            when(val user = getFirebaseUser()) {
-                is AuthorizationResponse.Success -> {
-                    val email = if (isActive) user.user.email else null
-                    user.user.getIdToken(false).await().token?.let {
-                        targetAlerts = farmerService.updateTargetAlerts(it, TargetRequest(number, email, pushToken))
-                    } ?: run {
-                        emit(ResponseWrapper.Error("Failed to create target alerts"))
-                        return@flow
-                    }
-                }
-                is AuthorizationResponse.Error -> {
-                    emit(ResponseWrapper.Error(user.message))
-                    return@flow
-                }
+            val targetAlerts = withToken(getFirebaseUser(), ::getFirebaseToken) {
+                farmerService.updateTargetAlerts(it, TargetRequest(number, pushToken))
             }
 
-            targetAlerts?.let {
-                it.data.phoneNumber?.let { number ->
-                    settingsPreferencesRepository.savePhoneNumberSetting(number)
-                } ?: run {
-                    settingsPreferencesRepository.savePhoneNumberSetting("")
-                }
-
-                emit(ResponseWrapper.Success(it.data))
+            targetAlerts.data.phoneNumber?.let { number ->
+                settingsPreferencesRepository.savePhoneNumberSetting(number)
             } ?: run {
-                emit(ResponseWrapper.Error("Failed to update phone number"))
-                return@flow
+                settingsPreferencesRepository.savePhoneNumberSetting("")
             }
+
+            emit(ResponseWrapper.Success(targetAlerts.data))
         } catch (e: Exception) {
             emit(ResponseWrapper.Error(e.message.toString()))
             return@flow
