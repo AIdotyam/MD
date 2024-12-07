@@ -37,6 +37,7 @@ navigationUiKtx = "2.8.4"
 hiltAndroid = "2.51.1"
 firebaseMessaging = "24.1.0"
 mpandroidchart = "3.0.3"
+shimmer = "0.5.0"
 viewpager2 = "1.1.0"
 coreSplashscreenVersion = "1.0.1"
 pagingRuntimeKtx = "3.1.0"
@@ -91,6 +92,7 @@ firebase-messaging = { group = "com.google.firebase", name = "firebase-messaging
 mpandroidchart = { group = "com.github.PhilJay", name = "MPAndroidChart", version.ref = "mpandroidchart" }
 androidx-core-splashscreen = { module = "androidx.core:core-splashscreen", version.ref = "coreSplashscreenVersion" }
 androidx-paging-runtime-ktx = { module = "androidx.paging:paging-runtime-ktx", version.ref = "pagingRuntimeKtx" }
+shimmer = { module = "com.facebook.shimmer:shimmer", version.ref = "shimmer" }
 
 [plugins]
 android-application = { id = "com.android.application", version.ref = "agp" }

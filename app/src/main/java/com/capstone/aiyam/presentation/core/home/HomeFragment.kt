@@ -14,6 +14,8 @@ import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
 import com.capstone.aiyam.databinding.FragmentHomeBinding
 import com.capstone.aiyam.domain.model.WeeklySummary
+import com.capstone.aiyam.utils.gone
+import com.capstone.aiyam.utils.visible
 import com.github.mikephil.charting.data.BarEntry
 import com.github.mikephil.charting.data.Entry
 import com.github.mikephil.charting.data.LineData
@@ -42,6 +44,7 @@ class HomeFragment : Fragment() {
         observeButtons()
         observeSummaries()
         observeError()
+        observeLoading()
     }
 
     private fun observeButtons() { binding.apply {
@@ -94,6 +97,66 @@ class HomeFragment : Fragment() {
             viewLifecycleOwner.repeatOnLifecycle(Lifecycle.State.CREATED) {
                 viewModel.canNavigateScansPrevious.collect { canNavigate ->
                     btnNextScan.isEnabled = canNavigate
+                }
+            }
+        }
+    }}
+
+    private fun observeLoading() { binding.apply {
+        lifecycleScope.launch {
+            viewLifecycleOwner.repeatOnLifecycle(Lifecycle.State.CREATED) {
+                viewModel.isLoadingAlerts.collect { isLoading ->
+                    if (isLoading) {
+                        mortalityTrendsCard.gone()
+                        cardTwo.alpha = 0f
+                        shimmerCardTwo.alpha = 1f
+                        shimmerCardTwo.startShimmer()
+                        shimmerLayoutMortality.visible()
+                        shimmerLayoutMortality.startShimmer()
+                    } else {
+                        mortalityTrendsCard.visible()
+                        cardTwo.alpha = 1f
+                        shimmerCardTwo.alpha = 0f
+                        shimmerCardTwo.stopShimmer()
+                        shimmerLayoutMortality.gone()
+                        shimmerLayoutMortality.stopShimmer()
+
+//                        mortalityTrendsCard.gone()
+//                        cardTwo.alpha = 0f
+//                        shimmerCardTwo.alpha = 1f
+//                        shimmerCardTwo.startShimmer()
+//                        shimmerLayoutMortality.visible()
+//                        shimmerLayoutMortality.startShimmer()
+                    }
+                }
+            }
+        }
+
+        lifecycleScope.launch {
+            viewLifecycleOwner.repeatOnLifecycle(Lifecycle.State.CREATED) {
+                viewModel.isLoadingScans.collect { isLoading ->
+                    if (isLoading) {
+                        dailyChickenCard.gone()
+                        cardOne.alpha = 0f
+                        shimmerCardOne.alpha = 1f
+                        shimmerCardOne.startShimmer()
+                        shimmerLayoutScans.visible()
+                        shimmerLayoutScans.startShimmer()
+                    } else {
+                        dailyChickenCard.visible()
+                        cardOne.alpha = 1f
+                        shimmerCardOne.alpha = 0f
+                        shimmerCardOne.stopShimmer()
+                        shimmerLayoutScans.gone()
+                        shimmerLayoutScans.stopShimmer()
+
+//                        dailyChickenCard.gone()
+//                        cardOne.alpha = 0f
+//                        shimmerCardOne.alpha = 1f
+//                        shimmerCardOne.startShimmer()
+//                        shimmerLayoutScans.visible()
+//                        shimmerLayoutScans.startShimmer()
+                    }
                 }
             }
         }

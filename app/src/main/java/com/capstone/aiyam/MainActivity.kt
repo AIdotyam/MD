@@ -28,7 +28,6 @@ import androidx.navigation.fragment.NavHostFragment
 import com.capstone.aiyam.databinding.ActivityMainBinding
 import com.google.android.material.bottomnavigation.BottomNavigationView
 import dagger.hilt.android.AndroidEntryPoint
-import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.launch
 
 @AndroidEntryPoint

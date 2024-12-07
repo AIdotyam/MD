@@ -1,6 +1,5 @@
 package com.capstone.aiyam.presentation.core.home
 
-import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.capstone.aiyam.data.dto.ResponseWrapper
@@ -9,9 +8,6 @@ import com.capstone.aiyam.domain.model.Classification
 import com.capstone.aiyam.domain.model.WeeklySummary
 import com.capstone.aiyam.domain.repository.AlertRepository
 import com.capstone.aiyam.domain.repository.ChickenRepository
-import com.google.firebase.Firebase
-import com.google.firebase.auth.auth
-import com.google.firebase.messaging.FirebaseMessaging
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
@@ -23,7 +19,6 @@ import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.onStart
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
-import kotlinx.coroutines.tasks.await
 import java.time.LocalDateTime
 import java.time.format.DateTimeFormatter
 import javax.inject.Inject
@@ -35,7 +30,11 @@ class HomeViewModel @Inject constructor(
 ) : ViewModel() {
     private val pageSize = 7
 
-    private val _isLoading = MutableStateFlow(false)
+    var isLoadingAlerts = MutableStateFlow(false)
+        private set
+
+    var isLoadingScans = MutableStateFlow(false)
+        private set
 
     private val _errorMessage = MutableStateFlow<String?>(null)
     val errorMessage: StateFlow<String?> = _errorMessage.asStateFlow()
@@ -100,33 +99,33 @@ class HomeViewModel @Inject constructor(
     }
 
     private fun fetchWeeklySummaries() { viewModelScope.launch {
-        Firebase.auth.currentUser?.getIdToken(false)?.await()?.token?.let { Log.d("TOKEN", it) }
-        FirebaseMessaging.getInstance().token.await()?.let { Log.d("TOKEN MSG", it) }
+//        Firebase.auth.currentUser?.getIdToken(false)?.await()?.token?.let { Log.d("TOKEN", it) }
+//        FirebaseMessaging.getInstance().token.await()?.let { Log.d("TOKEN MSG", it) }
 
         alertRepository.getAlerts()
             .onStart {
-                _isLoading.value = true
+                isLoadingAlerts.value = true
                 _errorMessage.value = null
             }
             .catch { e ->
-                _isLoading.value = false
+                isLoadingAlerts.value = false
                 _errorMessage.value = e.message ?: "An unexpected error occurred."
             }
             .collect { response ->
                 when (response) {
                     is ResponseWrapper.Success -> {
-                        _isLoading.value = false
+                        isLoadingAlerts.value = false
                         val summaries = aggregateAlertsByDay(response.data)
                         alertsCount.value = response.data.size
                         _weeklyAlerts.value = summaries
                         _currentAlertsPage.value = 0
                     }
                     is ResponseWrapper.Error -> {
-                        _isLoading.value = false
+                        isLoadingAlerts.value = false
                         _errorMessage.value = response.error
                     }
                     is ResponseWrapper.Loading -> {
-                        _isLoading.value = true
+                        isLoadingAlerts.value = true
                         _errorMessage.value = null
                     }
                 }
@@ -186,28 +185,28 @@ class HomeViewModel @Inject constructor(
     private fun fetchWeeklyScans() { viewModelScope.launch {
         chickenRepository.getHistories()
             .onStart {
-                _isLoading.value = true
+                isLoadingScans.value = true
                 _errorMessage.value = null
             }
             .catch { e ->
-                _isLoading.value = false
+                isLoadingScans.value = false
                 _errorMessage.value = e.message ?: "An unexpected error occurred."
             }
             .collect { response ->
                 when (response) {
                     is ResponseWrapper.Success -> {
-                        _isLoading.value = false
+                        isLoadingScans.value = false
                         val summaries = aggregateScansByDay(response.data)
                         scansCount.value = response.data.size
                         _weeklyScans.value = summaries
                         _currentScansPage.value = 0
                     }
                     is ResponseWrapper.Error -> {
-                        _isLoading.value = false
+                        isLoadingScans.value = false
                         _errorMessage.value = response.error
                     }
                     is ResponseWrapper.Loading -> {
-                        _isLoading.value = true
+                        isLoadingScans.value = true
                         _errorMessage.value = null
                     }
                 }
