@@ -88,7 +88,7 @@
                                     android:layout_marginEnd="8dp"
                                     android:adjustViewBounds="true"
                                     android:contentDescription="@string/todo"
-                                    android:src="@drawable/baseline_wallpaper_24"
+                                    android:src="@drawable/svg_width_48_height_39_viewbox_0_0"
                                     android:padding="2dp"/>
 
                                 <LinearLayout
@@ -145,7 +145,7 @@
                                     android:layout_marginEnd="8dp"
                                     android:adjustViewBounds="true"
                                     android:contentDescription="@string/todo"
-                                    android:src="@drawable/bell_notification_svgrepo_com"
+                                    android:src="@drawable/alerts_kuning_le"
                                     android:padding="2dp"/>
 
                                 <LinearLayout
@@ -389,7 +389,7 @@
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
                                 android:textColor="@color/black"
-                                android:textSize="16sp"
+                                android:textSize="14sp"
                                 tools:text="Something" />
                         </LinearLayout>
 
@@ -494,7 +494,7 @@
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
                                 android:textColor="@color/black"
-                                android:textSize="16sp"
+                                android:textSize="14sp"
                                 tools:text="Something" />
                         </LinearLayout>
 

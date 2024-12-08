@@ -52,13 +52,14 @@ class DetailFragment : Fragment() {
     private fun bindViews(classification: Classification) { binding.apply {
         if (classification.deadChicken) {
             chickenValue.text = "Dead Chicken Detected"
-            chickenValueDesc.text = "Immediate action required to maintain flock health"
-            icon.setImageResource(R.drawable.coffin_dead_svgrepo_com)
+            chickenValueDesc.text = "Immediate action required to maintain flock health."
+            icon.setImageResource(R.drawable.peti_mati)
         } else {
-            chickenValue.text = "No Dead Chicken Detected"
-            chickenValueDesc.text = "No immediate action required"
-            icon.setImageResource(R.drawable.health_svgrepo_com)
+            chickenValue.text = "Chickens Alive and Well!"
+            chickenValueDesc.text = "No immediate action necessary—flock in good health."
+            icon.setImageResource(R.drawable.peti_hidup)
         }
+
 
         Glide.with(requireContext()).load(classification.mediaUrl).into(headerImage)
 

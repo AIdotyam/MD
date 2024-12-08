@@ -87,7 +87,7 @@
         android:layout_height="wrap_content"
         android:background="@drawable/rounded_card_bg"
         app:layout_behavior="com.google.android.material.bottomsheet.BottomSheetBehavior"
-        app:behavior_peekHeight="160dp"
+        app:behavior_peekHeight="200dp"
         app:behavior_hideable="false"
         app:behavior_fitToContents="true">
 
@@ -116,6 +116,7 @@
                 android:layout_marginBottom="6dp"
                 android:textSize="24sp"
                 android:textStyle="bold"
+                android:textAlignment="center"
                 android:text="Dead Chicken Alert" />
 
             <TextView

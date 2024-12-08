@@ -156,7 +156,7 @@
             android:id="@+id/sign_in_button"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="@string/signup"
+            android:text="Sign In"
             android:textColor="@android:color/black"
             android:layout_gravity="center" />
     </androidx.cardview.widget.CardView>

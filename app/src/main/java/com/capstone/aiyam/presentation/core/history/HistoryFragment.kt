@@ -38,8 +38,6 @@ class HistoryFragment : Fragment() {
     }
 
     companion object {
-        private val TAB_TITLES = arrayOf(
-            "Alerts", "Classifications"
-        )
+        private val TAB_TITLES = arrayOf("Alerts", "Scans")
     }
 }

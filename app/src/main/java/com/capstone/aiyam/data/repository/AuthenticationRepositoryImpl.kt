@@ -1,6 +1,7 @@
 package com.capstone.aiyam.data.repository
 
 import android.app.Application
+import android.util.Log
 import androidx.core.net.toUri
 import androidx.credentials.CreatePasswordRequest
 import androidx.credentials.CredentialManager
@@ -24,13 +25,9 @@ import kotlinx.coroutines.tasks.await
 import com.capstone.aiyam.BuildConfig
 import com.capstone.aiyam.data.dto.CreateFarmerRequest
 import com.capstone.aiyam.data.dto.GoogleRequest
-import com.capstone.aiyam.data.dto.ResponseWrapper
-import com.capstone.aiyam.data.dto.SuspendWrapper
 import com.capstone.aiyam.data.remote.FarmerService
 import com.capstone.aiyam.domain.repository.AuthenticationRepository
-import com.capstone.aiyam.domain.repository.UserRepository
 import com.capstone.aiyam.utils.createNonce
-import com.capstone.aiyam.utils.withToken
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.FirebaseAuthInvalidCredentialsException
 import com.google.firebase.auth.FirebaseAuthUserCollisionException
@@ -119,12 +116,12 @@ class AuthenticationRepositoryImpl @Inject constructor(
 
     override fun signInWithGoogle(): Flow<AuthenticationResponse> = flow {
         emit(AuthenticationResponse.Loading)
-
+        val nonce = createNonce()
         val googleIdOption = GetGoogleIdOption.Builder()
             .setFilterByAuthorizedAccounts(false)
             .setServerClientId(BuildConfig.CLIENT_KEY)
             .setAutoSelectEnabled(false)
-            .setNonce(createNonce())
+            .setNonce(nonce)
             .build()
 
         val request = GetCredentialRequest.Builder()
@@ -132,32 +129,29 @@ class AuthenticationRepositoryImpl @Inject constructor(
             .build()
 
         try {
-            val credential = manager.getCredential(context, request).credential
-            if (credential !is CustomCredential) {
+            val credential = manager.getCredential(context, request)
+            if (credential.credential !is CustomCredential) {
                 throw Exception("Credential not found")
             }
 
-            if (credential.type != GoogleIdTokenCredential.TYPE_GOOGLE_ID_TOKEN_CREDENTIAL) {
-                throw Exception("Credential type is not valid")
-            }
+            val googleIdTokenCredential = GoogleIdTokenCredential.createFrom(credential.credential.data)
 
-            val googleIdTokenCredential = GoogleIdTokenCredential.createFrom(credential.data)
             val firebaseCredential = GoogleAuthProvider.getCredential(googleIdTokenCredential.idToken, null)
 
             auth.signInWithCredential(firebaseCredential).await()
         } catch (e: GoogleIdTokenParsingException) {
-            e.printStackTrace()
-            emit(AuthenticationResponse.Error(e.message ?: ""))
+            emit(AuthenticationResponse.Error(e.message ?: "Error parsing Google ID Token"))
+            return@flow
+        } catch (e: NoCredentialException) {
+            emit(AuthenticationResponse.Error("No credentials available"))
             return@flow
         } catch (e: Exception) {
-            e.printStackTrace()
-            emit(AuthenticationResponse.Error(e.message ?: ""))
+            emit(AuthenticationResponse.Error(e.message ?: "An unexpected error occurred"))
             return@flow
         }
 
         try {
-            val firebaseIdToken = auth.currentUser?.getIdToken(true)?.await()?.token
-                ?: throw Exception("Firebase ID Token not found")
+            val firebaseIdToken = auth.currentUser?.getIdToken(true)?.await()?.token ?: throw Exception("Firebase ID Token not found")
             farmerService.loginGoogle(GoogleRequest(token = firebaseIdToken))
             emit(AuthenticationResponse.Success)
         } catch (e: Exception) {

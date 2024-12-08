@@ -154,7 +154,7 @@
                             android:layout_width="24dp"
                             android:layout_height="24dp"
                             android:contentDescription="@string/todo"
-                            android:src="@drawable/baseline_notifications_active_24" />
+                            android:src="@drawable/lonceng_samarinda_berbunyi_rek" />
 
                         <TextView
                             android:layout_width="0dp"

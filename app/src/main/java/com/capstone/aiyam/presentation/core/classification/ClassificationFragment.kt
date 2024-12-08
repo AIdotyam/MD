@@ -30,9 +30,6 @@ import com.capstone.aiyam.domain.model.Classification
 import com.capstone.aiyam.data.dto.ResponseWrapper
 import com.capstone.aiyam.presentation.shared.CustomAlertDialog
 import com.capstone.aiyam.presentation.shared.LoadingDialog
-import com.capstone.aiyam.utils.gone
-import com.capstone.aiyam.utils.toFormattedTime
-import com.capstone.aiyam.utils.visible
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.launch
 import java.io.File

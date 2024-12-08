@@ -90,7 +90,7 @@ class AlertDetailFragment : Fragment() {
     private fun bindAlert(alert: Alerts) { binding.apply {
         showLoading(false)
         icon.setImageResource(R.drawable.alert_svgrepo_com__1_)
-        chickenValue.text = "Critical Alert"
+        chickenValue.text = "Alert Detected"
         chickenValueDesc.text = "Immediate inspection of chicken health required!"
         dateTitle.text = alert.createdAt.parseDateTime()
         Glide.with(requireContext()).load(alert.mediaUrl).into(headerImage)

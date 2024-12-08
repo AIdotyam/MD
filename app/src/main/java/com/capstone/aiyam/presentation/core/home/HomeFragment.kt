@@ -59,7 +59,7 @@ class HomeFragment : Fragment() {
         lifecycleScope.launch {
             viewLifecycleOwner.repeatOnLifecycle(Lifecycle.State.CREATED) {
                 viewModel.canNavigateAlertsNext.collect { canNavigate ->
-                    if (canNavigate) btnPrevious.visible() else btnPrevious.gone()
+                    if (canNavigate) btnPrevious.alpha = 1f else btnPrevious.alpha = 0.4f
                     btnPrevious.isEnabled = canNavigate
                 }
             }
@@ -68,7 +68,7 @@ class HomeFragment : Fragment() {
         lifecycleScope.launch {
             viewLifecycleOwner.repeatOnLifecycle(Lifecycle.State.CREATED) {
                 viewModel.canNavigateAlertsPrevious.collect { canNavigate ->
-                    if (canNavigate) btnNext.visible() else btnNext.gone()
+                    if (canNavigate) btnNext.alpha = 1f else btnNext.alpha = 0.4f
                     btnNext.isEnabled = canNavigate
                 }
             }
@@ -90,7 +90,7 @@ class HomeFragment : Fragment() {
         lifecycleScope.launch {
             viewLifecycleOwner.repeatOnLifecycle(Lifecycle.State.CREATED) {
                 viewModel.canNavigateScansNext.collect { canNavigate ->
-                    if (canNavigate) btnPreviousScan.visible() else btnPreviousScan.gone()
+                    if (canNavigate) btnPreviousScan.alpha = 1f else btnPreviousScan.alpha = 0.4f
                     btnPreviousScan.isEnabled = canNavigate
                 }
             }
@@ -99,7 +99,7 @@ class HomeFragment : Fragment() {
         lifecycleScope.launch {
             viewLifecycleOwner.repeatOnLifecycle(Lifecycle.State.CREATED) {
                 viewModel.canNavigateScansPrevious.collect { canNavigate ->
-                    if (canNavigate) btnNextScan.visible() else btnNextScan.gone()
+                    if (canNavigate) btnNextScan.alpha = 1f else btnNextScan.alpha = 0.4f
                     btnNextScan.isEnabled = canNavigate
                 }
             }
