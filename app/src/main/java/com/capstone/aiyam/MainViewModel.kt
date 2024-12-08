@@ -42,17 +42,19 @@ class MainViewModel @Inject constructor(
 
     init {
         viewModelScope.launch {
-            val blankFile = File.createTempFile("empty", ".txt")
-            try {
-                chickenRepository.warmUp(blankFile)
-            } catch (e: Exception) {
-                e.printStackTrace()
-            }
-
             hasOnboarding.value = settingsPreferencesRepository.getOnBoarding().first()
             isAuthenticated.value = when (getUser()) {
                 is AuthorizationResponse.Success -> true
                 is AuthorizationResponse.Error -> false
+            }
+
+            if (isAuthenticated.value) {
+                val blankFile = File.createTempFile("empty", ".txt")
+                try {
+                    chickenRepository.warmUp(blankFile)
+                } catch (e: Exception) {
+                    e.printStackTrace()
+                }
             }
 
             delay(1000)

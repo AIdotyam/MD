@@ -103,8 +103,6 @@ class HomeViewModel @Inject constructor(
     }
 
     private fun fetchWeeklySummaries() { viewModelScope.launch {
-        Firebase.auth.currentUser?.getIdToken(false)?.await()?.token?.let { Log.d("TOKEN", it) }
-
         alertRepository.getAlerts()
             .onStart {
                 isLoadingAlerts.value = true

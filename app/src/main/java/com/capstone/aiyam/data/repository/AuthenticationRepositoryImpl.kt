@@ -171,6 +171,7 @@ class AuthenticationRepositoryImpl @Inject constructor(
     }
 
     override fun signInWithIntentGoogle(intent: Intent): Flow<AuthenticationResponse> = flow {
+        emit(AuthenticationResponse.Loading)
         try {
             val account = GoogleSignIn.getSignedInAccountFromIntent(intent).await()
             val firebaseCredential = GoogleAuthProvider.getCredential(account.idToken, null)
@@ -183,6 +184,8 @@ class AuthenticationRepositoryImpl @Inject constructor(
         try {
             val firebaseIdToken = auth.currentUser?.getIdToken(true)?.await()?.token ?: throw Exception("Firebase ID Token not found")
             farmerService.loginGoogle(GoogleRequest(token = firebaseIdToken))
+
+            auth.currentUser?.reload()?.await()
             emit(AuthenticationResponse.Success)
         } catch (e: Exception) {
             e.printStackTrace()

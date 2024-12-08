@@ -7,11 +7,9 @@ import com.capstone.aiyam.domain.model.Classification
 import com.capstone.aiyam.domain.repository.ChickenRepository
 import com.capstone.aiyam.domain.repository.UserRepository
 import com.capstone.aiyam.utils.withToken
-import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
-import kotlinx.coroutines.withContext
 import okhttp3.MediaType.Companion.toMediaTypeOrNull
 import okhttp3.MultipartBody
 import okhttp3.RequestBody.Companion.asRequestBody

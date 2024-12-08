@@ -38,11 +38,9 @@ class SignInFragment : Fragment() {
         ActivityResultContracts.StartActivityForResult()
     ) {
         if (it.resultCode == RESULT_OK) { lifecycleScope.launch {
-            viewLifecycleOwner.repeatOnLifecycle(Lifecycle.State.CREATED) {
-                it.data?.let { it1 ->
-                    viewModel.fallbackSignIn(it1).collect { response ->
-                        handleOnAuth(response)
-                    }
+            it.data?.let { it1 ->
+                viewModel.fallbackSignIn(it1).collect { response ->
+                    handleOnAuth(response)
                 }
             }
         }}
