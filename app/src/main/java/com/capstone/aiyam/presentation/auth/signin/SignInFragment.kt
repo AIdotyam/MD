@@ -34,18 +34,6 @@ class SignInFragment : Fragment() {
 
     private val viewModel: SignInViewModel by viewModels()
 
-    private val fallbackLauncher = registerForActivityResult(
-        ActivityResultContracts.StartActivityForResult()
-    ) {
-        if (it.resultCode == RESULT_OK) { lifecycleScope.launch {
-            it.data?.let { it1 ->
-                viewModel.fallbackSignIn(it1).collect { response ->
-                    handleOnAuth(response)
-                }
-            }
-        }}
-    }
-
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
@@ -56,25 +44,8 @@ class SignInFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        changeStatusBarColor(R.color.white)
         animate()
         button()
-    }
-
-    private fun changeStatusBarColor(colorResId: Int) {
-        val color = ContextCompat.getColor(requireContext(), colorResId)
-
-        if (Build.VERSION.SDK_INT > Build.VERSION_CODES.O) {
-            activity?.window?.statusBarColor = color
-        }
-
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
-            val windowInsetsController = activity?.window?.insetsController
-            windowInsetsController?.setSystemBarsAppearance(
-                WindowInsetsController.APPEARANCE_LIGHT_STATUS_BARS,
-                WindowInsetsController.APPEARANCE_LIGHT_STATUS_BARS
-            )
-        }
     }
 
     private fun button() { binding.apply {
@@ -105,12 +76,7 @@ class SignInFragment : Fragment() {
         when(result) {
             is AuthenticationResponse.Error -> {
                 onLoading(false)
-
-                if (result.message == "Credential not found") {
-                    fallbackLauncher.launch(viewModel.googleIntent())
-                } else {
-                    showToast(result.message)
-                }
+                showToast(result.message)
             }
             is AuthenticationResponse.Loading -> {
                 onLoading(true)

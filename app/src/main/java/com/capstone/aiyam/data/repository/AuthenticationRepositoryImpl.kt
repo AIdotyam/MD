@@ -29,9 +29,6 @@ import com.capstone.aiyam.data.dto.GoogleRequest
 import com.capstone.aiyam.data.remote.FarmerService
 import com.capstone.aiyam.domain.repository.AuthenticationRepository
 import com.capstone.aiyam.utils.createNonce
-import com.google.android.gms.auth.api.signin.GoogleSignIn
-import com.google.android.gms.auth.api.signin.GoogleSignInClient
-import com.google.android.gms.auth.api.signin.GoogleSignInOptions
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.FirebaseAuthInvalidCredentialsException
 import com.google.firebase.auth.FirebaseAuthUserCollisionException
@@ -45,7 +42,6 @@ class AuthenticationRepositoryImpl @Inject constructor(
     private val context: Application,
     private val auth: FirebaseAuth,
     private val manager: CredentialManager,
-    private val signInClient: GoogleSignInClient,
     private val farmerService: FarmerService
 ): AuthenticationRepository {
     override fun createAccountWithEmail(username: String, email: String, password: String): Flow<AuthenticationResponse> = flow {
@@ -133,12 +129,17 @@ class AuthenticationRepositoryImpl @Inject constructor(
             .build()
 
         try {
-            val credential = manager.getCredential(context, request)
-            if (credential.credential !is CustomCredential) {
+            val credential = manager.getCredential(context, request).credential
+            if (credential !is CustomCredential) {
                 throw Exception("Credential not found")
             }
 
-            val googleIdTokenCredential = GoogleIdTokenCredential.createFrom(credential.credential.data)
+            if (credential.type != GoogleIdTokenCredential.TYPE_GOOGLE_ID_TOKEN_CREDENTIAL) {
+                emit(AuthenticationResponse.Error("Invalid credential type"))
+                return@flow
+            }
+
+            val googleIdTokenCredential = GoogleIdTokenCredential.createFrom(credential.data)
             val firebaseCredential = GoogleAuthProvider.getCredential(googleIdTokenCredential.idToken, null)
             auth.signInWithCredential(firebaseCredential).await()
         } catch (e: GoogleIdTokenParsingException) {
@@ -158,34 +159,6 @@ class AuthenticationRepositoryImpl @Inject constructor(
         try {
             val firebaseIdToken = auth.currentUser?.getIdToken(true)?.await()?.token ?: throw Exception("Firebase ID Token not found")
             farmerService.loginGoogle(GoogleRequest(token = firebaseIdToken))
-            emit(AuthenticationResponse.Success)
-        } catch (e: Exception) {
-            e.printStackTrace()
-            emit(AuthenticationResponse.Error(e.message ?: ""))
-            return@flow
-        }
-    }
-
-    override fun signInWithGoogleIntent(): Intent {
-        return signInClient.signInIntent
-    }
-
-    override fun signInWithIntentGoogle(intent: Intent): Flow<AuthenticationResponse> = flow {
-        emit(AuthenticationResponse.Loading)
-        try {
-            val account = GoogleSignIn.getSignedInAccountFromIntent(intent).await()
-            val firebaseCredential = GoogleAuthProvider.getCredential(account.idToken, null)
-            auth.signInWithCredential(firebaseCredential).await()
-        } catch (e: Exception) {
-            emit(AuthenticationResponse.Error("No Google account found"))
-            return@flow
-        }
-
-        try {
-            val firebaseIdToken = auth.currentUser?.getIdToken(true)?.await()?.token ?: throw Exception("Firebase ID Token not found")
-            farmerService.loginGoogle(GoogleRequest(token = firebaseIdToken))
-
-            auth.currentUser?.reload()?.await()
             emit(AuthenticationResponse.Success)
         } catch (e: Exception) {
             e.printStackTrace()

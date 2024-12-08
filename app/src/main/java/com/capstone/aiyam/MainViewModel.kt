@@ -48,15 +48,6 @@ class MainViewModel @Inject constructor(
                 is AuthorizationResponse.Error -> false
             }
 
-            if (isAuthenticated.value) {
-                val blankFile = File.createTempFile("empty", ".txt")
-                try {
-                    chickenRepository.warmUp(blankFile)
-                } catch (e: Exception) {
-                    e.printStackTrace()
-                }
-            }
-
             delay(1000)
 
             splashCondition.value = false

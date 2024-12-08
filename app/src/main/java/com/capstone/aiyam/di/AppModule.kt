@@ -51,18 +51,6 @@ object AppModule {
 
     @Provides
     @Singleton
-    fun provideGoogleClient(
-        context: Application
-    ): GoogleSignInClient {
-        return GoogleSignIn.getClient(context, GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
-            .requestIdToken(BuildConfig.CLIENT_KEY)
-            .requestEmail()
-            .build()
-        )
-    }
-
-    @Provides
-    @Singleton
     fun provideRetrofit(): Retrofit {
         val loggingInterceptor = HttpLoggingInterceptor().setLevel(HttpLoggingInterceptor.Level.BODY)
 

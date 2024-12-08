@@ -12,6 +12,4 @@ interface AuthenticationRepository {
     fun signInWithGoogle(): Flow<AuthenticationResponse>
     fun linkPhoneNumber(credential: PhoneAuthCredential): Flow<AuthenticationResponse>
     fun sendOtp(phoneNumber: String, verificationCallback: PhoneAuthProvider.OnVerificationStateChangedCallbacks)
-    fun signInWithIntentGoogle(intent: Intent): Flow<AuthenticationResponse>
-    fun signInWithGoogleIntent(): Intent
 }

@@ -26,7 +26,6 @@ class UserRepositoryImpl @Inject constructor (
     private val auth: FirebaseAuth,
     private val messaging: FirebaseMessaging,
     private val farmerService: FarmerService,
-    private val signInClient: GoogleSignInClient,
     private val settingsPreferencesRepository: SettingsPreferencesRepository
 ) : UserRepository {
     override fun getFirebaseUser(): AuthorizationResponse {
@@ -37,10 +36,7 @@ class UserRepositoryImpl @Inject constructor (
         }
     }
 
-    override fun firebaseSignOut() {
-        signInClient.signOut()
-        auth.signOut()
-    }
+    override suspend fun firebaseSignOut() = auth.signOut()
 
     override fun getFirebaseToken(user: FirebaseUser): Flow<TokenResponse> = flow {
         user.getIdToken(false).await().token?.let {
