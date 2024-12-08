@@ -7,9 +7,11 @@ import com.capstone.aiyam.domain.model.Classification
 import com.capstone.aiyam.domain.repository.ChickenRepository
 import com.capstone.aiyam.domain.repository.UserRepository
 import com.capstone.aiyam.utils.withToken
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
+import kotlinx.coroutines.withContext
 import okhttp3.MediaType.Companion.toMediaTypeOrNull
 import okhttp3.MultipartBody
 import okhttp3.RequestBody.Companion.asRequestBody
@@ -55,19 +57,6 @@ class ChickenRepositoryImpl @Inject constructor(
             emit(ResponseWrapper.Success(histories.data))
         } catch (e: Exception) {
             emit(ResponseWrapper.Error(e.message.toString()))
-        }
-    }
-
-    override suspend fun warmUp(file: File) {
-        val requestBody = file.asRequestBody("text/plain".toMediaTypeOrNull())
-        val malformedPart = MultipartBody.Part.createFormData("file", file.name, requestBody)
-
-        try {
-            withToken(user, userRepository::getFirebaseToken) {
-                chickenService.warmUp(it, malformedPart)
-            }
-        } catch (e: Exception) {
-            Log.e("WarmUp", "Triggered error as expected: ${e.message}")
         }
     }
 }

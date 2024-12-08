@@ -2,7 +2,6 @@ package com.capstone.aiyam.presentation.auth.signin
 
 import android.animation.AnimatorSet
 import android.animation.ObjectAnimator
-import android.app.Activity.RESULT_OK
 import android.os.Build
 import androidx.fragment.app.viewModels
 import android.os.Bundle
@@ -13,7 +12,6 @@ import android.view.View
 import android.view.ViewGroup
 import android.view.WindowInsetsController
 import android.widget.Toast
-import androidx.activity.result.contract.ActivityResultContracts
 import androidx.core.content.ContextCompat
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.lifecycleScope

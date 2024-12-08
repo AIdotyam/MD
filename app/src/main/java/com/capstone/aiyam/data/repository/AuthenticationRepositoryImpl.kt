@@ -65,7 +65,8 @@ class AuthenticationRepositoryImpl @Inject constructor(
 
         val user = auth.currentUser
         try {
-            val firebaseIdToken = user?.getIdToken(true)?.await()?.token ?: throw Exception("Firebase ID Token not found")
+            val firebaseIdToken = user?.getIdToken(true)?.await()?.token
+                ?: throw Exception("Firebase ID Token not found")
             farmerService.createFarmer(firebaseIdToken, CreateFarmerRequest(user.uid, username, email))
             emit(AuthenticationResponse.Success)
         } catch (e: Exception) {
@@ -142,11 +143,23 @@ class AuthenticationRepositoryImpl @Inject constructor(
             val googleIdTokenCredential = GoogleIdTokenCredential.createFrom(credential.data)
             val firebaseCredential = GoogleAuthProvider.getCredential(googleIdTokenCredential.idToken, null)
             auth.signInWithCredential(firebaseCredential).await()
+            emit(AuthenticationResponse.Success)
         } catch (e: GoogleIdTokenParsingException) {
             emit(AuthenticationResponse.Error(e.message ?: "Error parsing Google ID Token"))
             return@flow
         } catch (e: NoCredentialException) {
-            emit(AuthenticationResponse.Error("Credential not found"))
+//            try {
+//                val signInIntent = signInClient.signInIntent
+//                val account = GoogleSignIn.getSignedInAccountFromIntent(signInIntent).await()
+//                val firebaseCredential = GoogleAuthProvider.getCredential(account.idToken, null)
+//
+//                auth.signInWithCredential(firebaseCredential).await()
+//                emit(AuthenticationResponse.Success)
+//            } catch (fallbackException: Exception) {
+//                emit(AuthenticationResponse.Error("No Google account found"))
+//                return@flow
+//            }
+            emit(AuthenticationResponse.Error("No Google account found"))
             return@flow
         } catch (e: CreateCredentialCancellationException) {
             emit(AuthenticationResponse.Error("Cancelled"))

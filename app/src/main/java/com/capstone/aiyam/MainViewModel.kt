@@ -3,11 +3,9 @@ package com.capstone.aiyam
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.capstone.aiyam.domain.model.AuthorizationResponse
-import com.capstone.aiyam.domain.repository.ChickenRepository
 import com.capstone.aiyam.domain.repository.SettingsPreferencesRepository
 import com.capstone.aiyam.domain.repository.UserRepository
 import dagger.hilt.android.lifecycle.HiltViewModel
-import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
@@ -16,15 +14,12 @@ import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
-import kotlinx.coroutines.withContext
-import java.io.File
 import javax.inject.Inject
 
 @HiltViewModel
 class MainViewModel @Inject constructor(
     private val userRepository: UserRepository,
-    private val settingsPreferencesRepository: SettingsPreferencesRepository,
-    private val chickenRepository: ChickenRepository
+    private val settingsPreferencesRepository: SettingsPreferencesRepository
 ) : ViewModel() {
     var splashCondition = MutableStateFlow(true)
         private set
