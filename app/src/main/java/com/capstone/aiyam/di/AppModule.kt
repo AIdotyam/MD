@@ -6,6 +6,9 @@ import com.capstone.aiyam.BuildConfig
 import com.capstone.aiyam.data.remote.AlertService
 import com.capstone.aiyam.data.remote.ChickenService
 import com.capstone.aiyam.data.remote.FarmerService
+import com.google.android.gms.auth.api.signin.GoogleSignIn
+import com.google.android.gms.auth.api.signin.GoogleSignInClient
+import com.google.android.gms.auth.api.signin.GoogleSignInOptions
 import com.google.firebase.Firebase
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.auth
@@ -44,6 +47,18 @@ object AppModule {
         context: Application
     ): CredentialManager {
         return CredentialManager.create(context)
+    }
+
+    @Provides
+    @Singleton
+    fun provideGoogleClient(
+        context: Application
+    ): GoogleSignInClient {
+        return GoogleSignIn.getClient(context, GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
+            .requestIdToken(BuildConfig.CLIENT_KEY)
+            .requestEmail()
+            .build()
+        )
     }
 
     @Provides

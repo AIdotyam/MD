@@ -1,6 +1,7 @@
 package com.capstone.aiyam.data.repository
 
 import android.app.Application
+import android.content.Intent
 import android.util.Log
 import androidx.core.net.toUri
 import androidx.credentials.CreatePasswordRequest
@@ -28,6 +29,9 @@ import com.capstone.aiyam.data.dto.GoogleRequest
 import com.capstone.aiyam.data.remote.FarmerService
 import com.capstone.aiyam.domain.repository.AuthenticationRepository
 import com.capstone.aiyam.utils.createNonce
+import com.google.android.gms.auth.api.signin.GoogleSignIn
+import com.google.android.gms.auth.api.signin.GoogleSignInClient
+import com.google.android.gms.auth.api.signin.GoogleSignInOptions
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.FirebaseAuthInvalidCredentialsException
 import com.google.firebase.auth.FirebaseAuthUserCollisionException
@@ -41,6 +45,7 @@ class AuthenticationRepositoryImpl @Inject constructor(
     private val context: Application,
     private val auth: FirebaseAuth,
     private val manager: CredentialManager,
+    private val signInClient: GoogleSignInClient,
     private val farmerService: FarmerService
 ): AuthenticationRepository {
     override fun createAccountWithEmail(username: String, email: String, password: String): Flow<AuthenticationResponse> = flow {
@@ -135,15 +140,28 @@ class AuthenticationRepositoryImpl @Inject constructor(
             }
 
             val googleIdTokenCredential = GoogleIdTokenCredential.createFrom(credential.credential.data)
-
             val firebaseCredential = GoogleAuthProvider.getCredential(googleIdTokenCredential.idToken, null)
-
             auth.signInWithCredential(firebaseCredential).await()
+            emit(AuthenticationResponse.Success)
         } catch (e: GoogleIdTokenParsingException) {
             emit(AuthenticationResponse.Error(e.message ?: "Error parsing Google ID Token"))
             return@flow
         } catch (e: NoCredentialException) {
-            emit(AuthenticationResponse.Error("No credentials available"))
+//            try {
+//                val signInIntent = signInClient.signInIntent
+//                val account = GoogleSignIn.getSignedInAccountFromIntent(signInIntent).await()
+//                val firebaseCredential = GoogleAuthProvider.getCredential(account.idToken, null)
+//
+//                auth.signInWithCredential(firebaseCredential).await()
+//                emit(AuthenticationResponse.Success)
+//            } catch (fallbackException: Exception) {
+//                emit(AuthenticationResponse.Error("No Google account found"))
+//                return@flow
+//            }
+            emit(AuthenticationResponse.Error("No Google account found"))
+            return@flow
+        } catch (e: CreateCredentialCancellationException) {
+            emit(AuthenticationResponse.Error("Cancelled"))
             return@flow
         } catch (e: Exception) {
             emit(AuthenticationResponse.Error(e.message ?: "An unexpected error occurred"))
@@ -161,3 +179,4 @@ class AuthenticationRepositoryImpl @Inject constructor(
         }
     }
 }
+
