@@ -8,4 +8,5 @@ import java.io.File
 interface ChickenRepository {
     fun classifyChicken(file: File, mediaType: String): Flow<ResponseWrapper<Classification>>
     fun getHistories(): Flow<ResponseWrapper<List<Classification>>>
+    suspend fun warmUp(file: File)
 }

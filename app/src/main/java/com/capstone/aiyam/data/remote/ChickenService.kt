@@ -21,4 +21,11 @@ interface ChickenService {
     suspend fun getHistories(
         @Header("Authorization") token: String,
     ): DataWrapper<List<Classification>>
+
+    @Multipart
+    @POST("processes")
+    suspend fun warmUp(
+        @Header("Authorization") token: String,
+        @Part file: MultipartBody.Part
+    )
 }

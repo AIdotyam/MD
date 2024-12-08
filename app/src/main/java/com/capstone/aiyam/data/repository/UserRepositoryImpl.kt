@@ -39,7 +39,7 @@ class UserRepositoryImpl @Inject constructor (
     override fun firebaseSignOut() = auth.signOut()
 
     override fun getFirebaseToken(user: FirebaseUser): Flow<TokenResponse> = flow {
-        user.getIdToken(false).await().token?.let {
+        user.getIdToken(true).await().token?.let {
             emit(TokenResponse.Success(it))
         } ?: run {
             emit(TokenResponse.Failed)

@@ -23,6 +23,7 @@ import kotlinx.coroutines.flow.onStart
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.tasks.await
+import java.io.File
 import java.time.LocalDateTime
 import java.time.format.DateTimeFormatter
 import javax.inject.Inject
@@ -49,7 +50,19 @@ class HomeViewModel @Inject constructor(
     var scansCount = MutableStateFlow(0)
         private set
 
+    private fun warmUp() {
+        viewModelScope.launch {
+            val blankFile = File.createTempFile("empty", ".txt")
+            try {
+                chickenRepository.warmUp(blankFile)
+            } catch (e: Exception) {
+                e.printStackTrace()
+            }
+        }
+    }
+
     init {
+        warmUp()
         fetchWeeklySummaries()
         fetchWeeklyScans()
     }

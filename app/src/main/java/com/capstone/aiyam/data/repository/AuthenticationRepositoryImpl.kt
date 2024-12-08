@@ -148,17 +148,6 @@ class AuthenticationRepositoryImpl @Inject constructor(
             emit(AuthenticationResponse.Error(e.message ?: "Error parsing Google ID Token"))
             return@flow
         } catch (e: NoCredentialException) {
-//            try {
-//                val signInIntent = signInClient.signInIntent
-//                val account = GoogleSignIn.getSignedInAccountFromIntent(signInIntent).await()
-//                val firebaseCredential = GoogleAuthProvider.getCredential(account.idToken, null)
-//
-//                auth.signInWithCredential(firebaseCredential).await()
-//                emit(AuthenticationResponse.Success)
-//            } catch (fallbackException: Exception) {
-//                emit(AuthenticationResponse.Error("No Google account found"))
-//                return@flow
-//            }
             emit(AuthenticationResponse.Error("No Google account found"))
             return@flow
         } catch (e: CreateCredentialCancellationException) {

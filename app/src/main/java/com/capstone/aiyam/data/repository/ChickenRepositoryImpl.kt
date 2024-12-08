@@ -59,4 +59,16 @@ class ChickenRepositoryImpl @Inject constructor(
             emit(ResponseWrapper.Error(e.message.toString()))
         }
     }
+
+    override suspend fun warmUp(file: File) {
+        val requestBody = file.asRequestBody("text/plain".toMediaTypeOrNull())
+        val malformedPart = MultipartBody.Part.createFormData("file", file.name, requestBody)
+        try {
+            withToken(user, userRepository::getFirebaseToken) {
+                chickenService.warmUp(it, malformedPart)
+            }
+        } catch (e: Exception) {
+            Log.e("WarmUp", "Triggered error as expected: ${e.message}")
+        }
+    }
 }

@@ -10,7 +10,7 @@ import kotlinx.coroutines.flow.Flow
 
 interface UserRepository {
     fun getFirebaseUser(): AuthorizationResponse
-    suspend fun firebaseSignOut()
+    fun firebaseSignOut()
     fun getFirebaseToken(user: FirebaseUser): Flow<TokenResponse>
     fun getPushToken(): Flow<TokenResponse>
 
