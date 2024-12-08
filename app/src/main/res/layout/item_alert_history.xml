@@ -4,14 +4,14 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     xmlns:tools="http://schemas.android.com/tools"
-    android:layout_margin="3dp"
+    android:layout_margin="6dp"
     app:cardCornerRadius="12dp"
     app:cardElevation="4dp">
 
     <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:padding="6dp">
+        android:padding="12dp">
 
         <androidx.cardview.widget.CardView
             android:id="@+id/icon_warning_card"
@@ -37,7 +37,7 @@
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_toEndOf="@id/icon_warning_card"
-            android:layout_toStartOf="@+id/btn_detail"
+            android:layout_toStartOf="@+id/signInCard"
             android:layout_marginStart="16dp"
             android:layout_marginEnd="16dp"
             android:layout_centerVertical="true"
@@ -60,14 +60,22 @@
                 android:textSize="12sp" />
         </LinearLayout>
 
-        <Button
-            android:id="@+id/btn_detail"
+        <androidx.cardview.widget.CardView
+            android:id="@+id/signInCard"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_alignParentEnd="true"
             android:layout_centerVertical="true"
-            android:text="Detail"
-            android:textAllCaps="false"
-            android:textSize="14sp" />
+            app:cardCornerRadius="12dp"
+            app:cardElevation="4dp"
+            app:cardBackgroundColor="@color/md_theme_primary">
+
+            <Button
+                android:id="@+id/btn_detail"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Home"
+                android:textColor="@android:color/black" />
+        </androidx.cardview.widget.CardView>
     </RelativeLayout>
 </androidx.cardview.widget.CardView>

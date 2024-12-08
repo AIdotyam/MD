@@ -2,13 +2,17 @@ package com.capstone.aiyam.presentation.auth.signin
 
 import android.animation.AnimatorSet
 import android.animation.ObjectAnimator
+import android.os.Build
 import androidx.fragment.app.viewModels
 import android.os.Bundle
+import android.text.Html
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.view.WindowInsetsController
 import android.widget.Toast
+import androidx.core.content.ContextCompat
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
@@ -38,8 +42,25 @@ class SignInFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+        changeStatusBarColor(R.color.white)
         animate()
         button()
+    }
+
+    private fun changeStatusBarColor(colorResId: Int) {
+        val color = ContextCompat.getColor(requireContext(), colorResId)
+
+        if (Build.VERSION.SDK_INT > Build.VERSION_CODES.O) {
+            activity?.window?.statusBarColor = color
+        }
+
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
+            val windowInsetsController = activity?.window?.insetsController
+            windowInsetsController?.setSystemBarsAppearance(
+                WindowInsetsController.APPEARANCE_LIGHT_STATUS_BARS,
+                WindowInsetsController.APPEARANCE_LIGHT_STATUS_BARS
+            )
+        }
     }
 
     private fun button() { binding.apply {
@@ -91,6 +112,8 @@ class SignInFragment : Fragment() {
     }
 
     private fun animate() { binding.apply {
+        signInTextView.text = Html.fromHtml("Don't have an account? <b>Sign Up</b>", Html.FROM_HTML_MODE_COMPACT)
+
         ObjectAnimator.ofFloat(imageView, View.TRANSLATION_X, -30f, 30f).apply {
             duration = 6000
             repeatCount = ObjectAnimator.INFINITE
@@ -102,9 +125,9 @@ class SignInFragment : Fragment() {
         val emailEditTextLayout = ObjectAnimator.ofFloat(emailEditTextLayout, View.ALPHA, 1f).setDuration(100)
         val passwordEditTextLayout = ObjectAnimator.ofFloat(passwordEditTextLayout, View.ALPHA, 1f).setDuration(100)
         val signup = ObjectAnimator.ofFloat(signInTextView, View.ALPHA, 1f).setDuration(100)
-        val login = ObjectAnimator.ofFloat(signInButton, View.ALPHA, 1f).setDuration(100)
+        val login = ObjectAnimator.ofFloat(signInCard, View.ALPHA, 1f).setDuration(100)
         val divider = ObjectAnimator.ofFloat(signInWith, View.ALPHA, 1f).setDuration(100)
-        val google = ObjectAnimator.ofFloat(googleSignInButton, View.ALPHA, 1f).setDuration(100)
+        val google = ObjectAnimator.ofFloat(googleSignInCard, View.ALPHA, 1f).setDuration(100)
 
         AnimatorSet().apply {
             playSequentially(

@@ -66,7 +66,6 @@
 
     <com.google.android.material.textfield.TextInputLayout
         android:id="@+id/nameEditTextLayout"
-        style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginStart="32dp"
@@ -76,7 +75,10 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/messageTextView"
-        app:startIconDrawable="@drawable/ic_baseline_person_24"
+        app:boxBackgroundMode="filled"
+        app:boxBackgroundColor="@color/white"
+        app:boxStrokeWidth="0dp"
+        app:hintEnabled="false"
         tools:alpha="100">
 
         <com.google.android.material.textfield.TextInputEditText
@@ -90,20 +92,22 @@
 
     <com.google.android.material.textfield.TextInputLayout
         android:id="@+id/emailEditTextLayout"
-        style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginStart="32dp"
-        android:layout_marginTop="8dp"
+        android:layout_marginTop="16dp"
         android:layout_marginEnd="32dp"
         android:alpha="0"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/nameEditTextLayout"
-        app:startIconDrawable="@drawable/ic_baseline_email_24"
+        app:boxBackgroundMode="filled"
+        app:boxBackgroundColor="@color/white"
+        app:boxStrokeWidth="0dp"
+        app:hintEnabled="false"
         tools:alpha="100">
 
-        <com.capstone.aiyam.presentation.shared.EmailEditText
+        <com.google.android.material.textfield.TextInputEditText
             android:id="@+id/emailEditText"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -115,18 +119,20 @@
 
     <com.google.android.material.textfield.TextInputLayout
         android:id="@+id/passwordEditTextLayout"
-        style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginStart="32dp"
-        android:layout_marginTop="8dp"
+        android:layout_marginTop="16dp"
         android:layout_marginEnd="32dp"
         android:alpha="0"
         app:endIconMode="password_toggle"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/emailEditTextLayout"
-        app:startIconDrawable="@drawable/ic_baseline_lock_24"
+        app:boxBackgroundMode="filled"
+        app:boxBackgroundColor="@color/white"
+        app:boxStrokeWidth="0dp"
+        app:hintEnabled="false"
         tools:alpha="100">
 
         <com.capstone.aiyam.presentation.shared.PasswordEditText
@@ -141,18 +147,20 @@
 
     <com.google.android.material.textfield.TextInputLayout
         android:id="@+id/confirmPasswordEditTextLayout"
-        style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginStart="32dp"
-        android:layout_marginTop="8dp"
+        android:layout_marginTop="16dp"
         android:layout_marginEnd="32dp"
         android:alpha="0"
         app:endIconMode="password_toggle"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/passwordEditTextLayout"
-        app:startIconDrawable="@drawable/ic_baseline_lock_24"
+        app:boxBackgroundMode="filled"
+        app:boxBackgroundColor="@color/white"
+        app:boxStrokeWidth="0dp"
+        app:hintEnabled="false"
         tools:alpha="100">
 
         <com.capstone.aiyam.presentation.shared.PasswordEditText
@@ -172,7 +180,6 @@
         android:layout_marginStart="32dp"
         android:layout_marginTop="12dp"
         android:layout_marginEnd="32dp"
-        android:textStyle="italic"
         android:gravity="center"
         android:alpha="0"
         android:text="@string/message_signup_page_sign_in"
@@ -183,19 +190,30 @@
         app:layout_constraintTop_toBottomOf="@+id/confirmPasswordEditTextLayout"
         tools:alpha="100" />
 
-    <Button
-        android:id="@+id/signUpButton"
+    <androidx.cardview.widget.CardView
+        android:id="@+id/signUpCard"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginStart="32dp"
         android:layout_marginTop="12dp"
         android:layout_marginEnd="32dp"
         android:alpha="0"
-        android:text="@string/signup"
+        app:cardCornerRadius="12dp"
+        app:cardElevation="4dp"
+        app:cardBackgroundColor="@color/md_theme_primary"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/signUpTextView"
-        tools:alpha="100" />
+        tools:alpha="100">
+
+        <Button
+            android:id="@+id/signUpButton"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/signup"
+            android:textColor="@android:color/black"
+            android:layout_gravity="center" />
+    </androidx.cardview.widget.CardView>
 
     <androidx.constraintlayout.widget.Guideline
         android:id="@+id/guidelineHorizontal"

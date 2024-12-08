@@ -118,28 +118,25 @@ class ProfileFragment : Fragment() {
                 viewModel.getPhoneNumberSetting().collect {
                     binding.phoneInput.text = it
 
-                    if (it.isNotEmpty()) {
-                        binding.cardButtonPhoneNumber.gone()
-                        binding.cardButtonDeletePhoneNumber.visible()
-                    } else {
-                        binding.cardButtonPhoneNumber.visible()
-                        binding.cardButtonDeletePhoneNumber.gone()
-                    }
-                }
-            }
-        }
+                    val isEnabled = it.isNotEmpty()
 
-        binding.cardButtonPhoneNumber.setOnClickListener {
-            ProfileFragmentDirections.actionProfileFragmentToPhoneFragment().let {
-                findNavController().navigate(it)
-            }
-        }
-
-        binding.cardButtonDeletePhoneNumber.setOnClickListener {
-            lifecycleScope.launch {
-                viewLifecycleOwner.repeatOnLifecycle(Lifecycle.State.CREATED) {
-                    viewModel.deleteNumber().collect{
-                        handleSwitch(it)
+                    binding.customSwitch.isChecked = isEnabled
+                    binding.customSwitch.setOnCheckedChangeListener { _, isChecked ->
+                        if (isChecked != isEnabled) {
+                            if (!isChecked) {
+                                lifecycleScope.launch {
+                                    viewLifecycleOwner.repeatOnLifecycle(Lifecycle.State.CREATED) {
+                                        viewModel.deleteNumber().collect { event ->
+                                            handleSwitch(event)
+                                        }
+                                    }
+                                }
+                            } else {
+                                ProfileFragmentDirections.actionProfileFragmentToPhoneFragment().let { action ->
+                                    findNavController().navigate(action)
+                                }
+                            }
+                        }
                     }
                 }
             }

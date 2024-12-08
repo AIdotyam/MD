@@ -2,17 +2,22 @@ package com.capstone.aiyam.presentation.auth.signup
 
 import android.animation.AnimatorSet
 import android.animation.ObjectAnimator
+import android.os.Build
 import androidx.fragment.app.viewModels
 import android.os.Bundle
+import android.text.Html
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.view.WindowInsetsController
 import android.widget.Toast
+import androidx.core.content.ContextCompat
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
 import androidx.navigation.fragment.findNavController
+import com.capstone.aiyam.R
 import com.capstone.aiyam.databinding.FragmentSignupBinding
 import com.capstone.aiyam.domain.model.AuthenticationResponse
 import com.capstone.aiyam.utils.gone
@@ -37,8 +42,25 @@ class SignUpFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+        changeStatusBarColor(R.color.white)
         animate()
         button()
+    }
+
+    private fun changeStatusBarColor(colorResId: Int) {
+        val color = ContextCompat.getColor(requireContext(), colorResId)
+
+        if (Build.VERSION.SDK_INT > Build.VERSION_CODES.O) {
+            activity?.window?.statusBarColor = color
+        }
+
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
+            val windowInsetsController = activity?.window?.insetsController
+            windowInsetsController?.setSystemBarsAppearance(
+                WindowInsetsController.APPEARANCE_LIGHT_STATUS_BARS,
+                WindowInsetsController.APPEARANCE_LIGHT_STATUS_BARS
+            )
+        }
     }
 
     private fun button() { binding.apply {
@@ -103,6 +125,8 @@ class SignUpFragment : Fragment() {
     }
 
     private fun animate() { binding.apply {
+        signUpTextView.text = Html.fromHtml("Already have an account? <b>Sign In</b>", Html.FROM_HTML_MODE_COMPACT)
+
         ObjectAnimator.ofFloat(imageView, View.TRANSLATION_X, -30f, 30f).apply {
             duration = 6000
             repeatCount = ObjectAnimator.INFINITE
@@ -116,7 +140,7 @@ class SignUpFragment : Fragment() {
         val passwordEditTextLayout = ObjectAnimator.ofFloat(passwordEditTextLayout, View.ALPHA, 1f).setDuration(100)
         val confirmPasswordEditTextLayout = ObjectAnimator.ofFloat(confirmPasswordEditTextLayout, View.ALPHA, 1f).setDuration(100)
         val login = ObjectAnimator.ofFloat(signUpTextView, View.ALPHA, 1f).setDuration(100)
-        val signup = ObjectAnimator.ofFloat(signUpButton, View.ALPHA, 1f).setDuration(100)
+        val signup = ObjectAnimator.ofFloat(signUpCard, View.ALPHA, 1f).setDuration(100)
 
         AnimatorSet().apply {
             playSequentially(

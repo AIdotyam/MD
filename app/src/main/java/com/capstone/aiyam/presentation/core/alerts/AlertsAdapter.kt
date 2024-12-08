@@ -2,8 +2,6 @@ package com.capstone.aiyam.presentation.core.alerts
 
 import android.annotation.SuppressLint
 import android.content.Context
-import android.graphics.Bitmap
-import android.media.MediaMetadataRetriever
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.DiffUtil
@@ -14,13 +12,8 @@ import com.capstone.aiyam.R
 import com.capstone.aiyam.databinding.ItemAlertHistoryBinding
 import com.capstone.aiyam.databinding.ItemHeaderBinding
 import com.capstone.aiyam.domain.model.Alerts
-import com.capstone.aiyam.utils.getMimeTypeFromUrl
 import com.capstone.aiyam.utils.getRandomDead
 import com.capstone.aiyam.utils.parseDateTime
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.launch
-import kotlinx.coroutines.withContext
 
 class AlertsAdapter(
     val onClick: (Alerts) -> Unit
@@ -35,40 +28,13 @@ class AlertsAdapter(
                 tvMessage.text = getRandomDead()
                 tvTimestamp.text = alerts.createdAt.parseDateTime()
 
-                val mediaUrl = alerts.mediaUrl
-                val mimeType = mediaUrl.getMimeTypeFromUrl()
-
-                if (mimeType != null && mimeType.startsWith("video")) {
-                    CoroutineScope(Dispatchers.Main).launch {
-                        val thumbnail = getVideoThumbnail(mediaUrl)
-                        Glide.with(context)
-                            .load(thumbnail)
-                            .error(R.drawable.video)
-                            .placeholder(R.drawable.video)
-                            .into(iconWarning)
-                    }
-                } else {
-                    Glide.with(context)
-                        .load(mediaUrl)
-                        .error(R.drawable.image)
-                        .placeholder(R.drawable.image)
-                        .into(iconWarning)
-                }
+                Glide.with(context)
+                    .load(alerts.mediaUrl)
+                    .error(R.drawable.image)
+                    .placeholder(R.drawable.image)
+                    .into(iconWarning)
 
                 btnDetail.setOnClickListener { onClick(alerts) }
-            }
-        }
-
-        private suspend fun getVideoThumbnail(videoUrl: String): Bitmap? {
-            return withContext(Dispatchers.IO) {
-                try {
-                    val retriever = MediaMetadataRetriever()
-                    retriever.setDataSource(videoUrl, HashMap<String, String>())
-                    retriever.getFrameAtTime(1000, MediaMetadataRetriever.OPTION_CLOSEST)
-                } catch (e: Exception) {
-                    e.printStackTrace()
-                    null
-                }
             }
         }
     }

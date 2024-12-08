@@ -4,6 +4,8 @@
     <color name="white">#FFFFFFFF</color>
     <color name="gold">#D4AF37</color>
     <color name="gray">#DDDDDD</color>
+    <color name="dark_gray">#5D5D5D</color>
+    <color name="prims">#EB9015</color>
 
     <!-- Primary Color -->
     <color name="md_theme_primary">#EDA84D</color>
@@ -30,7 +32,7 @@
     <color name="md_theme_onErrorContainer">#410002</color>
 
     <!-- Background and Surface Colors -->
-    <color name="md_theme_background">#FFFBFF</color>
+    <color name="md_theme_background">#F2F2F2</color>
     <color name="md_theme_onBackground">#1F1B16</color>
     <color name="md_theme_surface">#FFF8F0</color>
     <color name="md_theme_onSurface">#1F1B16</color>

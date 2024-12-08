@@ -14,18 +14,13 @@ import com.capstone.aiyam.R
 import com.capstone.aiyam.databinding.ItemClassificationHistoryBinding
 import com.capstone.aiyam.databinding.ItemHeaderBinding
 import com.capstone.aiyam.domain.model.Classification
-import com.capstone.aiyam.utils.getMimeTypeFromUrl
 import com.capstone.aiyam.utils.getRandomDead
 import com.capstone.aiyam.utils.parseDateTime
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.launch
-import kotlinx.coroutines.withContext
 
 class ClassificationHistoryAdapter(
     val onClick: (Classification) -> Unit
 ) : ListAdapter<ClassificationHistoryDisplayItem, RecyclerView.ViewHolder>(DIFF_CALLBACK) {
-    class ClassificationHistoryViewHolder(
+    inner class ClassificationHistoryViewHolder(
         val context: Context,
         val binding: ItemClassificationHistoryBinding
     ) : RecyclerView.ViewHolder(binding.root) {
@@ -35,38 +30,13 @@ class ClassificationHistoryAdapter(
                 tvMessage.text = if (classification.deadChicken) getRandomDead() else "Healthy Chicken"
                 tvTimestamp.text = classification.createdAt.parseDateTime()
 
-                val mediaUrl = classification.mediaUrl
-                val mimeType = mediaUrl.getMimeTypeFromUrl()
+                Glide.with(context)
+                    .load(classification.mediaUrl)
+                    .error(R.drawable.image)
+                    .placeholder(R.drawable.image)
+                    .into(iconWarning)
 
-                if (mimeType != null && mimeType.startsWith("video")) {
-                    CoroutineScope(Dispatchers.Main).launch {
-                        val thumbnail = getVideoThumbnail(mediaUrl)
-                        Glide.with(context)
-                            .load(thumbnail)
-                            .error(R.drawable.video)
-                            .placeholder(R.drawable.video)
-                            .into(ivHistory)
-                    }
-                } else {
-                    Glide.with(context)
-                        .load(mediaUrl)
-                        .error(R.drawable.image)
-                        .placeholder(R.drawable.image)
-                        .into(ivHistory)
-                }
-            }
-        }
-
-        private suspend fun getVideoThumbnail(videoUrl: String): Bitmap? {
-            return withContext(Dispatchers.IO) {
-                try {
-                    val retriever = MediaMetadataRetriever()
-                    retriever.setDataSource(videoUrl, HashMap<String, String>())
-                    retriever.getFrameAtTime(1000, MediaMetadataRetriever.OPTION_CLOSEST)
-                } catch (e: Exception) {
-                    e.printStackTrace()
-                    null
-                }
+                btnDetail.setOnClickListener { onClick(classification) }
             }
         }
     }
@@ -97,15 +67,7 @@ class ClassificationHistoryAdapter(
     override fun onBindViewHolder(holder: RecyclerView.ViewHolder, position: Int) {
         when (val item = getItem(position)) {
             is ClassificationHistoryDisplayItem.Header -> (holder as HeaderViewHolder).bind(item)
-            is ClassificationHistoryDisplayItem.Item -> {
-                (holder as ClassificationHistoryViewHolder).apply {
-                    bind(item.classification)
-
-                    itemView.setOnClickListener{
-                        onClick(item.classification)
-                    }
-                }
-            }
+            is ClassificationHistoryDisplayItem.Item -> (holder as ClassificationHistoryViewHolder).bind(item.classification)
         }
     }
 

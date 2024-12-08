@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- res/drawable/custom_switch_track.xml -->
+<shape xmlns:android="http://schemas.android.com/apk/res/android">
+    <solid android:color="@color/white" /> <!-- Track color -->
+    <corners android:radius="8dp" /> <!-- Rounded corners -->
+    <size android:width="56dp" android:height="24dp" /> <!-- Customize track size -->
+</shape>

@@ -22,6 +22,7 @@ import com.capstone.aiyam.utils.getMimeTypeFromUrl
 import com.capstone.aiyam.utils.gone
 import com.capstone.aiyam.utils.parseDateTime
 import com.capstone.aiyam.utils.visible
+import com.google.android.material.bottomsheet.BottomSheetBehavior
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.launch
 
@@ -30,8 +31,8 @@ class AlertDetailFragment : Fragment() {
     private var _binding: FragmentAlertDetailBinding? = null
     private val binding get() = _binding!!
 
+    private lateinit var bottomSheetBehavior: BottomSheetBehavior<View>
     private val viewModel: AlertDetailViewModel by viewModels()
-    private var player: ExoPlayer? = null
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -47,6 +48,16 @@ class AlertDetailFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+        bottomSheetBehavior = BottomSheetBehavior.from(binding.drawerContainer)
+        bottomSheetBehavior.state = BottomSheetBehavior.STATE_COLLAPSED
+        binding.scrollableContainer.setOnScrollChangeListener { _, _, scrollY, _, _ ->
+            if (scrollY > 0 && bottomSheetBehavior.state == BottomSheetBehavior.STATE_COLLAPSED) {
+                bottomSheetBehavior.state = BottomSheetBehavior.STATE_HIDDEN
+            } else if (scrollY == 0) {
+                bottomSheetBehavior.state = BottomSheetBehavior.STATE_COLLAPSED
+            }
+        }
+
         binding.backButton.setOnClickListener {
             findNavController().popBackStack()
         }
@@ -76,10 +87,10 @@ class AlertDetailFragment : Fragment() {
 
     private fun bindAlert(alert: Alerts) { binding.apply {
         showLoading(false)
-
+        icon.setImageResource(R.drawable.alert_svgrepo_com__1_)
+        chickenValueDesc.text = "Please check your chicken's condition immediately"
         dateTitle.text = alert.createdAt.parseDateTime()
-
-        Glide.with(requireContext()).load(alert.mediaUrl).placeholder(R.drawable.baseline_broken_image_24).into(headerImage)
+        Glide.with(requireContext()).load(alert.mediaUrl).into(headerImage)
     }}
 
     private fun showLoading(isLoading: Boolean) {
@@ -108,12 +119,6 @@ class AlertDetailFragment : Fragment() {
 
     override fun onDestroyView() {
         super.onDestroyView()
-        releasePlayer()
         _binding = null
-    }
-
-    private fun releasePlayer() {
-        player?.release()
-        player = null
     }
 }

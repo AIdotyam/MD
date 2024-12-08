@@ -5,7 +5,6 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@color/black"
-    android:layout_marginBottom="?android:attr/actionBarSize"
     tools:context=".presentation.core.classification.ClassificationFragment">
 
     <androidx.camera.view.PreviewView
@@ -37,7 +36,7 @@
     <androidx.cardview.widget.CardView
         android:id="@+id/captureIB"
         style="@style/CircularIconButtonLarge"
-        android:layout_marginBottom="46dp"
+        android:layout_marginBottom="106dp"
         android:clickable="true"
         android:focusable="true"
         app:layout_constraintBottom_toBottomOf="parent"

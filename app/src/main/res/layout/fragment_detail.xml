@@ -10,98 +10,126 @@
     <com.google.android.material.appbar.AppBarLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:background="@color/white"
+        android:backgroundTint="@color/white"
+        android:padding="6dp"
         android:theme="@style/ThemeOverlay.MaterialComponents.Dark.ActionBar">
 
         <com.google.android.material.appbar.MaterialToolbar
             android:id="@+id/topAppBar"
             android:layout_width="match_parent"
             android:layout_height="?attr/actionBarSize"
-            android:background="?attr/colorPrimary"
-            app:titleTextColor="?attr/colorOnPrimary">
+            android:background="@color/white"
+            android:backgroundTint="@color/white"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent">
+
+            <ImageView
+                android:layout_width="74dp"
+                android:layout_height="wrap_content"
+                android:layout_gravity="start"
+                android:src="@mipmap/ic_launcher_foreground"
+                android:layout_marginEnd="8dp"/>
 
             <TextView
-                android:id="@+id/toolbar_title"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="AI.result"
-                android:textColor="?attr/colorOnPrimary"
+                android:layout_gravity="start"
+                android:text="AI Result"
                 android:textSize="20sp"
-                android:textStyle="bold" />
+                android:textStyle="bold"
+                android:textColor="@color/black"/>
         </com.google.android.material.appbar.MaterialToolbar>
-
     </com.google.android.material.appbar.AppBarLayout>
 
-    <!-- Scrollable Content -->
     <androidx.core.widget.NestedScrollView
+        android:id="@+id/scrollableContainer"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         app:layout_behavior="@string/appbar_scrolling_view_behavior">
 
-        <LinearLayout
+        <androidx.constraintlayout.widget.ConstraintLayout
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="vertical">
+            android:layout_height="match_parent">
 
             <ImageView
                 android:id="@+id/headerImage"
                 android:layout_width="match_parent"
-                android:layout_height="500dp"
-                android:layout_marginBottom="16dp"
+                android:layout_height="700dp"
                 android:contentDescription="@string/todo"
-                android:scaleType="fitCenter"
-                tools:src="@drawable/logo" />
+                android:scaleType="centerCrop"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintLeft_toLeftOf="parent"
+                app:layout_constraintRight_toRightOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+                tools:src="@drawable/whatsapp" />
+        </androidx.constraintlayout.widget.ConstraintLayout>
+    </androidx.core.widget.NestedScrollView>
+
+    <FrameLayout
+        android:id="@+id/drawerContainer"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@drawable/rounded_card_bg"
+        app:layout_behavior="com.google.android.material.bottomsheet.BottomSheetBehavior"
+        app:behavior_peekHeight="160dp"
+        app:behavior_hideable="false"
+        app:behavior_fitToContents="true">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:background="@drawable/rounded_card_bg"
+            android:paddingHorizontal="32dp"
+            android:paddingTop="24dp">
+
+            <ImageView
+                android:id="@+id/icon"
+                android:layout_marginTop="36dp"
+                android:layout_width="64dp"
+                android:layout_height="64dp"
+                android:layout_gravity="center"
+                tools:src="@drawable/whatsapp"/>
 
             <TextView
-                android:id="@+id/dateTitle"
-                android:layout_width="match_parent"
+                android:id="@+id/chicken_value"
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:gravity="center"
-                android:textSize="18sp"
+                android:layout_gravity="center"
+                android:layout_marginTop="28dp"
+                android:layout_marginBottom="6dp"
+                android:textSize="24sp"
                 android:textStyle="bold"
-                android:layout_marginBottom="16dp"
-                tools:text="@string/date"/>
+                android:text="Dead Chicken Detected" />
+
+            <TextView
+                android:id="@+id/chicken_value_desc"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:layout_marginBottom="28dp"
+                android:textSize="18sp"
+                android:textAlignment="center"
+                android:text="Immediate action required to maintain flock health" />
 
             <androidx.cardview.widget.CardView
-                android:id="@+id/chickenValueCard"
+                android:id="@+id/signInCard"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginVertical="10dp"
-                android:layout_marginHorizontal="26dp"
-                style="@style/NormalCardView">
+                android:layout_marginVertical="16dp"
+                app:cardCornerRadius="12dp"
+                app:cardElevation="4dp"
+                app:cardBackgroundColor="@color/md_theme_primary">
 
-                <LinearLayout
+                <Button
+                    android:id="@+id/sign_in_button"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:padding="16dp"
-                    android:orientation="vertical"
-                    android:gravity="center">
-
-                    <ImageView
-                        android:id="@+id/predictIcon"
-                        android:layout_width="36dp"
-                        android:layout_height="36dp"
-                        android:layout_marginBottom="8dp"
-                        android:src="@drawable/skull"
-                        android:contentDescription="@string/todo" />
-
-                    <TextView
-                        android:id="@+id/predictValue"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="@string/dead_count"
-                        android:textColor="?attr/colorOnPrimary"
-                        android:textSize="17sp" />
-                </LinearLayout>
+                    android:text="Home"
+                    android:textColor="@android:color/black" />
             </androidx.cardview.widget.CardView>
-
-            <Button
-                android:id="@+id/backButton"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:text="@string/back"
-                android:layout_marginTop="18dp"
-                android:layout_marginHorizontal="12dp"
-                android:layout_marginBottom="12dp"/>
         </LinearLayout>
-    </androidx.core.widget.NestedScrollView>
+    </FrameLayout>
 </androidx.coordinatorlayout.widget.CoordinatorLayout>

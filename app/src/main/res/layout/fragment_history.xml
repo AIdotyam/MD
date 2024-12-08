@@ -4,31 +4,43 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:layout_marginBottom="?android:attr/actionBarSize"
+    android:layout_marginBottom="74dp"
     tools:context=".presentation.core.history.HistoryFragment">
 
     <com.google.android.material.appbar.AppBarLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:background="@color/white"
+        android:backgroundTint="@color/white"
+        android:padding="6dp"
         android:theme="@style/ThemeOverlay.MaterialComponents.Dark.ActionBar">
 
         <com.google.android.material.appbar.MaterialToolbar
             android:id="@+id/topAppBar"
             android:layout_width="match_parent"
             android:layout_height="?attr/actionBarSize"
-            android:background="?attr/colorPrimary"
-            app:titleTextColor="?attr/colorOnPrimary">
+            android:background="@color/white"
+            android:backgroundTint="@color/white"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent">
+
+            <ImageView
+                android:layout_width="74dp"
+                android:layout_height="wrap_content"
+                android:layout_gravity="start"
+                android:src="@mipmap/ic_launcher_foreground"
+                android:layout_marginEnd="8dp"/>
 
             <TextView
-                android:id="@+id/toolbar_title"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="AI.history"
-                android:textColor="?attr/colorOnPrimary"
+                android:layout_gravity="start"
+                android:text="AI History"
                 android:textSize="20sp"
-                android:textStyle="bold" />
+                android:textStyle="bold"
+                android:textColor="@color/black"/>
         </com.google.android.material.appbar.MaterialToolbar>
-
     </com.google.android.material.appbar.AppBarLayout>
 
     <LinearLayout
@@ -41,8 +53,8 @@
             android:id="@+id/tabs"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:background="?attr/colorPrimary"
-            app:tabTextColor="?attr/colorOnPrimary"
+            android:background="@color/white"
+            app:tabTextColor="@color/dark_gray"
             app:tabSelectedTextColor="?attr/colorOnBackground" />
 
         <androidx.viewpager2.widget.ViewPager2
@@ -50,6 +62,5 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent" />
     </LinearLayout>
-
 
 </androidx.coordinatorlayout.widget.CoordinatorLayout>
