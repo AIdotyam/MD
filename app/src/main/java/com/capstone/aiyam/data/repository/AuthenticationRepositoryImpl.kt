@@ -129,33 +129,36 @@ class AuthenticationRepositoryImpl @Inject constructor(
             .addCredentialOption(googleIdOption)
             .build()
 
-        try {
-            val credential = manager.getCredential(context, request).credential
-            if (credential !is CustomCredential) {
-                throw Exception("Credential not found")
-            }
+        repeat(5) {
+            try {
+                val credential = manager.getCredential(context, request).credential
+                if (credential !is CustomCredential) {
+                    throw Exception("Credential not found")
+                }
 
-            if (credential.type != GoogleIdTokenCredential.TYPE_GOOGLE_ID_TOKEN_CREDENTIAL) {
-                emit(AuthenticationResponse.Error("Invalid credential type"))
+                if (credential.type != GoogleIdTokenCredential.TYPE_GOOGLE_ID_TOKEN_CREDENTIAL) {
+                    emit(AuthenticationResponse.Error("Invalid credential type"))
+                    return@flow
+                }
+
+                val googleIdTokenCredential = GoogleIdTokenCredential.createFrom(credential.data)
+                val firebaseCredential = GoogleAuthProvider.getCredential(googleIdTokenCredential.idToken, null)
+                auth.signInWithCredential(firebaseCredential).await()
+                emit(AuthenticationResponse.Success)
+                return@flow
+
+            } catch (e: NoCredentialException) {
+                if (it == 4) {
+                    emit(AuthenticationResponse.Error("No Credential Available"))
+                    return@flow
+                }
+            } catch (e: CreateCredentialCancellationException) {
+                emit(AuthenticationResponse.Error("Cancelled"))
+                return@flow
+            } catch (e: Exception) {
+                emit(AuthenticationResponse.Error(e.message ?: "An unexpected error occurred"))
                 return@flow
             }
-
-            val googleIdTokenCredential = GoogleIdTokenCredential.createFrom(credential.data)
-            val firebaseCredential = GoogleAuthProvider.getCredential(googleIdTokenCredential.idToken, null)
-            auth.signInWithCredential(firebaseCredential).await()
-            emit(AuthenticationResponse.Success)
-        } catch (e: GoogleIdTokenParsingException) {
-            emit(AuthenticationResponse.Error(e.message ?: "Error parsing Google ID Token"))
-            return@flow
-        } catch (e: NoCredentialException) {
-            emit(AuthenticationResponse.Error("No Google account found"))
-            return@flow
-        } catch (e: CreateCredentialCancellationException) {
-            emit(AuthenticationResponse.Error("Cancelled"))
-            return@flow
-        } catch (e: Exception) {
-            emit(AuthenticationResponse.Error(e.message ?: "An unexpected error occurred"))
-            return@flow
         }
 
         try {
@@ -165,8 +168,6 @@ class AuthenticationRepositoryImpl @Inject constructor(
         } catch (e: Exception) {
             e.printStackTrace()
             emit(AuthenticationResponse.Error(e.message ?: ""))
-            return@flow
         }
     }
 }
-
