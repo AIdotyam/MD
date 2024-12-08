@@ -1,5 +1,6 @@
 package com.capstone.aiyam.presentation.auth.signin
 
+import android.content.Intent
 import androidx.lifecycle.ViewModel
 import com.capstone.aiyam.domain.model.AuthenticationResponse
 import com.capstone.aiyam.domain.repository.AuthenticationRepository
@@ -23,6 +24,12 @@ class SignInViewModel @Inject constructor(
 
     fun signInGoogle(): Flow<AuthenticationResponse> {
         return authenticationRepository.signInWithGoogle()
+    }
+
+    fun googleIntent() = authenticationRepository.signInWithGoogleIntent()
+
+    fun fallbackSignIn(intent: Intent): Flow<AuthenticationResponse> {
+        return authenticationRepository.signInWithIntentGoogle(intent)
     }
 
     private val scope = CoroutineScope(Dispatchers.IO)

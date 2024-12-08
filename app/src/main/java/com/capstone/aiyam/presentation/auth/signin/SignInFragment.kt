@@ -2,6 +2,7 @@ package com.capstone.aiyam.presentation.auth.signin
 
 import android.animation.AnimatorSet
 import android.animation.ObjectAnimator
+import android.app.Activity.RESULT_OK
 import android.os.Build
 import androidx.fragment.app.viewModels
 import android.os.Bundle
@@ -12,6 +13,7 @@ import android.view.View
 import android.view.ViewGroup
 import android.view.WindowInsetsController
 import android.widget.Toast
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.core.content.ContextCompat
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.lifecycleScope
@@ -31,6 +33,20 @@ class SignInFragment : Fragment() {
     private val binding get() = _binding!!
 
     private val viewModel: SignInViewModel by viewModels()
+
+    private val fallbackLauncher = registerForActivityResult(
+        ActivityResultContracts.StartActivityForResult()
+    ) {
+        if (it.resultCode == RESULT_OK) { lifecycleScope.launch {
+            viewLifecycleOwner.repeatOnLifecycle(Lifecycle.State.CREATED) {
+                it.data?.let { it1 ->
+                    viewModel.fallbackSignIn(it1).collect { response ->
+                        handleOnAuth(response)
+                    }
+                }
+            }
+        }}
+    }
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -91,7 +107,12 @@ class SignInFragment : Fragment() {
         when(result) {
             is AuthenticationResponse.Error -> {
                 onLoading(false)
-                showToast(result.message)
+
+                if (result.message == "Credential not found") {
+                    fallbackLauncher.launch(viewModel.googleIntent())
+                } else {
+                    showToast(result.message)
+                }
             }
             is AuthenticationResponse.Loading -> {
                 onLoading(true)

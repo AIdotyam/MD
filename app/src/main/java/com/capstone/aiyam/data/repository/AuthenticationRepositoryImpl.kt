@@ -69,8 +69,7 @@ class AuthenticationRepositoryImpl @Inject constructor(
 
         val user = auth.currentUser
         try {
-            val firebaseIdToken = user?.getIdToken(true)?.await()?.token
-                ?: throw Exception("Firebase ID Token not found")
+            val firebaseIdToken = user?.getIdToken(true)?.await()?.token ?: throw Exception("Firebase ID Token not found")
             farmerService.createFarmer(firebaseIdToken, CreateFarmerRequest(user.uid, username, email))
             emit(AuthenticationResponse.Success)
         } catch (e: Exception) {
@@ -142,29 +141,42 @@ class AuthenticationRepositoryImpl @Inject constructor(
             val googleIdTokenCredential = GoogleIdTokenCredential.createFrom(credential.credential.data)
             val firebaseCredential = GoogleAuthProvider.getCredential(googleIdTokenCredential.idToken, null)
             auth.signInWithCredential(firebaseCredential).await()
-            emit(AuthenticationResponse.Success)
         } catch (e: GoogleIdTokenParsingException) {
             emit(AuthenticationResponse.Error(e.message ?: "Error parsing Google ID Token"))
             return@flow
         } catch (e: NoCredentialException) {
-//            try {
-//                val signInIntent = signInClient.signInIntent
-//                val account = GoogleSignIn.getSignedInAccountFromIntent(signInIntent).await()
-//                val firebaseCredential = GoogleAuthProvider.getCredential(account.idToken, null)
-//
-//                auth.signInWithCredential(firebaseCredential).await()
-//                emit(AuthenticationResponse.Success)
-//            } catch (fallbackException: Exception) {
-//                emit(AuthenticationResponse.Error("No Google account found"))
-//                return@flow
-//            }
-            emit(AuthenticationResponse.Error("No Google account found"))
+            emit(AuthenticationResponse.Error("Credential not found"))
             return@flow
         } catch (e: CreateCredentialCancellationException) {
             emit(AuthenticationResponse.Error("Cancelled"))
             return@flow
         } catch (e: Exception) {
             emit(AuthenticationResponse.Error(e.message ?: "An unexpected error occurred"))
+            return@flow
+        }
+
+        try {
+            val firebaseIdToken = auth.currentUser?.getIdToken(true)?.await()?.token ?: throw Exception("Firebase ID Token not found")
+            farmerService.loginGoogle(GoogleRequest(token = firebaseIdToken))
+            emit(AuthenticationResponse.Success)
+        } catch (e: Exception) {
+            e.printStackTrace()
+            emit(AuthenticationResponse.Error(e.message ?: ""))
+            return@flow
+        }
+    }
+
+    override fun signInWithGoogleIntent(): Intent {
+        return signInClient.signInIntent
+    }
+
+    override fun signInWithIntentGoogle(intent: Intent): Flow<AuthenticationResponse> = flow {
+        try {
+            val account = GoogleSignIn.getSignedInAccountFromIntent(intent).await()
+            val firebaseCredential = GoogleAuthProvider.getCredential(account.idToken, null)
+            auth.signInWithCredential(firebaseCredential).await()
+        } catch (e: Exception) {
+            emit(AuthenticationResponse.Error("No Google account found"))
             return@flow
         }
 

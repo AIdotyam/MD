@@ -12,6 +12,7 @@ import com.capstone.aiyam.domain.model.TokenResponse
 import com.capstone.aiyam.domain.repository.SettingsPreferencesRepository
 import com.capstone.aiyam.domain.repository.UserRepository
 import com.capstone.aiyam.utils.withToken
+import com.google.android.gms.auth.api.signin.GoogleSignInClient
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.FirebaseUser
 import com.google.firebase.messaging.FirebaseMessaging
@@ -25,6 +26,7 @@ class UserRepositoryImpl @Inject constructor (
     private val auth: FirebaseAuth,
     private val messaging: FirebaseMessaging,
     private val farmerService: FarmerService,
+    private val signInClient: GoogleSignInClient,
     private val settingsPreferencesRepository: SettingsPreferencesRepository
 ) : UserRepository {
     override fun getFirebaseUser(): AuthorizationResponse {
@@ -35,7 +37,10 @@ class UserRepositoryImpl @Inject constructor (
         }
     }
 
-    override fun firebaseSignOut() = auth.signOut()
+    override fun firebaseSignOut() {
+        signInClient.signOut()
+        auth.signOut()
+    }
 
     override fun getFirebaseToken(user: FirebaseUser): Flow<TokenResponse> = flow {
         user.getIdToken(false).await().token?.let {
