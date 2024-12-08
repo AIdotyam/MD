@@ -11,7 +11,7 @@
         android:layout_width="354dp"
         android:layout_height="257dp"
         android:layout_marginTop="48dp"
-        android:src="@drawable/kartun1"
+        android:src="@drawable/page_one"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.491"
         app:layout_constraintStart_toStartOf="parent"
@@ -71,9 +71,10 @@
             android:layout_height="wrap_content"
             android:layout_marginEnd="16dp"
             android:layout_weight="2"
+            android:backgroundTint="@color/md_theme_primary"
             android:text="Next"
             android:textAllCaps="false"
-            android:textColor="@drawable/button_text_color"
+            android:textColor="@color/black"
             app:strokeColor="@drawable/button_stroke_color" />
     </LinearLayout>
 
