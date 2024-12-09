@@ -47,9 +47,7 @@ class MainActivity : AppCompatActivity() {
     ) { permissions ->
         val allGranted = permissions.all { it.value }
 
-        if (allGranted) {
-            showToast("All permissions granted")
-        } else {
+        if (!allGranted) {
             val deniedPermissions = permissions.filter { !it.value }.keys
             showToast("Denied permissions: ${deniedPermissions.joinToString()}")
         }
@@ -57,7 +55,7 @@ class MainActivity : AppCompatActivity() {
 
     private fun checkAllPermissions(): Boolean {
         val permissions = mutableListOf(
-            CAMERA_PERMISSION, AUDIO_PERMISSION
+            CAMERA_PERMISSION
         )
 
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
@@ -69,7 +67,7 @@ class MainActivity : AppCompatActivity() {
 
     private fun requestAllPermissions() {
         val permissionsToRequest = mutableListOf(
-            CAMERA_PERMISSION, AUDIO_PERMISSION
+            CAMERA_PERMISSION
         )
 
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
@@ -208,7 +206,5 @@ class MainActivity : AppCompatActivity() {
 
         @RequiresApi(Build.VERSION_CODES.TIRAMISU)
         private const val NOTIFICATION_PERMISSION = Manifest.permission.POST_NOTIFICATIONS
-
-        private const val AUDIO_PERMISSION = Manifest.permission.RECORD_AUDIO
     }
 }

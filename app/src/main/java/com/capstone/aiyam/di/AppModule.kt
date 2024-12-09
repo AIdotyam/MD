@@ -32,13 +32,13 @@ object AppModule {
     @Provides
     @Singleton
     fun provideFirebaseAuth(): FirebaseAuth {
-        return Firebase.auth
+        return FirebaseAuth.getInstance()
     }
 
     @Provides
     @Singleton
     fun provideFirebaseMessaging(): FirebaseMessaging {
-        return Firebase.messaging
+        return FirebaseMessaging.getInstance()
     }
 
     @Provides

@@ -1,20 +1,12 @@
 package com.capstone.aiyam.presentation.auth.profile
 
-import android.content.ClipData
-import android.content.ClipboardManager
-import android.content.Context
-import android.content.Intent
-import android.net.Uri
 import androidx.fragment.app.viewModels
 import android.os.Bundle
-import android.util.Log
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.Button
 import android.widget.Toast
-import androidx.appcompat.app.AlertDialog
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
@@ -30,7 +22,6 @@ import com.capstone.aiyam.utils.gone
 import com.capstone.aiyam.utils.visible
 import com.google.firebase.auth.FirebaseUser
 import dagger.hilt.android.AndroidEntryPoint
-import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.launch
 
 @AndroidEntryPoint
@@ -68,13 +59,13 @@ class ProfileFragment : Fragment() {
             val dialog = CustomAlertDialog(
                 context = requireContext(),
                 title = "Sign out",
-                message = "Are you sure you want to sign out?",
+                message = "Do you want to quit?",
                 negativeButtonClick = {}
             ) {
-                viewModel.signOut()
-                showToast("Successfully signed out")
-                ProfileFragmentDirections.actionProfileFragmentToSigninFragment().let {
-                    findNavController().navigate(it)
+                lifecycleScope.launch {
+                    viewModel.signOut()
+                    showToast("Successfully signed out")
+                    requireActivity().finish()
                 }
             }
 

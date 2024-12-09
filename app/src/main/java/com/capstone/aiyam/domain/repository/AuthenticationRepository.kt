@@ -9,6 +9,4 @@ interface AuthenticationRepository {
     fun createAccountWithEmail(username: String, email: String, password: String): Flow<AuthenticationResponse>
     fun loginWithEmail(email: String, password: String): Flow<AuthenticationResponse>
     fun signInWithGoogle(): Flow<AuthenticationResponse>
-    fun linkPhoneNumber(credential: PhoneAuthCredential): Flow<AuthenticationResponse>
-    fun sendOtp(phoneNumber: String, verificationCallback: PhoneAuthProvider.OnVerificationStateChangedCallbacks)
 }

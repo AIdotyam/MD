@@ -94,27 +94,6 @@ class AuthenticationRepositoryImpl @Inject constructor(
         }
     }
 
-    override fun sendOtp(phoneNumber: String, verificationCallback: PhoneAuthProvider.OnVerificationStateChangedCallbacks) {
-        val options = PhoneAuthOptions.newBuilder(auth)
-            .setPhoneNumber(phoneNumber)
-            .setTimeout(60L, TimeUnit.SECONDS)
-            .setCallbacks(verificationCallback)
-            .build()
-
-        PhoneAuthProvider.verifyPhoneNumber(options)
-    }
-
-    override fun linkPhoneNumber(credential: PhoneAuthCredential): Flow<AuthenticationResponse> = flow {
-        emit(AuthenticationResponse.Loading)
-        try {
-            auth.currentUser?.linkWithCredential(credential)?.await()
-            emit(AuthenticationResponse.Success)
-        } catch (e: Exception) {
-            e.printStackTrace()
-            emit(AuthenticationResponse.Error(e.message ?: ""))
-        }
-    }
-
     override fun signInWithGoogle(): Flow<AuthenticationResponse> = flow {
         emit(AuthenticationResponse.Loading)
         val nonce = createNonce()
@@ -129,45 +108,41 @@ class AuthenticationRepositoryImpl @Inject constructor(
             .addCredentialOption(googleIdOption)
             .build()
 
-        repeat(5) {
-            try {
-                val credential = manager.getCredential(context, request).credential
-                if (credential !is CustomCredential) {
-                    throw Exception("Credential not found")
-                }
 
-                if (credential.type != GoogleIdTokenCredential.TYPE_GOOGLE_ID_TOKEN_CREDENTIAL) {
-                    emit(AuthenticationResponse.Error("Invalid credential type"))
-                    return@flow
-                }
+        try {
+            val credential = manager.getCredential(context, request).credential
+            if (credential !is CustomCredential) {
+                throw Exception("Credential not found")
+            }
 
-                val googleIdTokenCredential = GoogleIdTokenCredential.createFrom(credential.data)
-                val firebaseCredential = GoogleAuthProvider.getCredential(googleIdTokenCredential.idToken, null)
-                auth.signInWithCredential(firebaseCredential).await()
-                emit(AuthenticationResponse.Success)
-                return@flow
-
-            } catch (e: NoCredentialException) {
-                if (it == 4) {
-                    emit(AuthenticationResponse.Error("No Credential Available"))
-                    return@flow
-                }
-            } catch (e: CreateCredentialCancellationException) {
-                emit(AuthenticationResponse.Error("Cancelled"))
-                return@flow
-            } catch (e: Exception) {
-                emit(AuthenticationResponse.Error(e.message ?: "An unexpected error occurred"))
+            if (credential.type != GoogleIdTokenCredential.TYPE_GOOGLE_ID_TOKEN_CREDENTIAL) {
+                emit(AuthenticationResponse.Error("Invalid credential type"))
                 return@flow
             }
+
+            val googleIdTokenCredential = GoogleIdTokenCredential.createFrom(credential.data)
+            val firebaseCredential = GoogleAuthProvider.getCredential(googleIdTokenCredential.idToken, null)
+            auth.signInWithCredential(firebaseCredential).await()
+        } catch (e: NoCredentialException) {
+            emit(AuthenticationResponse.Error("No Credential Available"))
+            return@flow
+        } catch (e: CreateCredentialCancellationException) {
+            emit(AuthenticationResponse.Error("Cancelled"))
+            return@flow
+        } catch (e: Exception) {
+            emit(AuthenticationResponse.Error(e.message ?: "An unexpected error occurred"))
+            return@flow
         }
 
         try {
             val firebaseIdToken = auth.currentUser?.getIdToken(true)?.await()?.token ?: throw Exception("Firebase ID Token not found")
             farmerService.loginGoogle(GoogleRequest(token = firebaseIdToken))
             emit(AuthenticationResponse.Success)
+            return@flow
         } catch (e: Exception) {
             e.printStackTrace()
             emit(AuthenticationResponse.Error(e.message ?: ""))
+            return@flow
         }
     }
 }

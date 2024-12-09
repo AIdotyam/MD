@@ -17,6 +17,7 @@ import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 import javax.inject.Inject
 
 @HiltViewModel
@@ -26,7 +27,7 @@ class ProfileViewModel @Inject constructor(
 ) : ViewModel() {
     fun getUser() = userRepository.getFirebaseUser()
     private fun getFcmToken() = userRepository.getPushToken()
-    fun signOut() { CoroutineScope(Dispatchers.IO).launch {
+    suspend fun signOut() { withContext(Dispatchers.IO) {
         userRepository.firebaseSignOut()
         settingsPreferencesRepository.savePhoneNumberSetting("")
         settingsPreferencesRepository.savePushNotificationSetting(false)

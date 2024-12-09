@@ -52,6 +52,7 @@ class ChickenRepositoryImpl @Inject constructor(
         emit(ResponseWrapper.Loading)
         try {
             val histories = withToken(user, userRepository::getFirebaseToken) {
+                Log.d("ChickenRepositoryImpl Firebase ID Token", it)
                 chickenService.getHistories(it)
             }
             emit(ResponseWrapper.Success(histories.data))
