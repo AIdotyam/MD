@@ -59,7 +59,7 @@ class ProfileFragment : Fragment() {
             val dialog = CustomAlertDialog(
                 context = requireContext(),
                 title = "Sign out",
-                message = "Do you want to quit?",
+                message = "",
                 negativeButtonClick = {}
             ) {
                 lifecycleScope.launch {
