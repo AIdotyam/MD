@@ -42,6 +42,8 @@ The app uses Kotlin for development, integrates with the cloud through Retrofit 
 <img src="https://github.com/user-attachments/assets/470ffd0d-540e-4375-a0c9-a8e9fbbe6b74" width="200"> 
 <img src="https://github.com/user-attachments/assets/bdcfbf41-e83c-4f87-9139-935876dccfe3" width="200">
 <img src="https://github.com/user-attachments/assets/80603266-1510-4fd3-b079-c87673b221cd" width="200">
+<img src="https://github.com/user-attachments/assets/a9928722-bba0-40a2-a496-06b25c283ffd" width="200">
+
 </p>
 
 <p align="center">
