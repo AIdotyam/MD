@@ -22,17 +22,16 @@ The app uses Kotlin for development, integrates with the cloud through Retrofit 
 
 # Use Cases:
 
-**Death Detection**:
+• **Image Scan**: Farmers can use the app to upload or take pictures of the chicken coop directly through the camera.
 
-• **Shooting**: Farmers can use the app to upload or take pictures of the chicken coop directly through the camera.
+• **AI Analysis**: The AI system analyzes the uploaded images to detect the presence of dead chickens.
 
-• **AI analysis**: The AI system analyzes the uploaded images to detect the presence of dead chickens.
+• **Notifications**: Cloud server automatically sends notifications to farmers to take immediate action on chickens that are detected dead.
 
-• **Notifications**: AI automatically sends notifications to farmers to take immediate action on chickens that are detected dead.
-
-• **Integration to Dashboard**: The results of AI analysis, including dead chicken data, will be saved and displayed on the dashboard. This dashboard provides detailed information about the scanned data to assist farmers in monitoring the health of chickens comprehensively.
+• **Dashboard**: The results of AI analysis, including dead chicken data, will be saved and displayed on the dashboard. This dashboard provides detailed information about the scanned data to assist farmers in monitoring the health of chickens.
 
 # Screenshots
+
 <p align="center">
 <img src="https://github.com/user-attachments/assets/c11a06ef-7c84-4c9c-beb5-5b2630fd6d32" width="200">
 <img src="https://github.com/user-attachments/assets/e31d60ed-b209-4630-90dd-d4308e3de121" width="200">
@@ -58,66 +57,37 @@ The app uses Kotlin for development, integrates with the cloud through Retrofit 
 <img src="https://github.com/user-attachments/assets/3fe45176-6c81-4985-973d-c57aaba409f7" width="200"> 
 </p>
 
-# Development Roadmap
+# Tech Stack
 
 •	 Kotlin
-
+•  Dagger Hilt
+•  Firebase
 •	 Glide
-
-•	 Retrofit.
-
-•	 CameraX
-
-•	 preferences
-
-•	 Navigation Component
-
-
+•	 Retrofit
+•	 Camera X
+•	 Media Store
+•	 Android Jetpack
+•  Material Design
 
 # Features
 
-•	 Onboarding
-
-•	 Login
-
-•	 Register
-
-•	 Bottom Navigation
-
-•	Profile
-
+•	Onboarding
+•	Login
+•	Register
+•	Bottom Navigation
 •	Dashboard
-
-•	Alerts
-
-•	Notifikasi
-
-•	History
-
 •	Image Scan
+•	History
+•	Profile
+•	Alert
 
 # Requirement
 
-•	Android Studio 
-
-•	Android Device or Android Emulator with minimum Lollipop Version
-
-•	Emulator / External Device
-
-•	USB Cable (to Connect Android Device to your Computer)
-
+•	Android Device or Android Emulator with minimum Oreo Version
+•	Working Internet
 
 # Installation
-1. Clone this Project to your Computer
-git clone https://github.com/ziliscite/capstone_project.git
-or you can use Android Studio
 
-File > New > Project from Version Control ...
-
-2. Open the Project in your Android Studio
-Open Android Studio and select open an existing project.
-
-3. Run Project in Android Studio
-Wait for Gradle Build to Finish and finally press the Run > Run ‘app’. Now the app has been installed in your phone / emulator. Make sure that you have configured your android device or emulator
-
-# Thank You :)
+1. Open "releases" tab
+2. Download app-debug.aab
+3. Install and run the project in an android device or emulator
