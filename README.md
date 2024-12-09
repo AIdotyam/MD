@@ -60,30 +60,47 @@ The app uses Kotlin for development, integrates with the cloud through Retrofit 
 # Tech Stack
 
 •	 Kotlin
+
 •  Dagger Hilt
+
 •  Firebase
+
 •	 Glide
+
 •	 Retrofit
+
 •	 Camera X
+
 •	 Media Store
+
 •	 Android Jetpack
+
 •  Material Design
 
 # Features
 
 •	Onboarding
+
 •	Login
+
 •	Register
+
 •	Bottom Navigation
+
 •	Dashboard
+
 •	Image Scan
+
 •	History
+
 •	Profile
+
 •	Alert
 
 # Requirement
 
 •	Android Device or Android Emulator with minimum Oreo Version
+
 •	Working Internet
 
 # Installation
