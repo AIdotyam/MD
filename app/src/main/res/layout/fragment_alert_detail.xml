@@ -70,7 +70,7 @@
             <ImageView
                 android:id="@+id/headerImage"
                 android:layout_width="match_parent"
-                android:layout_height="700dp"
+                android:layout_height="600dp"
                 android:contentDescription="@string/todo"
                 android:scaleType="centerCrop"
                 app:layout_constraintBottom_toBottomOf="parent"
@@ -87,8 +87,8 @@
         android:layout_height="wrap_content"
         android:background="@drawable/rounded_card_bg"
         app:layout_behavior="com.google.android.material.bottomsheet.BottomSheetBehavior"
-        app:behavior_peekHeight="200dp"
-        app:behavior_hideable="false"
+        app:behavior_peekHeight="150dp"
+        app:behavior_hideable="true"
         app:behavior_fitToContents="true">
 
         <LinearLayout
@@ -157,7 +157,7 @@
                     android:id="@+id/backButton"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:text="Home"
+                    android:text="Finish"
                     android:textColor="@android:color/black" />
             </androidx.cardview.widget.CardView>
         </LinearLayout>

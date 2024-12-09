@@ -38,7 +38,7 @@ class DetailFragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
 
         bottomSheetBehavior = BottomSheetBehavior.from(binding.drawerContainer)
-        bottomSheetBehavior.state = BottomSheetBehavior.STATE_COLLAPSED
+        bottomSheetBehavior.state = BottomSheetBehavior.STATE_EXPANDED
         binding.scrollableContainer.setOnScrollChangeListener { _, _, scrollY, _, _ ->
             if (scrollY > 0 && bottomSheetBehavior.state == BottomSheetBehavior.STATE_COLLAPSED) {
                 bottomSheetBehavior.state = BottomSheetBehavior.STATE_HIDDEN
@@ -53,13 +53,12 @@ class DetailFragment : Fragment() {
         if (classification.deadChicken) {
             chickenValue.text = "Dead Chicken Detected"
             chickenValueDesc.text = "Immediate action required to maintain flock health."
-            icon.setImageResource(R.drawable.peti_mati)
+            icon.setImageResource(R.drawable.ded)
         } else {
             chickenValue.text = "Chickens Alive and Well!"
             chickenValueDesc.text = "No immediate action necessary—flock in good health."
-            icon.setImageResource(R.drawable.peti_hidup)
+            icon.setImageResource(R.drawable.chiav)
         }
-
 
         Glide.with(requireContext()).load(classification.mediaUrl).into(headerImage)
 
