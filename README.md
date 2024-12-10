@@ -47,13 +47,13 @@ The app uses Kotlin for development, integrates with the cloud through Retrofit 
 </p>
 
 <p align="center">
-<img src="https://github.com/user-attachments/assets/69446aee-93e6-4eef-aa6b-b35501c81205" width="200"> 
-<img src="https://github.com/user-attachments/assets/603f47dc-2429-45ab-af4b-d2f620eee968" width="200">
+<img src="https://github.com/user-attachments/assets/69446aee-93e6-4eef-aa6b-b35501c81205" width="200">
+<img src="https://github.com/user-attachments/assets/83c52be8-d904-40b9-aa31-ae3ecbe0f735" width="200">
 <img src="https://github.com/user-attachments/assets/5abdb4cf-ff18-468e-b637-899067f3e551" width="200">
 </p>
 
 <p align="center">
-<img src="https://github.com/user-attachments/assets/e9627728-e77e-40b5-83e7-75ed13e66a4d" width="200"> 
+<img src="https://github.com/user-attachments/assets/37f36f71-f576-4c81-a693-139184afc999" width="200">
 <img src="https://github.com/user-attachments/assets/096a239e-44eb-42da-a8a5-0f24c437e99e" width="200"> 
 <img src="https://github.com/user-attachments/assets/465402fa-9dc2-474e-a2bd-987b6f7db188" width="200"> 
 <img src="https://github.com/user-attachments/assets/3fe45176-6c81-4985-973d-c57aaba409f7" width="200"> 
